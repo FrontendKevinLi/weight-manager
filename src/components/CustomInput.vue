@@ -1,6 +1,6 @@
 <template>
   <div class="custom-input-wrapper">
-    <input id="input" class="input" @input="handleInputChange"
+    <input id="input" class="input" :value="inputText" @input="handleInputChange"
       @mousedown="setInputFocus(true)"
       @focus="setInputFocus(true)"
       @blur="setInputFocus(false)"
@@ -13,20 +13,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'LoginView',
+  name: 'CustomInput',
   props: {
     placeholder: {
       type: String,
       default: '',
     },
-
+    inputText: {
+      type: String,
+      default: '',
+    },
   },
   data() {
     return {
-      inputText: '',
       isInputFocused: false,
     };
   },
@@ -45,7 +47,7 @@ export default defineComponent({
     },
     handleInputChange(e: Event) {
       const target = e.target as HTMLInputElement;
-      this.inputText = target.value;
+      this.$emit('update:inputText', target.value);
     },
   },
 });
@@ -56,7 +58,7 @@ export default defineComponent({
 
 @import "@/style/colors.scss";
 
-.username {
+.custom-input-wrapper {
   position: relative;
   width: 500px;
   height: 35px;
@@ -68,7 +70,7 @@ export default defineComponent({
     padding-left: 10px;
     padding-right: 10px;
     border: none;
-    border-bottom: 1px solid map-get($map: $blue, $key: "700");
+    border-bottom: 2px solid map-get($map: $blue, $key: "700");
   }
   .placeholder {
     position: absolute;
@@ -77,9 +79,9 @@ export default defineComponent({
     transform: translateY(0);
     top: 0;
     left: 10px;
-    transition: transform 0.1s ease-in-out,
-      font-size 0.1s ease-in-out,
-      color 0.1s ease-in-out;
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+      font-size 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+      color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: text;
     pointer-events: none;
     &.focus {
