@@ -1,13 +1,12 @@
 <template>
   <div class="login">
-    <div class="login-box">
+    <div ref="login-box" class="login-box">
+      <div ref="bottom-left" class="bottom-left"></div>
+      <div ref="top-right" class="top-right"></div>
       <div class="left">
-        <div
-          class="username"
-          id="123"
-        >
-         <CustomInput :placeholder="'Username'" />
-        </div>
+        <CustomInput v-model:inputText="username" :placeholder="'Username'" />
+        <CustomInput v-model:inputText="password" :placeholder="'Password'" />
+        <div class="login-btn">Login</div>
         <div class="password"></div>
       </div>
       <div class="right">
@@ -29,6 +28,8 @@ export default defineComponent({
   name: 'LoginView',
   data() {
     return {
+      username: '',
+      password: '',
       BodyWeightingImg,
     };
   },
@@ -38,15 +39,37 @@ export default defineComponent({
   methods: {
     initAnimation() {
       const timeLine = gsap.timeline();
-      timeLine.from(this.$refs.picture as gsap.TweenTarget, {
-        y: '-75vh',
-        ease: 'bounce',
-        duration: 1,
+      timeLine.set(this.$refs['top-right'] as gsap.TweenTarget, {
+        transformOrigin: 'center',
       });
+
+      timeLine.from(this.$refs['login-box'] as gsap.TweenTarget, {
+        opacity: 0,
+        ease: 'power4',
+        duration: 0.5,
+      });
+      timeLine.to(this.$refs['top-right'] as gsap.TweenTarget, {
+        rotate: '360deg',
+        ease: 'power3',
+        duration: 1.5,
+      }, '-=0.5');
+      timeLine.to(this.$refs['bottom-left'] as gsap.TweenTarget, {
+        rotate: '-360deg',
+        ease: 'power3',
+        duration: 1.5,
+      }, '-=1.5');
+      timeLine.from(this.$refs.picture as gsap.TweenTarget, {
+        opacity: 0,
+        scale: 0.5,
+        ease: 'power2',
+        duration: 0.75,
+      }, '-=1.5');
       timeLine.from(this.$refs.slogan as gsap.TweenTarget, {
         opacity: 0,
-        ease: 'power3',
-      });
+        translateX: '-200px',
+        ease: 'back',
+        duration: 0.5,
+      }, '-=0.75');
     },
   },
   components: { CustomInput },
@@ -65,7 +88,9 @@ export default defineComponent({
   height: 100vh;
   background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   background-blend-mode: screen;
+  overflow: hidden;
   .login-box {
+    position: relative;
     $border-radius: 12px;
     display: flex;
     flex-direction: row;
@@ -73,51 +98,29 @@ export default defineComponent({
     width: 80vw;
     border-radius: $border-radius;
     box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
+    z-index: 0;
     .left {
       display: flex;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
+      row-gap: 50px;
       width: 50%;
       height: 100%;
       background-color: white;
       border-top-left-radius: $border-radius;
       border-bottom-left-radius: $border-radius;
-      .username {
-        position: relative;
-        width: 500px;
-        height: 35px;
-        // border-bottom: 1px solid map-get($map: $blue, $key: "700");
-        .input {
-          width: 100%;
-          height: 100%;
-          outline: none;
-          font-size: 24px;
-          padding-left: 10px;
-          padding-right: 10px;
-          border: none;
-          border-bottom: 1px solid map-get($map: $blue, $key: "700");
-        }
-        .placeholder {
-          position: absolute;
-          font-size: 24px;
-          color: map-get($map: $black, $key: "500");
-          transform: translateY(0);
-          top: 0;
-          left: 10px;
-          transition: transform 0.1s ease-in-out,
-            font-size 0.1s ease-in-out,
-            color 0.1s ease-in-out;
-          cursor: text;
-          pointer-events: none;
-          &.focus {
-              transform: translate(0, -20px);
-              font-size: 16px;
-              color: map-get($map: $blue, $key: "500");
-          }
-        }
-      }
-      .password {
-
+      .login-btn {
+        width: fit-content;
+        padding-left: 20px;
+        padding-right: 20px;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        color: map-get($map: $blue, $key: "50");
+        background: map-get($map: $blue, $key: "500");
+        border-radius: $border-radius;
+        cursor: pointer;
+        font-size: 20px;
       }
     }
     .right {
@@ -139,6 +142,26 @@ export default defineComponent({
         width: 25vw;
         height: 25vw;
       }
+    }
+    .bottom-left {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      left: -25px;
+      bottom: -25px;
+      background-color: map-get($map: $blue, $key: "700");
+      border-radius: $border-radius;
+      z-index: -1;
+    }
+    .top-right {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      right: -25px;
+      top: -25px;
+      background-color: white;
+      border-radius: $border-radius;
+      z-index: -1;
     }
   }
 }
