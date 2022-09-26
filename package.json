@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "gsap": "^3.11.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"
@@ -43,7 +44,34 @@
     "parserOptions": {
       "ecmaVersion": 2020
     },
-    "rules": {}
+    "rules": {
+      "linebreak-style": [
+        "error",
+        "windows"
+      ],
+      "vuejs-accessibility/label-has-for": [
+        "error",
+        {
+          "components": ["VLabel"],
+          "controlComponents": ["VInput"],
+          "required": {
+            "some": ["nesting", "id"]
+          },
+          "allowChildren": false
+        }
+      ],
+      "vuejs-accessibility/label-has-for": [
+        "error",
+        {
+          "components": ["VLabel"],
+          "controlComponents": ["VInput"],
+          "required": {
+            "some": ["nesting", "id"]
+          },
+          "allowChildren": false
+        }
+      ]
+    }
   },
   "browserslist": [
     "> 1%",
