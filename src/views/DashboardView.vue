@@ -1,10 +1,5 @@
 <template>
   <div class="dashboard-view">
-    <div class="box"></div>
-    <div class="box"></div>
-    <div class="box"></div>
-    <div class="box"></div>
-    <div class="box"></div>
   </div>
 </template>
 
@@ -14,15 +9,6 @@ import gsap from 'gsap';
 
 export default defineComponent({
   name: 'DashboardView',
-  mounted() {
-    const timeline = gsap.timeline();
-
-    timeline.to('.box', {
-      y: 100,
-      ease: 'back.in',
-      stagger: 0.1,
-    });
-  },
 });
 </script>
 
