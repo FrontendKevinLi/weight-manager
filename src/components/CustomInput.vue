@@ -62,6 +62,7 @@ export default defineComponent({
   position: relative;
   width: 500px;
   height: 35px;
+  border-bottom: 2px solid map-get($map: $blue, $key: "700");
   .input {
     width: 100%;
     height: 100%;
@@ -72,7 +73,6 @@ export default defineComponent({
     padding-bottom: 0;
     background: transparent;
     border: none;
-    border-bottom: 2px solid map-get($map: $blue, $key: "700");
   }
   .placeholder {
     position: absolute;
