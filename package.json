@@ -70,7 +70,9 @@
           },
           "allowChildren": false
         }
-      ]
+      ],
+      "max-len": 0,
+      "vue/no-unused-components": 0
     }
   },
   "browserslist": [
