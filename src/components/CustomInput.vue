@@ -1,6 +1,11 @@
 <template>
   <div :class="['custom-input-wrapper', (isInputFocused  || !isInputTextEmpty) && 'focus']">
-    <input id="input" class="input" :value="inputText" @input="handleInputChange"
+    <input
+      id="input"
+      class="input"
+      :value="inputText"
+      :type="type"
+      @input="handleInputChange"
       @mousedown="setInputFocus(true)"
       @focus="setInputFocus(true)"
       @blur="setInputFocus(false)"
@@ -25,6 +30,10 @@ export default defineComponent({
     inputText: {
       type: String,
       default: '',
+    },
+    type: {
+      type: String,
+      default: 'text',
     },
   },
   data() {

@@ -6,8 +6,8 @@
       <div class="white-section">
         <div class="title">Weight Manager</div>
         <CustomInput v-model:inputText="username" :placeholder="'Username'" />
-        <CustomInput v-model:inputText="password" :placeholder="'Password'" />
-        <div class="login-btn">Login</div>
+        <CustomInput v-model:inputText="password" :placeholder="'Password'" :type="'password'"/>
+        <CustomButton :label="'Login'" />
       </div>
       <div ref="blue-section" class="blue-section">
         <img ref="picture" class="picture" :src="BodyWeightingImg" alt=""/>
@@ -23,6 +23,7 @@ import { defineComponent } from 'vue';
 import BodyWeightingImg from '@/assets/bodyWeighting.png';
 import gsap from 'gsap';
 import CustomInput from '@/components/CustomInput.vue';
+import CustomButton from '@/components/CustomButton.vue';
 
 export default defineComponent({
   name: 'LoginView',
@@ -72,14 +73,14 @@ export default defineComponent({
       }, '-=0.75');
     },
   },
-  components: { CustomInput },
+  components: { CustomInput, CustomButton },
 });
 </script>
 
 <style lang="scss" scoped>
 @use "sass:map";
-
 @import "@/style/colors.scss";
+@import "@/style/constants.scss";
 
 @font-face {
     font-family: 'Tomatoes';
@@ -105,7 +106,6 @@ export default defineComponent({
   overflow: hidden;
   .login-box {
     position: relative;
-    $border-radius: 12px;
     display: flex;
     flex-direction: row;
     height: 700px;
