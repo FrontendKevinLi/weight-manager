@@ -58,6 +58,7 @@ export default defineComponent({
         opacity: 0.001,
         x: 100,
         ease: 'power2',
+        delay: 0.1,
         duration: 0.75,
       });
       timeLine.from('.white-section-item', {
