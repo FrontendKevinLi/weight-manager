@@ -69,6 +69,8 @@ export default defineComponent({
     font-size: 24px;
     padding-left: 10px;
     padding-right: 10px;
+    padding-bottom: 0;
+    background: transparent;
     border: none;
     border-bottom: 2px solid map-get($map: $blue, $key: "700");
   }
