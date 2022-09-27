@@ -8,7 +8,7 @@
         <CustomInput v-model:inputText="password" :placeholder="'Password'" />
         <div class="login-btn">Login</div>
       </div>
-      <div class="blue-section">
+      <div ref="blue-section" class="blue-section">
         <img ref="picture" class="picture" :src="BodyWeightingImg" alt=""/>
         <div ref="slogan" class="slogan">Start Record Yourself Today!</div>
         <!-- <a href="http://www.freepik.com">Designed by vectorjuice / Freepik</a> -->
@@ -80,6 +80,15 @@ export default defineComponent({
 
 @import "@/style/colors.scss";
 
+@mixin decoration-box($color: white, $size: 200px, $border-radius: 10px) {
+  position: absolute;
+  width: $size;
+  height: $size;
+  background-color: $color;
+  border-radius: $border-radius;
+  z-index: -1;
+}
+
 .login {
   display: flex;
   justify-content: center;
@@ -143,24 +152,17 @@ export default defineComponent({
       }
     }
     .bottom-left {
-      position: absolute;
-      width: 200px;
-      height: 200px;
+      @include decoration-box(map-get($map: $blue, $key: "700"), 200px, $border-radius);
+      box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
       left: -25px;
       bottom: -25px;
-      background-color: map-get($map: $blue, $key: "700");
-      border-radius: $border-radius;
-      z-index: -1;
     }
     .top-right {
-      position: absolute;
-      width: 200px;
-      height: 200px;
+      @include decoration-box(white, 200px, $border-radius);
+      box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
       right: -25px;
       top: -25px;
-      background-color: white;
-      border-radius: $border-radius;
-      z-index: -1;
+
     }
   }
 }
