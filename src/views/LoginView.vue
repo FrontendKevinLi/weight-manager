@@ -3,13 +3,13 @@
     <div ref="login-box" class="login-box">
       <div ref="bottom-left" class="bottom-left"></div>
       <div ref="top-right" class="top-right"></div>
-      <div class="left">
+      <div class="white-section">
         <CustomInput v-model:inputText="username" :placeholder="'Username'" />
         <CustomInput v-model:inputText="password" :placeholder="'Password'" />
         <div class="login-btn">Login</div>
         <div class="password"></div>
       </div>
-      <div class="right">
+      <div class="blue-section">
         <img ref="picture" class="picture" :src="BodyWeightingImg" alt=""/>
         <div ref="slogan" class="slogan">Start Record Yourself Today!</div>
         <!-- <a href="http://www.freepik.com">Designed by vectorjuice / Freepik</a> -->
@@ -99,7 +99,7 @@ export default defineComponent({
     border-radius: $border-radius;
     box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
     z-index: 0;
-    .left {
+    .white-section {
       display: flex;
       justify-content: center;
       align-items: center;
@@ -123,7 +123,7 @@ export default defineComponent({
         font-size: 20px;
       }
     }
-    .right {
+    .blue-section {
       display: flex;
       flex-direction: column;
       justify-content: center;
