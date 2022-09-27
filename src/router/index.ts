@@ -7,6 +7,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'login',
     component: LoginView,
   },
+  {
+    path: '/dashboard',
+    name: 'dashboard',
+    component: () => import('@/views/DashboardView.vue'),
+  },
   // {
   //   path: '/about',
   //   name: 'about',

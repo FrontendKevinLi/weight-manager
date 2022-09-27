@@ -7,7 +7,7 @@
         <div class="title">Weight Manager</div>
         <CustomInput v-model:inputText="username" :placeholder="'Username'" />
         <CustomInput v-model:inputText="password" :placeholder="'Password'" :type="'password'"/>
-        <CustomButton :label="'Login'" />
+        <CustomButton :label="'Login'" @click="handleLoginButtonClick" />
       </div>
       <div ref="blue-section" class="blue-section">
         <img ref="picture" class="picture" :src="BodyWeightingImg" alt=""/>
@@ -71,6 +71,9 @@ export default defineComponent({
         ease: 'back',
         duration: 0.5,
       }, '-=0.75');
+    },
+    handleLoginButtonClick() {
+      this.$router.push('/dashboard');
     },
   },
   components: { CustomInput, CustomButton },
