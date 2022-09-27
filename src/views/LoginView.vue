@@ -4,6 +4,7 @@
       <div ref="bottom-left" class="bottom-left"></div>
       <div ref="top-right" class="top-right"></div>
       <div class="white-section">
+        <div class="title">Weight Manager</div>
         <CustomInput v-model:inputText="username" :placeholder="'Username'" />
         <CustomInput v-model:inputText="password" :placeholder="'Password'" />
         <div class="login-btn">Login</div>
@@ -80,6 +81,11 @@ export default defineComponent({
 
 @import "@/style/colors.scss";
 
+@font-face {
+    font-family: 'Tomatoes';
+    src: url('@/fonts/Tomatoes-O8L8.ttf') format('truetype');
+}
+
 @mixin decoration-box($color: white, $size: 200px, $border-radius: 10px) {
   position: absolute;
   width: $size;
@@ -118,6 +124,10 @@ export default defineComponent({
       background-color: white;
       border-top-left-radius: $border-radius;
       border-bottom-left-radius: $border-radius;
+      .title {
+        font-family: 'Tomatoes', sans-serif;
+        font-size: 34px;
+      }
       .login-btn {
         width: fit-content;
         padding-left: 20px;
