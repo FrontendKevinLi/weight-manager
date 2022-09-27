@@ -182,6 +182,7 @@ export default defineComponent({
       transform: scale(1.2);
       z-index: -1;
       row-gap: 30px;
+      will-change: opacity;
       @media screen and (max-width: 1024px) {
         display: none;
       }
