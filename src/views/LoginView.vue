@@ -1,12 +1,18 @@
 <template>
   <div class="login">
     <div ref="login-box" class="login-box">
-      <div ref="bottom-left" class="bottom-left"></div>
-      <div ref="top-right" class="top-right"></div>
+      <!-- <div ref="bottom-left" class="bottom-left"></div>
+      <div ref="top-right" class="top-right"></div> -->
       <div class="white-section">
+        <!-- <div class="circle"></div> -->
         <div class="title">Weight Manager</div>
-        <CustomInput v-model:inputText="username" :placeholder="'Username'" />
-        <CustomInput v-model:inputText="password" :placeholder="'Password'" :type="'password'"/>
+        <CustomInput v-model:inputText="username" :placeholder="'Username'" class="username-input"/>
+        <CustomInput
+          v-model:inputText="password"
+          :placeholder="'Password'"
+          :type="'password'"
+          class="password-input"
+        />
         <CustomButton :label="'Login'" @click="handleLoginButtonClick" />
       </div>
       <div ref="blue-section" class="blue-section">
@@ -84,6 +90,7 @@ export default defineComponent({
 @use "sass:map";
 @import "@/style/colors.scss";
 @import "@/style/constants.scss";
+@import '@/style/animations.scss';
 
 @font-face {
     font-family: 'Tomatoes';
@@ -108,28 +115,47 @@ export default defineComponent({
   background-blend-mode: screen;
   overflow: hidden;
   .login-box {
-    position: relative;
+    $loginBoxWidth: 75vw;
+
     display: flex;
+    justify-content: center;
+    position: relative;
     flex-direction: row;
-    height: 700px;
-    width: 80vw;
+    height: 70vh;
+    max-height: 700px;
+    width: $loginBoxWidth;
     border-radius: $border-radius;
-    box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
+    // box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
     z-index: 0;
     .white-section {
+      position: relative;
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
       row-gap: 50px;
-      width: 50%;
+      width: calc($loginBoxWidth / 2.5);
+      min-width: 320px;
       height: 100%;
+      padding: 20px;
+      box-sizing: border-box;
       background-color: white;
-      border-top-left-radius: $border-radius;
-      border-bottom-left-radius: $border-radius;
+      box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
+      border-radius: 12px;
       .title {
+        text-align: center;
         font-family: 'Tomatoes', sans-serif;
         font-size: 34px;
+        margin-right: 10px;
+        margin-left: 10px;
+      }
+      .username-input {
+        width: 80%;
+        min-width: 260px;
+      }
+      .password-input {
+        width: 80%;
+        min-width: 260px;
       }
       .login-btn {
         width: fit-content;
@@ -149,12 +175,16 @@ export default defineComponent({
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width: 50%;
-      height: 100%;
+      width: calc($loginBoxWidth / 2);
       background-color: map-get($map: $blue, $key: "700");
-      border-top-right-radius: $border-radius;
-      border-bottom-right-radius: $border-radius;
+      box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
+      border-radius: 12px;
+      transform: scale(1.2);
+      z-index: -1;
       row-gap: 30px;
+      @media screen and (max-width: 1024px) {
+        display: none;
+      }
       .slogan {
         color: white;
         font-size: 26px;
@@ -163,6 +193,17 @@ export default defineComponent({
         width: 25vw;
         height: 25vw;
       }
+    }
+    .circle {
+      position: absolute;
+      left: 0;
+      top: calc(50% - 50px);
+      z-index: -1;
+      height: 100px;
+      width: 100px;
+      border-radius: 50%;
+      border: 5px dotted map-get($map: $blue, $key: "200");
+      animation: spinning 5s linear infinite;
     }
     .bottom-left {
       @include decoration-box(map-get($map: $blue, $key: "700"), 200px, $border-radius);
@@ -175,7 +216,6 @@ export default defineComponent({
       box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
       right: -25px;
       top: -25px;
-
     }
   }
 }
