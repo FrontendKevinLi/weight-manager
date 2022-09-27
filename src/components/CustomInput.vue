@@ -1,5 +1,5 @@
 <template>
-  <div class="custom-input-wrapper">
+  <div :class="['custom-input-wrapper', (isInputFocused  || !isInputTextEmpty) && 'focus']">
     <input id="input" class="input" :value="inputText" @input="handleInputChange"
       @mousedown="setInputFocus(true)"
       @focus="setInputFocus(true)"
@@ -7,7 +7,7 @@
     />
     <label
       for="input"
-      :class="{'placeholder': true, 'focus': isInputFocused || !isInputTextEmpty}"
+      :class="['placeholder']"
     >{{ placeholder }}</label>
   </div>
 </template>
@@ -59,10 +59,20 @@ export default defineComponent({
 @import "@/style/colors.scss";
 
 .custom-input-wrapper {
+  $underlineHeight: 2px;
   position: relative;
   width: 500px;
   height: 35px;
-  border-bottom: 2px solid map-get($map: $blue, $key: "700");
+  border-bottom: $underlineHeight solid map-get($map: $black, $key: "500");
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -$underlineHeight;
+    width: 0;
+    height: $underlineHeight;
+    background-color: map-get($map: $blue, $key: "700");
+    transition: width 0.15s ease-in-out;
+  }
   .input {
     width: 100%;
     height: 100%;
@@ -86,10 +96,15 @@ export default defineComponent({
       color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: text;
     pointer-events: none;
-    &.focus {
-        transform: translate(0, -20px);
-        font-size: 16px;
-        color: map-get($map: $blue, $key: "500");
+  }
+  &.focus {
+    &::after {
+      width: 100%;
+    }
+    .placeholder {
+      transform: translate(0, -20px);
+      font-size: 16px;
+      color: map-get($map: $blue, $key: "500");
     }
   }
 }
