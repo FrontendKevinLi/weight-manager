@@ -77,6 +77,7 @@ export default defineComponent({
     content: '';
     position: absolute;
     bottom: -$underlineHeight;
+    left: 0;
     width: 0;
     height: $underlineHeight;
     background-color: map-get($map: $blue, $key: "700");
@@ -92,6 +93,7 @@ export default defineComponent({
     padding-bottom: 0;
     background: transparent;
     border: none;
+    box-sizing: border-box;
   }
   .placeholder {
     position: absolute;
