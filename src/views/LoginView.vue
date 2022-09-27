@@ -3,17 +3,20 @@
     <div ref="login-box" class="login-box">
       <!-- <div ref="bottom-left" class="bottom-left"></div>
       <div ref="top-right" class="top-right"></div> -->
-      <div class="white-section">
-        <!-- <div class="circle"></div> -->
-        <div class="title">Weight Manager</div>
-        <CustomInput v-model:inputText="username" :placeholder="'Username'" class="username-input"/>
+      <div ref="white-section" class="white-section">
+        <div class="white-section-item title">Weight Manager</div>
+        <CustomInput
+          v-model:inputText="username"
+          :placeholder="'Username'"
+          class="white-section-item username-input"
+        />
         <CustomInput
           v-model:inputText="password"
           :placeholder="'Password'"
           :type="'password'"
-          class="password-input"
+          class="white-section-item password-input"
         />
-        <CustomButton :label="'Login'" @click="handleLoginButtonClick" />
+        <CustomButton :label="'Login'" @click="handleLoginButtonClick" class="white-section-item" />
       </div>
       <div ref="blue-section" class="blue-section">
         <img ref="picture" class="picture" :src="BodyWeightingImg" alt=""/>
@@ -40,49 +43,40 @@ export default defineComponent({
       BodyWeightingImg,
     };
   },
+  components: {
+    CustomInput,
+    CustomButton,
+  },
   mounted() {
     this.initAnimation();
   },
   methods: {
     initAnimation() {
       const timeLine = gsap.timeline();
-      timeLine.set(this.$refs['top-right'] as gsap.TweenTarget, {
-        transformOrigin: 'center',
-      });
 
-      timeLine.from(this.$refs['login-box'] as gsap.TweenTarget, {
-        opacity: 0,
-        ease: 'power4',
-        duration: 0.5,
-      });
-      timeLine.to(this.$refs['top-right'] as gsap.TweenTarget, {
-        rotate: '360deg',
-        ease: 'power3',
-        duration: 1.5,
-      }, '-=0.5');
-      timeLine.to(this.$refs['bottom-left'] as gsap.TweenTarget, {
-        rotate: '-360deg',
-        ease: 'power3',
-        duration: 1.5,
-      }, '-=1.5');
-      timeLine.from(this.$refs.picture as gsap.TweenTarget, {
-        opacity: 0,
-        scale: 0.5,
+      timeLine.from(this.$refs['white-section'] as gsap.TweenTarget, {
+        opacity: 0.001,
+        x: 100,
         ease: 'power2',
         duration: 0.75,
-      }, '-=1.5');
-      timeLine.from(this.$refs.slogan as gsap.TweenTarget, {
-        opacity: 0,
-        translateX: '-200px',
+      });
+      timeLine.from('.white-section-item', {
+        y: '-250px',
         ease: 'back',
-        duration: 0.5,
-      }, '-=0.75');
+        opacity: 0,
+        stagger: 0.1,
+      }, '-=0.5');
+      timeLine.from(this.$refs['blue-section'] as gsap.TweenTarget, {
+        opacity: 0.001,
+        x: -100,
+        ease: 'power2',
+        duration: 0.75,
+      }, '-=0.55');
     },
     handleLoginButtonClick() {
       this.$router.push('/dashboard');
     },
   },
-  components: { CustomInput, CustomButton },
 });
 </script>
 
@@ -125,7 +119,6 @@ export default defineComponent({
     max-height: 700px;
     width: $loginBoxWidth;
     border-radius: $border-radius;
-    // box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
     z-index: 0;
     .white-section {
       position: relative;
