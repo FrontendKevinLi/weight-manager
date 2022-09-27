@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import BodyWeightingImg from '@/assets/bodyWeighting2.png';
+import BodyWeightingImg from '@/assets/bodyWeighting.png';
 import gsap from 'gsap';
 import CustomInput from '@/components/CustomInput.vue';
 
