@@ -7,7 +7,6 @@
         <CustomInput v-model:inputText="username" :placeholder="'Username'" />
         <CustomInput v-model:inputText="password" :placeholder="'Password'" />
         <div class="login-btn">Login</div>
-        <div class="password"></div>
       </div>
       <div class="blue-section">
         <img ref="picture" class="picture" :src="BodyWeightingImg" alt=""/>
