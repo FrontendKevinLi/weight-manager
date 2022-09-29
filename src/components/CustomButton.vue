@@ -69,7 +69,7 @@ export default defineComponent({
   padding-bottom: 10px;
   padding-left: 20px;
   width: fit-content;
-  color: map.get($map: colors.$black, $key: "50");
+  color: map.get($map: colors.$black, $key: "100");
   font-size: 20px;
 
   // &:hover {
