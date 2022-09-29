@@ -108,13 +108,13 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @use "sass:map";
-@import "@/style/colors.scss";
-@import "@/style/constants.scss";
-@import '@/style/animations.scss';
+@import "@/style/colors";
+@import "@/style/constants";
+@import "@/style/animations";
 
 @font-face {
-    font-family: 'Tomatoes';
-    src: url('@/fonts/Tomatoes-O8L8.ttf') format('truetype');
+  font-family: Tomatoes;
+  src: url("@/fonts/Tomatoes-O8L8.ttf") format("truetype");
 }
 
 @mixin decoration-box($color: white, $size: 200px, $border-radius: 10px) {
@@ -134,8 +134,9 @@ export default defineComponent({
   background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   background-blend-mode: screen;
   overflow: hidden;
+
   .login-box {
-    $loginBoxWidth: 75vw;
+    $login-box-width: 75vw;
 
     display: flex;
     justify-content: center;
@@ -143,9 +144,10 @@ export default defineComponent({
     flex-direction: row;
     height: 70vh;
     max-height: 700px;
-    width: $loginBoxWidth;
+    width: $login-box-width;
     border-radius: $border-radius;
     z-index: 0;
+
     .white-section {
       position: relative;
       display: flex;
@@ -153,67 +155,76 @@ export default defineComponent({
       align-items: center;
       flex-direction: column;
       row-gap: 50px;
-      width: calc($loginBoxWidth / 2.5);
+      width: calc($login-box-width / 2.5);
       min-width: 320px;
       height: 100%;
       padding: 20px;
       box-sizing: border-box;
       background-color: white;
-      box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
+      box-shadow: 0 0 20px -3px map.get($map: $blue, $key: "200");
       border-radius: 12px;
+
       .title {
         text-align: center;
-        font-family: 'Tomatoes', sans-serif;
+        font-family: Tomatoes, sans-serif;
         font-size: 34px;
         margin-right: 10px;
         margin-left: 10px;
       }
+
       .username-input {
         width: 80%;
         min-width: 260px;
       }
+
       .password-input {
         width: 80%;
         min-width: 260px;
       }
+
       .login-btn {
         width: fit-content;
         padding-left: 20px;
         padding-right: 20px;
         padding-top: 10px;
         padding-bottom: 10px;
-        color: map-get($map: $blue, $key: "50");
-        background: map-get($map: $blue, $key: "500");
+        color: map.get($map: $blue, $key: "50");
+        background: map.get($map: $blue, $key: "500");
         border-radius: $border-radius;
         cursor: pointer;
         font-size: 20px;
       }
     }
+
     .blue-section {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      width: calc($loginBoxWidth / 2);
-      background-color: map-get($map: $blue, $key: "700");
-      box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
+      width: calc($login-box-width / 2);
+      background-color: map.get($map: $blue, $key: "700");
+      box-shadow: 0 0 20px -3px map.get($map: $blue, $key: "200");
       border-radius: 12px;
       transform: scale(1.2);
       z-index: -1;
       row-gap: 30px;
       will-change: opacity;
+
       @media screen and (max-width: 1024px) {
         display: none;
       }
+
       .slogan {
         color: white;
         font-size: 26px;
       }
+
       .picture {
         width: 25vw;
         height: 25vw;
       }
     }
+
     .circle {
       position: absolute;
       left: 0;
@@ -222,18 +233,22 @@ export default defineComponent({
       height: 100px;
       width: 100px;
       border-radius: 50%;
-      border: 5px dotted map-get($map: $blue, $key: "200");
+      border: 5px dotted map.get($map: $blue, $key: "200");
       animation: spinning 5s linear infinite;
     }
+
     .bottom-left {
-      @include decoration-box(map-get($map: $blue, $key: "700"), 200px, $border-radius);
-      box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
+      @include decoration-box(map.get($map: $blue, $key: "700"), 200px, $border-radius);
+
+      box-shadow: 0 0 20px -3px map.get($map: $blue, $key: "200");
       left: -25px;
       bottom: -25px;
     }
+
     .top-right {
       @include decoration-box(white, 200px, $border-radius);
-      box-shadow: 0px 0px 20px -3px map-get($map: $blue, $key: "200");
+
+      box-shadow: 0 0 20px -3px map.get($map: $blue, $key: "200");
       right: -25px;
       top: -25px;
     }

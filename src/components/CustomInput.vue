@@ -65,25 +65,27 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @use "sass:map";
-
-@import "@/style/colors.scss";
+@import "@/style/colors";
 
 .custom-input-wrapper {
-  $underlineHeight: 2px;
+  $underline-height: 2px;
+
   position: relative;
   width: 500px;
   height: 35px;
-  border-bottom: $underlineHeight solid map-get($map: $black, $key: "500");
+  border-bottom: $underline-height solid map.get($map: $black, $key: "500");
+
   &::after {
-    content: '';
+    content: "";
     position: absolute;
-    bottom: -$underlineHeight;
+    bottom: -$underline-height;
     left: 0;
     width: 0;
-    height: $underlineHeight;
-    background-color: map-get($map: $blue, $key: "700");
+    height: $underline-height;
+    background-color: map.get($map: $blue, $key: "700");
     transition: width 0.15s ease-in-out;
   }
+
   .input {
     width: 100%;
     height: 100%;
@@ -96,27 +98,31 @@ export default defineComponent({
     border: none;
     box-sizing: border-box;
   }
+
   .placeholder {
     position: absolute;
     font-size: 24px;
-    color: map-get($map: $black, $key: "500");
+    color: map.get($map: $black, $key: "500");
     transform: translateY(0);
     top: 0;
     left: 10px;
-    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+    transition:
+      transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
       font-size 0.15s cubic-bezier(0.4, 0, 0.2, 1),
       color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: text;
     pointer-events: none;
   }
+
   &.focus {
     &::after {
       width: 100%;
     }
+
     .placeholder {
       transform: translate(0, -20px);
       font-size: 16px;
-      color: map-get($map: $blue, $key: "500");
+      color: map.get($map: $blue, $key: "500");
     }
   }
 }

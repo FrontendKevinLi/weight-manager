@@ -11,7 +11,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import '@/style/colors.scss';
+@import "@/style/colors";
+
 .dashboard-view {
   display: flex;
   gap: 20px;
@@ -19,10 +20,11 @@ export default defineComponent({
   background-blend-mode: screen;
   height: 100vh;
   overflow: hidden;
+
   .box {
     height: 100px;
     width: 100px;
-    background-color: map-get($map: $blue, $key: "200");
+    background-color: map.get($map: $blue, $key: "200");
   }
 }
 </style>
