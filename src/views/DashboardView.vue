@@ -1,15 +1,13 @@
 <template>
-  <div class="dashboard-view">
-  </div>
+  <div class="dashboard-view" />
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import gsap from 'gsap';
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'DashboardView',
-});
+})
 </script>
 
 <style lang="scss" scoped>

@@ -1,5 +1,5 @@
 <template>
-  <div :class="['custom-input-wrapper', (isInputFocused  || !isInputTextEmpty) && 'focus']">
+  <div :class="['custom-input-wrapper', (isInputFocused || !isInputTextEmpty) && 'focus']">
     <input
       id="input"
       class="input"
@@ -9,7 +9,7 @@
       @mousedown="setInputFocus(true)"
       @focus="setInputFocus(true)"
       @blur="setInputFocus(false)"
-    />
+    >
     <label
       for="input"
       :class="['placeholder']"
@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'CustomInput',
@@ -36,30 +36,31 @@ export default defineComponent({
       default: 'text',
     },
   },
+  emits: ['update:inputText'],
   data() {
     return {
       isInputFocused: false,
-    };
+    }
   },
   computed: {
     isInputTextEmpty() {
-      const isInputTextEmpty = this.inputText.length === 0;
-      return isInputTextEmpty;
+      const isInputTextEmpty = this.inputText.length === 0
+      return isInputTextEmpty
     },
   },
   methods: {
     setInputFocus(shouldFocus: boolean) {
-      this.isInputFocused = shouldFocus;
+      this.isInputFocused = shouldFocus
     },
     handleInputFocus() {
-      this.isInputFocused = true;
+      this.isInputFocused = true
     },
     handleInputChange(e: Event) {
-      const target = e.target as HTMLInputElement;
-      this.$emit('update:inputText', target.value);
+      const target = e.target as HTMLInputElement
+      this.$emit('update:inputText', target.value)
     },
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>

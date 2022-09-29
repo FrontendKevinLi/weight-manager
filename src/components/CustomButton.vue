@@ -1,10 +1,15 @@
 <template>
-  <div ref="custom-btn" class="custom-btn">{{ label }}</div>
+  <div
+    ref="custom-btn"
+    class="custom-btn"
+  >
+    {{ label }}
+  </div>
 </template>
 
 <script lang="ts">
-import gsap from 'gsap';
-import { defineComponent } from 'vue';
+import gsap from 'gsap'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'CustomButton',
@@ -16,28 +21,34 @@ export default defineComponent({
   },
   data() {
     return {
-    };
+    }
   },
   mounted() {
+    const a = true
+    if (a) {
+      console.log('asdf')
+    }
     (this.$refs['custom-btn'] as HTMLElement).addEventListener('mouseenter', () => {
       gsap.to(this.$refs['custom-btn'] as gsap.TweenTarget, {
         scale: 1.2,
         boxShadow: '0px 0px 20px -3px map-get($map: $blue, $key: "200")',
         duration: 0.1,
-      });
+      })
     });
     (this.$refs['custom-btn'] as HTMLElement).addEventListener('mouseleave', () => {
       gsap.to(this.$refs['custom-btn'] as gsap.TweenTarget, {
         scale: 1,
         boxShadow: '0px 0px 10px -3px map-get($map: $blue, $key: "200")',
         duration: 0.1,
-      });
-    });
+      })
+    })
   },
   methods: {
-
+    test(a: number) {
+      return a
+    },
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>

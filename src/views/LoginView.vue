@@ -1,10 +1,18 @@
 <template>
   <div class="login">
-    <div ref="login-box" class="login-box">
+    <div
+      ref="login-box"
+      class="login-box"
+    >
       <!-- <div ref="bottom-left" class="bottom-left"></div>
       <div ref="top-right" class="top-right"></div> -->
-      <div ref="white-section" class="white-section">
-        <div class="white-section-item title">Weight Manager</div>
+      <div
+        ref="white-section"
+        class="white-section"
+      >
+        <div class="white-section-item title">
+          Weight Manager
+        </div>
         <CustomInput
           v-model:inputText="username"
           :placeholder="'Username'"
@@ -16,11 +24,28 @@
           :type="'password'"
           class="white-section-item password-input"
         />
-        <CustomButton :label="'Login'" @click="handleLoginButtonClick" class="white-section-item" />
+        <CustomButton
+          :label="'Login'"
+          class="white-section-item"
+          @click="handleLoginButtonClick"
+        />
       </div>
-      <div ref="blue-section" class="blue-section">
-        <img ref="picture" class="picture" :src="BodyWeightingImg" alt=""/>
-        <div ref="slogan" class="slogan">Start Record Yourself Today!</div>
+      <div
+        ref="blue-section"
+        class="blue-section"
+      >
+        <img
+          ref="picture"
+          class="picture"
+          :src="BodyWeightingImg"
+          alt=""
+        >
+        <div
+          ref="slogan"
+          class="slogan"
+        >
+          Start Record Yourself Today!
+        </div>
         <!-- <a href="http://www.freepik.com">Designed by vectorjuice / Freepik</a> -->
       </div>
     </div>
@@ -28,31 +53,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import BodyWeightingImg from '@/assets/bodyWeighting.png';
-import gsap from 'gsap';
-import CustomInput from '@/components/CustomInput.vue';
-import CustomButton from '@/components/CustomButton.vue';
+import { defineComponent } from 'vue'
+import BodyWeightingImg from '@/assets/bodyWeighting.png'
+import gsap from 'gsap'
+import CustomInput from '@/components/CustomInput.vue'
+import CustomButton from '@/components/CustomButton.vue'
 
 export default defineComponent({
   name: 'LoginView',
+  components: {
+    CustomInput,
+    CustomButton,
+  },
   data() {
     return {
       username: '',
       password: '',
       BodyWeightingImg,
-    };
-  },
-  components: {
-    CustomInput,
-    CustomButton,
+    }
   },
   mounted() {
-    this.initAnimation();
+    this.initAnimation()
   },
   methods: {
     initAnimation() {
-      const timeLine = gsap.timeline();
+      const timeLine = gsap.timeline()
 
       timeLine.from(this.$refs['white-section'] as gsap.TweenTarget, {
         opacity: 0.001,
@@ -60,25 +85,25 @@ export default defineComponent({
         ease: 'power2',
         delay: 0.1,
         duration: 0.75,
-      });
+      })
       timeLine.from('.white-section-item', {
         y: '-250px',
         ease: 'back',
         opacity: 0,
         stagger: 0.1,
-      }, '-=0.5');
+      }, '-=0.5')
       timeLine.from(this.$refs['blue-section'] as gsap.TweenTarget, {
         opacity: 0.001,
         x: -100,
         ease: 'power2',
         duration: 0.75,
-      }, '-=0.55');
+      }, '-=0.55')
     },
     handleLoginButtonClick() {
-      this.$router.push('/dashboard');
+      this.$router.push('/dashboard')
     },
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>
