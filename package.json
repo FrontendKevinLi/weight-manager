@@ -6,7 +6,9 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "eslint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
+    "eslint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
+    "stylelint": "stylelint \"**/*.{scss,sass,vue}\"",
+    "stylefix": "stylelint \"**/*.{scss,sass,vue}\" --fix"
   },
   "dependencies": {
     "gsap": "^3.11.1",
