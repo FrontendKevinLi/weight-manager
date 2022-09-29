@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "eslint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src"
   },
   "dependencies": {
     "gsap": "^3.11.1",
@@ -24,9 +25,11 @@
     "@vue/eslint-config-airbnb": "^6.0.0",
     "@vue/eslint-config-typescript": "^9.1.0",
     "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-vue": "^8.0.3",
     "eslint-plugin-vuejs-accessibility": "^1.1.0",
+    "prettier": "2.7.1",
     "sass": "^1.32.7",
     "sass-loader": "^12.0.0",
     "typescript": "~4.5.5"
@@ -37,7 +40,8 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/vue3-essential",
+      "eslint:recommended",
+      "plugin:vue/vue3-recommended",
       "@vue/airbnb",
       "@vue/typescript/recommended"
     ],
@@ -52,27 +56,25 @@
       "vuejs-accessibility/label-has-for": [
         "error",
         {
-          "components": ["VLabel"],
-          "controlComponents": ["VInput"],
+          "components": [
+            "VLabel"
+          ],
+          "controlComponents": [
+            "VInput"
+          ],
           "required": {
-            "some": ["nesting", "id"]
-          },
-          "allowChildren": false
-        }
-      ],
-      "vuejs-accessibility/label-has-for": [
-        "error",
-        {
-          "components": ["VLabel"],
-          "controlComponents": ["VInput"],
-          "required": {
-            "some": ["nesting", "id"]
+            "some": [
+              "nesting",
+              "id"
+            ]
           },
           "allowChildren": false
         }
       ],
       "max-len": 0,
-      "vue/no-unused-components": 0
+      "vue/no-unused-components": 0,
+      "no-console": "off",
+      "semi": ["warn", "never"]
     }
   },
   "browserslist": [
