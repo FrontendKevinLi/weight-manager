@@ -65,7 +65,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @use "sass:map";
-@import "@/style/colors";
+@use "@/style/colors" as colors;
 
 .custom-input-wrapper {
   $underline-height: 2px;
@@ -73,7 +73,7 @@ export default defineComponent({
   position: relative;
   width: 500px;
   height: 35px;
-  border-bottom: $underline-height solid map.get($map: $black, $key: "500");
+  border-bottom: $underline-height solid map.get($map: colors.$black, $key: "500");
 
   &::after {
     content: "";
@@ -82,7 +82,7 @@ export default defineComponent({
     left: 0;
     width: 0;
     height: $underline-height;
-    background-color: map.get($map: $blue, $key: "700");
+    background-color: map.get($map: colors.$blue, $key: "700");
     transition: width 0.15s ease-in-out;
   }
 
@@ -102,7 +102,7 @@ export default defineComponent({
   .placeholder {
     position: absolute;
     font-size: 24px;
-    color: map.get($map: $black, $key: "500");
+    color: map.get($map: colors.$black, $key: "500");
     transform: translateY(0);
     top: 0;
     left: 10px;
@@ -122,7 +122,7 @@ export default defineComponent({
     .placeholder {
       transform: translate(0, -20px);
       font-size: 16px;
-      color: map.get($map: $blue, $key: "500");
+      color: map.get($map: colors.$blue, $key: "500");
     }
   }
 }

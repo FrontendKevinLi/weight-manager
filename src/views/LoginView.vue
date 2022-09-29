@@ -108,9 +108,9 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @use "sass:map";
-@import "@/style/colors";
-@import "@/style/constants";
-@import "@/style/animations";
+@use "@/style/colors" as colors;
+@use "@/style/constants" as constants;
+@use "@/style/animations";
 
 @font-face {
   font-family: Tomatoes;
@@ -122,7 +122,7 @@ export default defineComponent({
   width: $size;
   height: $size;
   background-color: $color;
-  border-radius: $border-radius;
+  border-radius: constants.$border-radius;
   z-index: -1;
 }
 
@@ -145,7 +145,7 @@ export default defineComponent({
     height: 70vh;
     max-height: 700px;
     width: $login-box-width;
-    border-radius: $border-radius;
+    border-radius: constants.$border-radius;
     z-index: 0;
 
     .white-section {
@@ -161,7 +161,7 @@ export default defineComponent({
       padding: 20px;
       box-sizing: border-box;
       background-color: white;
-      box-shadow: 0 0 20px -3px map.get($map: $blue, $key: "200");
+      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
       border-radius: 12px;
 
       .title {
@@ -188,9 +188,9 @@ export default defineComponent({
         padding-right: 20px;
         padding-top: 10px;
         padding-bottom: 10px;
-        color: map.get($map: $blue, $key: "50");
-        background: map.get($map: $blue, $key: "500");
-        border-radius: $border-radius;
+        color: map.get($map: colors.$blue, $key: "50");
+        background: map.get($map: colors.$blue, $key: "500");
+        border-radius: constants.$border-radius;
         cursor: pointer;
         font-size: 20px;
       }
@@ -202,8 +202,8 @@ export default defineComponent({
       justify-content: center;
       align-items: center;
       width: calc($login-box-width / 2);
-      background-color: map.get($map: $blue, $key: "700");
-      box-shadow: 0 0 20px -3px map.get($map: $blue, $key: "200");
+      background-color: map.get($map: colors.$blue, $key: "700");
+      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
       border-radius: 12px;
       transform: scale(1.2);
       z-index: -1;
@@ -233,22 +233,22 @@ export default defineComponent({
       height: 100px;
       width: 100px;
       border-radius: 50%;
-      border: 5px dotted map.get($map: $blue, $key: "200");
+      border: 5px dotted map.get($map: colors.$blue, $key: "200");
       animation: spinning 5s linear infinite;
     }
 
     .bottom-left {
-      @include decoration-box(map.get($map: $blue, $key: "700"), 200px, $border-radius);
+      @include decoration-box(map.get($map: colors.$blue, $key: "700"), 200px, constants.$border-radius);
 
-      box-shadow: 0 0 20px -3px map.get($map: $blue, $key: "200");
+      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
       left: -25px;
       bottom: -25px;
     }
 
     .top-right {
-      @include decoration-box(white, 200px, $border-radius);
+      @include decoration-box(white, 200px, constants.$border-radius);
 
-      box-shadow: 0 0 20px -3px map.get($map: $blue, $key: "200");
+      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
       right: -25px;
       top: -25px;
     }

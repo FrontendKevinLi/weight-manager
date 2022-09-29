@@ -11,7 +11,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@import "@/style/colors";
+@use "sass:map";
+@use "@/style/colors" as colors;
 
 .dashboard-view {
   display: flex;
@@ -24,7 +25,7 @@ export default defineComponent({
   .box {
     height: 100px;
     width: 100px;
-    background-color: map.get($map: $blue, $key: "200");
+    background-color: map.get($map: colors.$blue, $key: "200");
   }
 }
 </style>
