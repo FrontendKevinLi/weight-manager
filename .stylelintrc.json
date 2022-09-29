@@ -4,6 +4,7 @@
     "stylelint-config-recommended-vue/scss"
   ],
   "rules": {
-    "declaration-block-no-redundant-longhand-properties": null
+    "declaration-block-no-redundant-longhand-properties": null,
+    "scss/at-use-no-unnamespaced": true
   }
 }
