@@ -23,9 +23,9 @@ export default defineComponent({
   overflow: hidden;
 
   .box {
-    height: 100px;
-    width: 100px;
     background-color: map.get($map: colors.$blue, $key: "200");
+    width: 100px;
+    height: 100px;
   }
 }
 </style>

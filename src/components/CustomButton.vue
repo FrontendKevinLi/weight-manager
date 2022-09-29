@@ -57,20 +57,20 @@ export default defineComponent({
 @use "@/style/constants.scss" as constants;
 
 .custom-btn {
-  width: fit-content;
-  padding-left: 20px;
-  padding-right: 20px;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  color: map.get($map: colors.$blue, $key: "50");
-  background: map.get($map: colors.$blue, $key: "500");
   border-radius: constants.$border-radius;
-  cursor: pointer;
-  font-size: 20px;
 
   // transition: transform 0.1s ease-in-out, box-shadow 0.15s ease-in-out;
   // transition: transform 0.1s ease-in-out, box-shadow 0.15s ease-in-out;
   box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
+  background: map.get($map: colors.$blue, $key: "500");
+  cursor: pointer;
+  padding-top: 10px;
+  padding-right: 20px;
+  padding-bottom: 10px;
+  padding-left: 20px;
+  width: fit-content;
+  color: map.get($map: colors.$black, $key: "50");
+  font-size: 20px;
 
   // &:hover {
   //   transform: scale(1.2);

@@ -119,57 +119,57 @@ export default defineComponent({
 
 @mixin decoration-box($color: white, $size: 200px, $border-radius: 10px) {
   position: absolute;
+  z-index: -1;
+  border-radius: constants.$border-radius;
+  background-color: $color;
   width: $size;
   height: $size;
-  background-color: $color;
-  border-radius: constants.$border-radius;
-  z-index: -1;
 }
 
 .login {
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
+  justify-content: center;
   background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   background-blend-mode: screen;
+  height: 100vh;
   overflow: hidden;
 
   .login-box {
     $login-box-width: 75vw;
 
     display: flex;
-    justify-content: center;
     position: relative;
     flex-direction: row;
+    justify-content: center;
+    z-index: 0;
+    border-radius: constants.$border-radius;
+    width: $login-box-width;
     height: 70vh;
     max-height: 700px;
-    width: $login-box-width;
-    border-radius: constants.$border-radius;
-    z-index: 0;
 
     .white-section {
-      position: relative;
+      box-sizing: border-box;
       display: flex;
-      justify-content: center;
-      align-items: center;
+      position: relative;
       flex-direction: column;
       row-gap: 50px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
+      background-color: white;
+      padding: 20px;
       width: calc($login-box-width / 2.5);
       min-width: 320px;
       height: 100%;
-      padding: 20px;
-      box-sizing: border-box;
-      background-color: white;
-      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
-      border-radius: 12px;
 
       .title {
+        margin-right: 10px;
+        margin-left: 10px;
         text-align: center;
         font-family: Tomatoes, sans-serif;
         font-size: 34px;
-        margin-right: 10px;
-        margin-left: 10px;
       }
 
       .username-input {
@@ -183,15 +183,15 @@ export default defineComponent({
       }
 
       .login-btn {
-        width: fit-content;
-        padding-left: 20px;
-        padding-right: 20px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        color: map.get($map: colors.$blue, $key: "50");
-        background: map.get($map: colors.$blue, $key: "500");
         border-radius: constants.$border-radius;
+        background: map.get($map: colors.$blue, $key: "500");
         cursor: pointer;
+        padding-top: 10px;
+        padding-right: 20px;
+        padding-bottom: 10px;
+        padding-left: 20px;
+        width: fit-content;
+        color: map.get($map: colors.$blue, $key: "50");
         font-size: 20px;
       }
     }
@@ -199,20 +199,16 @@ export default defineComponent({
     .blue-section {
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      row-gap: 30px;
       align-items: center;
-      width: calc($login-box-width / 2);
-      background-color: map.get($map: colors.$blue, $key: "700");
-      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
-      border-radius: 12px;
+      justify-content: center;
       transform: scale(1.2);
       z-index: -1;
-      row-gap: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
+      background-color: map.get($map: colors.$blue, $key: "700");
+      width: calc($login-box-width / 2);
       will-change: opacity;
-
-      @media screen and (max-width: 1024px) {
-        display: none;
-      }
 
       .slogan {
         color: white;
@@ -223,34 +219,38 @@ export default defineComponent({
         width: 25vw;
         height: 25vw;
       }
+
+      @media screen and (max-width: 1024px) {
+        display: none;
+      }
     }
 
     .circle {
       position: absolute;
-      left: 0;
       top: calc(50% - 50px);
+      left: 0;
       z-index: -1;
-      height: 100px;
-      width: 100px;
-      border-radius: 50%;
       border: 5px dotted map.get($map: colors.$blue, $key: "200");
+      border-radius: 50%;
+      width: 100px;
+      height: 100px;
       animation: spinning 5s linear infinite;
     }
 
     .bottom-left {
       @include decoration-box(map.get($map: colors.$blue, $key: "700"), 200px, constants.$border-radius);
 
-      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
-      left: -25px;
       bottom: -25px;
+      left: -25px;
+      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
     }
 
     .top-right {
       @include decoration-box(white, 200px, constants.$border-radius);
 
-      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
-      right: -25px;
       top: -25px;
+      right: -25px;
+      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
     }
   }
 }

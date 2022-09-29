@@ -71,46 +71,46 @@ export default defineComponent({
   $underline-height: 2px;
 
   position: relative;
+  border-bottom: $underline-height solid map.get($map: colors.$black, $key: "500");
   width: 500px;
   height: 35px;
-  border-bottom: $underline-height solid map.get($map: colors.$black, $key: "500");
 
   &::after {
-    content: "";
     position: absolute;
     bottom: -$underline-height;
     left: 0;
+    transition: width 0.15s ease-in-out;
+    background-color: map.get($map: colors.$blue, $key: "700");
     width: 0;
     height: $underline-height;
-    background-color: map.get($map: colors.$blue, $key: "700");
-    transition: width 0.15s ease-in-out;
+    content: "";
   }
 
   .input {
-    width: 100%;
-    height: 100%;
+    box-sizing: border-box;
     outline: none;
-    font-size: 24px;
-    padding-left: 10px;
+    border: none;
+    background: transparent;
     padding-right: 10px;
     padding-bottom: 0;
-    background: transparent;
-    border: none;
-    box-sizing: border-box;
+    padding-left: 10px;
+    width: 100%;
+    height: 100%;
+    font-size: 24px;
   }
 
   .placeholder {
     position: absolute;
-    font-size: 24px;
-    color: map.get($map: colors.$black, $key: "500");
-    transform: translateY(0);
     top: 0;
     left: 10px;
+    transform: translateY(0);
     transition:
       transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
       font-size 0.15s cubic-bezier(0.4, 0, 0.2, 1),
       color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: text;
+    color: map.get($map: colors.$black, $key: "500");
+    font-size: 24px;
     pointer-events: none;
   }
 
@@ -121,8 +121,8 @@ export default defineComponent({
 
     .placeholder {
       transform: translate(0, -20px);
-      font-size: 16px;
       color: map.get($map: colors.$blue, $key: "500");
+      font-size: 16px;
     }
   }
 }
