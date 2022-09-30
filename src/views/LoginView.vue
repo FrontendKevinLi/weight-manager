@@ -73,10 +73,10 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.initAnimation()
+    this.initAnimations()
   },
   methods: {
-    initAnimation() {
+    initAnimations() {
       const timeLine = gsap.timeline()
 
       timeLine.from(this.$refs['white-section'] as gsap.TweenTarget, {
@@ -100,7 +100,15 @@ export default defineComponent({
       }, '-=0.55')
     },
     handleLoginButtonClick() {
-      this.$router.push('/dashboard')
+      const vm = this
+      gsap.to('.login', {
+        opacity: 0,
+        duration: 0.25,
+        ease: 'power2',
+        onComplete() {
+          vm.$router.push('/dashboard')
+        },
+      })
     },
   },
 })
