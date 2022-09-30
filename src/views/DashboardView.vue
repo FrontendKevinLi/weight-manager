@@ -1,6 +1,9 @@
 <template>
   <div class="dashboard-view">
     <div class="header">
+      <div class="product-name">
+        Weight Manager
+      </div>
       <div class="user-info">
         <InlineSvg
           :src="BellSvg"
@@ -13,19 +16,23 @@
         >
       </div>
     </div>
+    <div class="side-bar">
+      <div
+        v-for="sidebarItem in sidebarItems"
+        :key="sidebarItem.class"
+        :class="['side-bar-item', sidebarItem.class]"
+      >
+        <InlineSvg
+          :src="sidebarItem.icon"
+        />
+      </div>
+    </div>
     <div class="body">
-      <div class="side-bar">
-        <div
-          v-for="sidebarItem in sidebarItems"
-          :key="sidebarItem.class"
-          :class="['side-bar-item', sidebarItem.class]"
-        >
-          <InlineSvg
-            :src="sidebarItem.icon"
-          />
+      <div class="content">
+        <div class="info-cards">
+          <div class="info-card" />
         </div>
       </div>
-      <div class="content" />
     </div>
   </div>
 </template>
@@ -86,20 +93,74 @@ export default defineComponent({
     },
   },
   mounted() {
-    const timeline = gsap.timeline()
+    this.initListeners()
+    this.initAnimations()
+  },
+  methods: {
+    initAnimations() {
+      const timeline = gsap.timeline()
+      timeline.set('.dashboard-view', {
+        backgroundImage: 'linear-gradient(135deg, #fff 0%, #fff 100%)',
+      })
 
-    timeline.from('.side-bar-item', {
-      y: -150,
-      opacity: 0,
-      stagger: 0.15,
-      ease: 'back',
-    })
-    timeline.from('.user-info', {
-      x: -150,
-      opacity: 0,
-      ease: 'back',
-      duration: 0.5,
-    }, '-=0.45')
+      timeline.to('.dashboard-view', {
+        backgroundImage: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+        duration: 0.25,
+      })
+
+      timeline.from('.side-bar-item', {
+        y: -150,
+        opacity: 0,
+        stagger: 0.15,
+        ease: 'back',
+      }, '-=0.25')
+      timeline.from('.user-info', {
+        x: -150,
+        opacity: 0,
+        ease: 'back',
+        duration: 0.5,
+      }, '-=0.6')
+      timeline.from('.product-name', {
+        x: 150,
+        opacity: 0,
+        ease: 'back',
+        duration: 0.5,
+      }, '-=0.5')
+      timeline.from('.info-card', {
+        opacity: 0,
+        ease: 'power4',
+        stagger: 0.05,
+      }, '-=0.5')
+    },
+    initListeners() {
+      const sideBarItems = gsap.utils.toArray('.side-bar-item') as HTMLElement[]
+
+      sideBarItems.forEach((sideBarItem) => {
+        gsap.set(sideBarItem, {
+          transformOrigin: 'center',
+          fill: '#99b0d3',
+        })
+        sideBarItem.addEventListener('mouseenter', () => {
+          gsap.to(sideBarItem, {
+            // scale: 1.25,
+            width: 100,
+            height: 100,
+            duration: 0.15,
+            ease: 'power4',
+            fill: '#0050a4',
+          })
+        })
+        sideBarItem.addEventListener('mouseleave', () => {
+          gsap.to(sideBarItem, {
+            scale: 1.0,
+            width: 70,
+            height: 70,
+            duration: 0.15,
+            fill: '#99b0d3',
+          })
+        })
+      })
+    },
   },
 })
 </script>
@@ -111,22 +172,33 @@ export default defineComponent({
 
 .dashboard-view {
   box-sizing: border-box;
-  display: flex;
+  display: grid;
   flex-direction: column;
-  row-gap: 40px;
-  background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  background-blend-mode: screen;
+  grid-template-areas:
+    "sidebar header"
+    "sidebar body";
+  grid-template-rows: 70px 1fr;
+  grid-template-columns: 120px 1fr;
+  row-gap: 20px;
   padding-top: 20px;
   padding-right: 40px;
   padding-bottom: 20px;
-  padding-left: 40px;
   width: 100vw;
   height: 100vh;
 
   .header {
     display: flex;
-    justify-content: flex-end;
+    grid-area: header;
+    justify-content: space-between;
     width: 100%;
+
+    .product-name {
+      margin-right: 10px;
+      margin-left: 10px;
+      text-align: center;
+      font-family: Tomatoes, sans-serif;
+      font-size: 34px;
+    }
 
     .user-info {
       display: flex;
@@ -144,7 +216,7 @@ export default defineComponent({
       .notification {
         width: 25px;
         height: 25px;
-        fill: map.get(colors.$blue, "300");
+        fill: map.get(colors.$blue, "700");
       }
 
       .user-icon {
@@ -155,27 +227,51 @@ export default defineComponent({
     }
   }
 
+  .side-bar {
+    display: flex;
+    flex-direction: column;
+    grid-area: sidebar;
+    row-gap: 30px;
+    align-items: center;
+    width: 120px;
+
+    .side-bar-item {
+      box-sizing: border-box;
+      border-radius: constants.$border-radius;
+      box-shadow: constants.$card-shadow;
+      background-color: white;
+      cursor: pointer;
+      padding: 10px;
+      width: 70px;
+      height: 70px;
+
+      // fill: map.get(colors.$blue, "300");
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
   .body {
     display: flex;
-    height: 100%;
+    grid-area: body;
+    column-gap: 20px;
 
-    .side-bar {
-      display: flex;
-      flex-direction: column;
-      row-gap: 30px;
+    .content {
+      width: 100%;
 
-      .side-bar-item {
-        box-sizing: border-box;
-        border-radius: constants.$border-radius;
-        box-shadow: constants.$card-shadow;
-        background-color: white;
-        cursor: pointer;
-        padding: 10px;
-        width: 70px;
-        height: 70px;
-        fill: map.get(colors.$blue, "300");
+      .info-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 100%);
+        gap: 20px;
+        height: 100%;
 
-        svg {
+        .info-card {
+          border-radius: constants.$border-radius;
+          box-shadow: constants.$card-shadow;
+          background-color: white;
           width: 100%;
           height: 100%;
         }
