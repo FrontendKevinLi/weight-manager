@@ -87,6 +87,13 @@
       "semi": [
         "warn",
         "never"
+      ],
+      "@typescript-eslint/no-this-alias": [
+        "error",
+        {
+          "allowDestructuring": true,
+          "allowedNames": ["vm"]
+        }
       ]
     }
   },
