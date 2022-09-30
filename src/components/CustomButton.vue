@@ -58,9 +58,6 @@ export default defineComponent({
 
 .custom-btn {
   border-radius: constants.$border-radius;
-
-  // transition: transform 0.1s ease-in-out, box-shadow 0.15s ease-in-out;
-  // transition: transform 0.1s ease-in-out, box-shadow 0.15s ease-in-out;
   box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
   background: map.get($map: colors.$blue, $key: "500");
   cursor: pointer;
@@ -71,10 +68,5 @@ export default defineComponent({
   width: fit-content;
   color: map.get($map: colors.$black, $key: "100");
   font-size: 20px;
-
-  // &:hover {
-  //   transform: scale(1.2);
-  //   box-shadow: 0px 0px 30px -3px map.get($map: colors.$blue, $key: "200");
-  // }
 }
 </style>
