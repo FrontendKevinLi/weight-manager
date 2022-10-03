@@ -24,10 +24,6 @@ export default defineComponent({
     }
   },
   mounted() {
-    const a = true
-    if (a) {
-      console.log('asdf')
-    }
     (this.$refs['custom-btn'] as HTMLElement).addEventListener('mouseenter', () => {
       gsap.to(this.$refs['custom-btn'] as gsap.TweenTarget, {
         scale: 1.2,
