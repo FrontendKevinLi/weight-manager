@@ -9,6 +9,7 @@
       @mousedown="setInputFocus(true)"
       @focus="setInputFocus(true)"
       @blur="setInputFocus(false)"
+      @keyup.enter="handleKeyUpEnter"
     >
     <label
       for="input"
@@ -36,7 +37,7 @@ export default defineComponent({
       default: 'text',
     },
   },
-  emits: ['update:inputText'],
+  emits: ['update:inputText', 'keyupEnter'],
   data() {
     return {
       isInputFocused: false,
@@ -58,6 +59,9 @@ export default defineComponent({
     handleInputChange(e: Event) {
       const target = e.target as HTMLInputElement
       this.$emit('update:inputText', target.value)
+    },
+    handleKeyUpEnter() {
+      this.$emit('keyupEnter')
     },
   },
 })
