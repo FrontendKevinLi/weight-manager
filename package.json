@@ -5,10 +5,15 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "eslint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src",
+    "stylelint": "stylelint \"**/*.{scss,sass,vue}\"",
+    "stylefix": "stylelint \"**/*.{scss,sass,vue}\" --fix"
   },
   "dependencies": {
+    "gsap": "^3.11.1",
     "vue": "^3.2.13",
+    "vue-inline-svg": "^3.1.0",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"
   },
@@ -23,11 +28,20 @@
     "@vue/eslint-config-airbnb": "^6.0.0",
     "@vue/eslint-config-typescript": "^9.1.0",
     "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-vue": "^8.0.3",
     "eslint-plugin-vuejs-accessibility": "^1.1.0",
+    "postcss-html": "^1.5.0",
+    "prettier": "2.7.1",
     "sass": "^1.32.7",
     "sass-loader": "^12.0.0",
+    "stylelint": "^14.13.0",
+    "stylelint-config-concentric-order": "^5.1.0",
+    "stylelint-config-recommended-scss": "^7.0.0",
+    "stylelint-config-recommended-vue": "^1.4.0",
+    "stylelint-config-standard": "^28.0.0",
+    "stylelint-config-standard-scss": "^5.0.0",
     "typescript": "~4.5.5"
   },
   "eslintConfig": {
@@ -36,14 +50,52 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/vue3-essential",
+      "eslint:recommended",
+      "plugin:vue/vue3-recommended",
       "@vue/airbnb",
       "@vue/typescript/recommended"
     ],
     "parserOptions": {
       "ecmaVersion": 2020
     },
-    "rules": {}
+    "rules": {
+      "linebreak-style": [
+        "error",
+        "windows"
+      ],
+      "vuejs-accessibility/label-has-for": [
+        "error",
+        {
+          "components": [
+            "VLabel"
+          ],
+          "controlComponents": [
+            "VInput"
+          ],
+          "required": {
+            "some": [
+              "nesting",
+              "id"
+            ]
+          },
+          "allowChildren": false
+        }
+      ],
+      "max-len": 0,
+      "vue/no-unused-components": 0,
+      "no-console": "off",
+      "semi": [
+        "warn",
+        "never"
+      ],
+      "@typescript-eslint/no-this-alias": [
+        "error",
+        {
+          "allowDestructuring": true,
+          "allowedNames": ["vm"]
+        }
+      ]
+    }
   },
   "browserslist": [
     "> 1%",

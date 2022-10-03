@@ -1,0 +1,5 @@
+@use "sass:map";
+@use "@/style/colors.scss" as colors;
+
+$border-radius: 12px;
+$card-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "100");

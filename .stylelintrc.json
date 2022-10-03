@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-config-recommended-vue/scss",
+    "stylelint-config-concentric-order"
+  ],
+  "rules": {
+    "declaration-block-no-redundant-longhand-properties": null,
+    "scss/at-use-no-unnamespaced": true
+  }
+}
