@@ -1,33 +1,23 @@
 <template>
-  <div class="dashboard-view">
-    <CustomHeader />
-    <CustomSidebar />
-    <div class="body">
-      <div class="content">
-        <div class="info-cards">
-          <div class="info-card" />
-        </div>
+  <PageLayout>
+    <div class="dashboard-view">
+      <div class="info-cards">
+        <div class="info-card" />
       </div>
     </div>
-  </div>
+  </PageLayout>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import gsap from 'gsap'
-
-import CustomSidebar from '@/components/CustomSidebar.vue'
-import CustomHeader from '@/components/CustomHeader.vue'
+import PageLayout from '@/components/PageLayout.vue'
 
 export default defineComponent({
   name: 'DashboardView',
-  components: {
-    CustomSidebar,
-    CustomHeader,
-  },
+  components: { PageLayout },
   data() {
-    return {
-    }
+    return {}
   },
   mounted() {
     this.initAnimations()
@@ -35,14 +25,11 @@ export default defineComponent({
   methods: {
     initAnimations() {
       const timeline = gsap.timeline()
-      timeline.set('.dashboard-view', {
-        backgroundImage: 'linear-gradient(135deg, #fff 0%, #fff 100%)',
-      })
-
-      timeline.to('.dashboard-view', {
-        backgroundImage: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
-        duration: 0.25,
-      })
+      timeline.from('.info-card', {
+        opacity: 0,
+        ease: 'power4',
+        stagger: 0.05,
+      }, 0)
     },
   },
 })
@@ -63,79 +50,21 @@ export default defineComponent({
   grid-template-rows: 70px 1fr;
   grid-template-columns: 120px 1fr;
   row-gap: 20px;
-  padding-top: 20px;
-  padding-right: 40px;
-  padding-bottom: 20px;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
 
-  .custom-sidebar {
-    grid-area: sidebar;
-  }
+  .info-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 100%);
+    gap: 20px;
+    height: 100%;
 
-  .custom-header {
-    display: flex;
-    grid-area: header;
-    justify-content: space-between;
-    width: 100%;
-
-    .product-name {
-      margin-right: 10px;
-      margin-left: 10px;
-      text-align: center;
-      font-family: Tomatoes, sans-serif;
-      font-size: 34px;
-    }
-
-    .user-info {
-      display: flex;
-      column-gap: 20px;
-      align-items: center;
-      justify-content: center;
+    .info-card {
       border-radius: constants.$border-radius;
       box-shadow: constants.$card-shadow;
       background-color: white;
-      padding-top: 10px;
-      padding-right: 20px;
-      padding-bottom: 10px;
-      padding-left: 20px;
-
-      .notification {
-        width: 25px;
-        height: 25px;
-        fill: map.get(colors.$blue, "700");
-      }
-
-      .user-icon {
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-      }
-    }
-  }
-
-  .body {
-    display: flex;
-    grid-area: body;
-    column-gap: 20px;
-
-    .content {
       width: 100%;
-
-      .info-cards {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, 100%);
-        gap: 20px;
-        height: 100%;
-
-        .info-card {
-          border-radius: constants.$border-radius;
-          box-shadow: constants.$card-shadow;
-          background-color: white;
-          width: 100%;
-          height: 100%;
-        }
-      }
+      height: 100%;
     }
   }
 }
