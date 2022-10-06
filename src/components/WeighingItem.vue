@@ -70,8 +70,8 @@ export default defineComponent({
     justify-content: center;
     z-index: 1;
     border-radius: 50%;
-    box-shadow: 0 5px 10px 5px map.get($map: colors.$blue, $key: "100");
-    background: white;
+    box-shadow: 5px 5px 30px 5px map.get($map: colors.$blue, $key: "100");
+    background-color: map.get($map: colors.$blue, $key: "50");
     width: 300px;
     height: 300px;
 
