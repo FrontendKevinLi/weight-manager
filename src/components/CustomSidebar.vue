@@ -115,9 +115,14 @@ export default defineComponent({
 .custom-sidebar {
   display: flex;
   flex-direction: column;
-  row-gap: 30px;
+  row-gap: 20px;
   align-items: center;
   width: 120px;
+
+  .logo {
+    width: 70px;
+    height: 70px;
+  }
 
   .custom-sidebar-item {
     box-sizing: border-box;
