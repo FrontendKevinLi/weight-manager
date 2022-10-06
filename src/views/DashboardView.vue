@@ -105,26 +105,29 @@ export default defineComponent({
         opacity: 0,
         stagger: 0.15,
         ease: 'back',
-      }, '-=0.25')
+      }, 0)
       timeline.from('.user-info', {
         x: -150,
         opacity: 0,
         ease: 'back',
         duration: 0.5,
-      }, '-=0.6')
+      }, 0)
       timeline.from('.product-name', {
         x: 150,
         opacity: 0,
         ease: 'back',
         duration: 0.5,
-      }, '-=0.5')
+      }, 0)
       timeline.from('.info-card', {
         opacity: 0,
         ease: 'power4',
         stagger: 0.05,
-      }, '-=0.5')
+      }, 0)
     },
     initListeners() {
+      this.initSidebarItemsListeners()
+    },
+    initSidebarItemsListeners() {
       const sideBarItems = gsap.utils.toArray('.side-bar-item') as HTMLElement[]
 
       sideBarItems.forEach((sideBarItem) => {
