@@ -1,9 +1,7 @@
 <template>
   <PageLayout>
     <div class="dashboard-view">
-      <div class="info-cards">
-        <div class="info-card" />
-      </div>
+      <WeighingItem />
     </div>
   </PageLayout>
 </template>
@@ -12,10 +10,11 @@
 import { defineComponent } from 'vue'
 import gsap from 'gsap'
 import PageLayout from '@/components/PageLayout.vue'
+import WeighingItem from '@/components/WeighingItem.vue'
 
 export default defineComponent({
   name: 'DashboardView',
-  components: { PageLayout },
+  components: { PageLayout, WeighingItem },
   data() {
     return {}
   },
@@ -25,10 +24,9 @@ export default defineComponent({
   methods: {
     initAnimations() {
       const timeline = gsap.timeline()
-      timeline.from('.info-card', {
+      timeline.from('.weighing-item', {
         opacity: 0,
         ease: 'power4',
-        stagger: 0.05,
       }, 0)
     },
   },
@@ -41,31 +39,8 @@ export default defineComponent({
 @use "@/style/colors" as colors;
 
 .dashboard-view {
-  box-sizing: border-box;
-  display: grid;
-  flex-direction: column;
-  grid-template-areas:
-    "sidebar header"
-    "sidebar body";
-  grid-template-rows: 70px 1fr;
-  grid-template-columns: 120px 1fr;
-  row-gap: 20px;
-  width: 100%;
+  display: flex;
+  justify-content: center;
   height: 100%;
-
-  .info-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, 100%);
-    gap: 20px;
-    height: 100%;
-
-    .info-card {
-      border-radius: constants.$border-radius;
-      box-shadow: constants.$card-shadow;
-      background-color: white;
-      width: 100%;
-      height: 100%;
-    }
-  }
 }
 </style>
