@@ -1,7 +1,7 @@
 <template>
   <div class="custom-header">
-    <div class="product-name">
-      Weight Manager
+    <div class="page-name">
+      Dashboard
     </div>
     <div class="user-info">
       <InlineSvg
@@ -49,7 +49,7 @@ export default defineComponent({
         ease: 'back',
         duration: 0.5,
       }, 0)
-      timeline.from('.product-name', {
+      timeline.from('.page-name', {
         x: 150,
         opacity: 0,
         ease: 'back',
@@ -76,10 +76,11 @@ export default defineComponent({
   justify-content: space-between;
   width: 100%;
 
-  .product-name {
+  .page-name {
     margin-right: 10px;
     margin-left: 10px;
     text-align: center;
+    color: map.get(colors.$blue, "700");
     font-family: Tomatoes, sans-serif;
     font-size: 34px;
   }
