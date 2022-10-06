@@ -16,17 +16,7 @@
         >
       </div>
     </div>
-    <div class="side-bar">
-      <div
-        v-for="sidebarItem in sidebarItems"
-        :key="sidebarItem.class"
-        :class="['side-bar-item', sidebarItem.class]"
-      >
-        <InlineSvg
-          :src="sidebarItem.icon"
-        />
-      </div>
-    </div>
+    <CustomSidebar />
     <div class="body">
       <div class="content">
         <div class="info-cards">
@@ -48,6 +38,7 @@ import BellSvg from '@/assets/bell-regular.svg'
 import TableSvg from '@/assets/table-columns-solid.svg'
 import RecordSvg from '@/assets/clipboard-regular.svg'
 import ChartSvg from '@/assets/chart-simple-solid.svg'
+import CustomSidebar from '@/components/CustomSidebar.vue'
 
 type SidebarItem = {
   icon: string,
@@ -59,6 +50,7 @@ export default defineComponent({
   name: 'DashboardView',
   components: {
     InlineSvg,
+    CustomSidebar,
   },
   data() {
     return {
