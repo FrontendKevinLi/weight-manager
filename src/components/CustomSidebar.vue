@@ -8,7 +8,8 @@
         sidebarItem.className,
         sidebarItem.slideIn && 'slide-in',
         sidebarItem.background && 'card-view',
-        sidebarItem.clickable && 'clickable'
+        sidebarItem.clickable && 'clickable',
+        sidebarItem.path === currentRoute && 'active'
       ]"
     >
       <InlineSvg
@@ -23,11 +24,13 @@ import { defineComponent } from 'vue'
 import InlineSvg from 'vue-inline-svg'
 import gsap from 'gsap'
 
+import CustomSidebarItem from '@/types/CustomSidebarItem'
+
+import LogoSvg from '@/assets/logo/svg/logo-no-background.svg'
 import TableSvg from '@/assets/sidebar-icons/table-columns-solid.svg'
 import RecordSvg from '@/assets/sidebar-icons/clipboard-regular.svg'
 import ChartSvg from '@/assets/sidebar-icons/chart-simple-solid.svg'
-import LogoSvg from '@/assets/logo/svg/logo-no-background.svg'
-import CustomSidebarItem from '@/types/CustomSidebarItem'
+import SettingsSvg from '@/assets/sidebar-icons/gear-solid.svg'
 
 export default defineComponent({
   name: 'CustomSidebar',
@@ -40,6 +43,7 @@ export default defineComponent({
       RecordSvg,
       ChartSvg,
       LogoSvg,
+      SettingsSvg,
     }
   },
   computed: {
@@ -68,8 +72,17 @@ export default defineComponent({
           className: 'graphs',
           path: '/graphs',
         }),
+        new CustomSidebarItem({
+          icon: this.SettingsSvg,
+          className: 'settings',
+          path: '/settings',
+        }),
       ]
       return sidebarItems
+    },
+    currentRoute() {
+      const currentRoute = this.$router.currentRoute.value.fullPath
+      return currentRoute
     },
   },
   mounted() {
@@ -82,8 +95,15 @@ export default defineComponent({
       timeline.from('.custom-sidebar-item', {
         y: -150,
         opacity: 0,
-        stagger: 0.15,
+        stagger: 0.10,
         ease: 'back',
+      }, 0)
+      timeline.set('.custom-sidebar-item.active', {
+        scale: 1.2,
+        duration: 0.15,
+        ease: 'power4',
+        fill: '#0050a4',
+        marginBottom: 20,
       }, 0)
     },
     initListeners() {
@@ -104,6 +124,7 @@ export default defineComponent({
           })
         })
         sideBarItem.addEventListener('mouseleave', () => {
+          if (sideBarItem.classList.contains('active')) return
           gsap.to(sideBarItem, {
             scale: 1,
             duration: 0.15,
