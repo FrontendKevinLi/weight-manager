@@ -1,5 +1,9 @@
 <template>
   <div class="custom-sidebar">
+    <InlineSvg
+      class="logo"
+      :src="LogoSvg"
+    />
     <div
       v-for="sidebarItem in sidebarItems"
       :key="sidebarItem.class"
@@ -17,9 +21,10 @@ import { defineComponent } from 'vue'
 import InlineSvg from 'vue-inline-svg'
 import gsap from 'gsap'
 
-import TableSvg from '@/assets/table-columns-solid.svg'
-import RecordSvg from '@/assets/clipboard-regular.svg'
-import ChartSvg from '@/assets/chart-simple-solid.svg'
+import TableSvg from '@/assets/sidebar-icons/table-columns-solid.svg'
+import RecordSvg from '@/assets/sidebar-icons/clipboard-regular.svg'
+import ChartSvg from '@/assets/sidebar-icons/chart-simple-solid.svg'
+import LogoSvg from '@/assets/logo/svg/logo-no-background.svg'
 
 type SidebarItem = {
   icon: string,
@@ -37,6 +42,7 @@ export default defineComponent({
       TableSvg,
       RecordSvg,
       ChartSvg,
+      LogoSvg,
     }
   },
   computed: {
