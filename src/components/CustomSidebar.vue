@@ -1,13 +1,15 @@
 <template>
   <div class="custom-sidebar">
-    <InlineSvg
-      class="logo"
-      :src="LogoSvg"
-    />
     <div
       v-for="sidebarItem in sidebarItems"
-      :key="sidebarItem.class"
-      :class="['custom-sidebar-item', sidebarItem.class]"
+      :key="sidebarItem.className"
+      :class="[
+        'custom-sidebar-item',
+        sidebarItem.className,
+        sidebarItem.slideIn && 'slide-in',
+        sidebarItem.background && 'card-view',
+        sidebarItem.clickable && 'clickable'
+      ]"
     >
       <InlineSvg
         :src="sidebarItem.icon"
@@ -25,12 +27,7 @@ import TableSvg from '@/assets/sidebar-icons/table-columns-solid.svg'
 import RecordSvg from '@/assets/sidebar-icons/clipboard-regular.svg'
 import ChartSvg from '@/assets/sidebar-icons/chart-simple-solid.svg'
 import LogoSvg from '@/assets/logo/svg/logo-no-background.svg'
-
-type SidebarItem = {
-  icon: string,
-  class: string,
-  path: string
-}
+import CustomSidebarItem from '@/types/CustomSidebarItem'
 
 export default defineComponent({
   name: 'CustomSidebar',
@@ -47,22 +44,30 @@ export default defineComponent({
   },
   computed: {
     sidebarItems() {
-      const sidebarItems: SidebarItem[] = [
-        {
+      const sidebarItems: CustomSidebarItem[] = [
+        new CustomSidebarItem({
+          icon: this.LogoSvg,
+          className: 'logo',
+          path: '',
+          slideIn: false,
+          background: false,
+          clickable: false,
+        }),
+        new CustomSidebarItem({
           icon: this.TableSvg,
-          class: 'dashboard',
+          className: 'dashboard',
           path: '/dashboard',
-        },
-        {
+        }),
+        new CustomSidebarItem({
           icon: this.RecordSvg,
-          class: 'records',
+          className: 'records',
           path: '/records',
-        },
-        {
+        }),
+        new CustomSidebarItem({
           icon: this.ChartSvg,
-          class: 'graphs',
+          className: 'graphs',
           path: '/graphs',
-        },
+        }),
       ]
       return sidebarItems
     },
@@ -82,7 +87,7 @@ export default defineComponent({
       }, 0)
     },
     initListeners() {
-      const sideBarItems = gsap.utils.toArray('.custom-sidebar-item') as HTMLElement[]
+      const sideBarItems = gsap.utils.toArray('.custom-sidebar-item.slide-in') as HTMLElement[]
 
       sideBarItems.forEach((sideBarItem) => {
         gsap.set(sideBarItem, {
@@ -132,13 +137,23 @@ export default defineComponent({
 
   .custom-sidebar-item {
     box-sizing: border-box;
-    border-radius: constants.$border-radius;
-    box-shadow: constants.$card-shadow;
-    background-color: white;
-    cursor: pointer;
     padding: 10px;
     width: 70px;
     height: 70px;
+
+    &.card-view {
+      border-radius: constants.$border-radius;
+      box-shadow: constants.$card-shadow;
+      background-color: white;
+    }
+
+    &.clickable {
+      cursor: pointer;
+    }
+
+    &.logo {
+      padding: 0;
+    }
 
     svg {
       width: 100%;
