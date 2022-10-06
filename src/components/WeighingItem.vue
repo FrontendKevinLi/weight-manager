@@ -104,15 +104,17 @@ export default defineComponent({
     height: 100%;
 
     .pointer {
+      $circle-size: 30px;
+
       position: absolute;
       top: 50%;
-      left: 0;
+      left: -($circle-size / 2);
       transform: translateY(-50%);
       z-index: 1;
       border-radius: 50%;
       background-color: white;
-      width: 30px;
-      height: 30px;
+      width: $circle-size;
+      height: $circle-size;
       filter: drop-shadow(0 0 10px map.get($map: colors.$blue, $key: "200"));
 
       .triangle-mask {
