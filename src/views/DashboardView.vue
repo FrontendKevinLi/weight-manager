@@ -85,7 +85,6 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.initListeners()
     this.initAnimations()
   },
   methods: {
@@ -123,38 +122,6 @@ export default defineComponent({
         ease: 'power4',
         stagger: 0.05,
       }, 0)
-    },
-    initListeners() {
-      this.initSidebarItemsListeners()
-    },
-    initSidebarItemsListeners() {
-      const sideBarItems = gsap.utils.toArray('.side-bar-item') as HTMLElement[]
-
-      sideBarItems.forEach((sideBarItem) => {
-        gsap.set(sideBarItem, {
-          transformOrigin: 'center',
-          fill: '#99b0d3',
-        })
-        sideBarItem.addEventListener('mouseenter', () => {
-          gsap.to(sideBarItem, {
-            // scale: 1.25,
-            width: 100,
-            height: 100,
-            duration: 0.15,
-            ease: 'power4',
-            fill: '#0050a4',
-          })
-        })
-        sideBarItem.addEventListener('mouseleave', () => {
-          gsap.to(sideBarItem, {
-            scale: 1.0,
-            width: 70,
-            height: 70,
-            duration: 0.15,
-            fill: '#99b0d3',
-          })
-        })
-      })
     },
   },
 })
@@ -218,33 +185,6 @@ export default defineComponent({
         border-radius: 50%;
         width: 50px;
         height: 50px;
-      }
-    }
-  }
-
-  .side-bar {
-    display: flex;
-    flex-direction: column;
-    grid-area: sidebar;
-    row-gap: 30px;
-    align-items: center;
-    width: 120px;
-
-    .side-bar-item {
-      box-sizing: border-box;
-      border-radius: constants.$border-radius;
-      box-shadow: constants.$card-shadow;
-      background-color: white;
-      cursor: pointer;
-      padding: 10px;
-      width: 70px;
-      height: 70px;
-
-      // fill: map.get(colors.$blue, "300");
-
-      svg {
-        width: 100%;
-        height: 100%;
       }
     }
   }
