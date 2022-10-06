@@ -55,11 +55,6 @@ export default defineComponent({
         ease: 'back',
         duration: 0.5,
       }, 0)
-      timeline.from('.info-card', {
-        opacity: 0,
-        ease: 'power4',
-        stagger: 0.05,
-      }, 0)
     },
   },
 })

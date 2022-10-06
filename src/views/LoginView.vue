@@ -39,12 +39,6 @@
           :src="BodyWeightingImg"
           alt=""
         >
-        <!-- <div
-          ref="slogan"
-          class="slogan"
-        >
-          Start Record Yourself Today!
-        </div> -->
         <!-- <a href="http://www.freepik.com">Designed by vectorjuice / Freepik</a> -->
       </div>
     </div>
