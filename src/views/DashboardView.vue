@@ -1,21 +1,6 @@
 <template>
   <div class="dashboard-view">
-    <div class="header">
-      <div class="product-name">
-        Weight Manager
-      </div>
-      <div class="user-info">
-        <InlineSvg
-          :src="BellSvg"
-          class="notification"
-        />
-        <img
-          :src="ProfilePng"
-          class="user-icon"
-          alt="icon"
-        >
-      </div>
-    </div>
+    <CustomHeader />
     <CustomSidebar />
     <div class="body">
       <div class="content">
@@ -29,7 +14,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import InlineSvg from 'vue-inline-svg'
 import gsap from 'gsap'
 
 import UserSvg from '@/assets/user-regular.svg'
@@ -39,6 +23,7 @@ import TableSvg from '@/assets/table-columns-solid.svg'
 import RecordSvg from '@/assets/clipboard-regular.svg'
 import ChartSvg from '@/assets/chart-simple-solid.svg'
 import CustomSidebar from '@/components/CustomSidebar.vue'
+import CustomHeader from '@/components/CustomHeader.vue'
 
 type SidebarItem = {
   icon: string,
@@ -49,8 +34,8 @@ type SidebarItem = {
 export default defineComponent({
   name: 'DashboardView',
   components: {
-    InlineSvg,
     CustomSidebar,
+    CustomHeader,
   },
   data() {
     return {
@@ -98,30 +83,6 @@ export default defineComponent({
         backgroundImage: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
         duration: 0.25,
       })
-
-      timeline.from('.side-bar-item', {
-        y: -150,
-        opacity: 0,
-        stagger: 0.15,
-        ease: 'back',
-      }, 0)
-      timeline.from('.user-info', {
-        x: -150,
-        opacity: 0,
-        ease: 'back',
-        duration: 0.5,
-      }, 0)
-      timeline.from('.product-name', {
-        x: 150,
-        opacity: 0,
-        ease: 'back',
-        duration: 0.5,
-      }, 0)
-      timeline.from('.info-card', {
-        opacity: 0,
-        ease: 'power4',
-        stagger: 0.05,
-      }, 0)
     },
   },
 })
@@ -148,7 +109,11 @@ export default defineComponent({
   width: 100vw;
   height: 100vh;
 
-  .header {
+  .custom-sidebar {
+    grid-area: sidebar;
+  }
+
+  .custom-header {
     display: flex;
     grid-area: header;
     justify-content: space-between;
