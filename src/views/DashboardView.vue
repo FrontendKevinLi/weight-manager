@@ -50,7 +50,7 @@ import RecordSvg from '@/assets/clipboard-regular.svg'
 import ChartSvg from '@/assets/chart-simple-solid.svg'
 
 type SidebarItem = {
-  icon: any,
+  icon: string,
   class: string,
   path: string
 }
