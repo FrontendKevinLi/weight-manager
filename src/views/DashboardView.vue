@@ -16,9 +16,6 @@
 import { defineComponent } from 'vue'
 import gsap from 'gsap'
 
-import UserSvg from '@/assets/user-regular.svg'
-import ProfilePng from '@/assets/profile.png'
-import BellSvg from '@/assets/bell-regular.svg'
 import CustomSidebar from '@/components/CustomSidebar.vue'
 import CustomHeader from '@/components/CustomHeader.vue'
 
@@ -30,9 +27,6 @@ export default defineComponent({
   },
   data() {
     return {
-      UserSvg,
-      ProfilePng,
-      BellSvg,
     }
   },
   mounted() {

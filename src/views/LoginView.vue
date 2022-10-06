@@ -54,7 +54,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import BodyWeightingImg from '@/assets/bodyWeighting.png'
+import BodyWeightingImg from '@/assets/login-page-pictures/bodyWeighting.png'
 import gsap from 'gsap'
 import CustomInput from '@/components/CustomInput.vue'
 import CustomButton from '@/components/CustomButton.vue'

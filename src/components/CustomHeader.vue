@@ -22,9 +22,8 @@ import { defineComponent } from 'vue'
 import InlineSvg from 'vue-inline-svg'
 import gsap from 'gsap'
 
-import UserSvg from '@/assets/user-regular.svg'
-import ProfilePng from '@/assets/profile.png'
-import BellSvg from '@/assets/bell-regular.svg'
+import ProfilePng from '@/assets/header-icons/profile.png'
+import BellSvg from '@/assets/header-icons/bell-regular.svg'
 
 export default defineComponent({
   name: 'DashboardView',
@@ -33,7 +32,6 @@ export default defineComponent({
   },
   data() {
     return {
-      UserSvg,
       ProfilePng,
       BellSvg,
     }
