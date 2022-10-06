@@ -19,17 +19,8 @@ import gsap from 'gsap'
 import UserSvg from '@/assets/user-regular.svg'
 import ProfilePng from '@/assets/profile.png'
 import BellSvg from '@/assets/bell-regular.svg'
-import TableSvg from '@/assets/table-columns-solid.svg'
-import RecordSvg from '@/assets/clipboard-regular.svg'
-import ChartSvg from '@/assets/chart-simple-solid.svg'
 import CustomSidebar from '@/components/CustomSidebar.vue'
 import CustomHeader from '@/components/CustomHeader.vue'
-
-type SidebarItem = {
-  icon: string,
-  class: string,
-  path: string
-}
 
 export default defineComponent({
   name: 'DashboardView',
@@ -42,32 +33,7 @@ export default defineComponent({
       UserSvg,
       ProfilePng,
       BellSvg,
-      TableSvg,
-      RecordSvg,
-      ChartSvg,
     }
-  },
-  computed: {
-    sidebarItems() {
-      const sidebarItems: SidebarItem[] = [
-        {
-          icon: this.TableSvg,
-          class: 'dashboard',
-          path: '/dashboard',
-        },
-        {
-          icon: this.RecordSvg,
-          class: 'records',
-          path: '/records',
-        },
-        {
-          icon: this.ChartSvg,
-          class: 'graphs',
-          path: '/graphs',
-        },
-      ]
-      return sidebarItems
-    },
   },
   mounted() {
     this.initAnimations()
