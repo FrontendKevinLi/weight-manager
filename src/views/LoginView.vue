@@ -4,15 +4,14 @@
       ref="login-box"
       class="login-box"
     >
-      <!-- <div ref="bottom-left" class="bottom-left"></div>
-      <div ref="top-right" class="top-right"></div> -->
       <div
         ref="white-section"
         class="white-section"
       >
-        <div class="white-section-item title">
-          Weight Manager
-        </div>
+        <InlineSvg
+          class="logo"
+          :src="LogoFullSvg"
+        />
         <CustomInput
           v-model:inputText="username"
           :placeholder="'Username'"
@@ -40,12 +39,12 @@
           :src="BodyWeightingImg"
           alt=""
         >
-        <div
+        <!-- <div
           ref="slogan"
           class="slogan"
         >
           Start Record Yourself Today!
-        </div>
+        </div> -->
         <!-- <a href="http://www.freepik.com">Designed by vectorjuice / Freepik</a> -->
       </div>
     </div>
@@ -54,22 +53,28 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import BodyWeightingImg from '@/assets/login-page-pictures/bodyWeighting.png'
 import gsap from 'gsap'
+import InlineSvg from 'vue-inline-svg'
+
 import CustomInput from '@/components/CustomInput.vue'
 import CustomButton from '@/components/CustomButton.vue'
+
+import BodyWeightingImg from '@/assets/login-page-pictures/bodyWeighting.png'
+import LogoFullSvg from '@/assets/logo-full/svg/logo-no-background.svg'
 
 export default defineComponent({
   name: 'LoginView',
   components: {
     CustomInput,
     CustomButton,
+    InlineSvg,
   },
   data() {
     return {
       username: '',
       password: '',
       BodyWeightingImg,
+      LogoFullSvg,
     }
   },
   mounted() {
@@ -172,12 +177,9 @@ export default defineComponent({
       min-width: 320px;
       height: 100%;
 
-      .title {
-        margin-right: 10px;
-        margin-left: 10px;
-        text-align: center;
-        font-family: Tomatoes, sans-serif;
-        font-size: 34px;
+      .logo {
+        width: 300px;
+        height: 300px;
       }
 
       .username-input {
