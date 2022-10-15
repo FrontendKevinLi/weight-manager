@@ -2,7 +2,7 @@
   <div class="weighing-item">
     <div class="circle-inside">
       <div class="weighing-number">
-        50 KG
+        50
       </div>
     </div>
     <div class="circle-outside">
@@ -56,6 +56,7 @@ export default defineComponent({
   display: grid;
   position: relative;
   place-items: center;
+  margin: 20px;
   padding: 20px;
   width: fit-content;
   height: fit-content;
@@ -70,33 +71,48 @@ export default defineComponent({
     justify-content: center;
     z-index: 1;
     border-radius: 50%;
-    box-shadow: 5px 5px 30px 5px map.get($map: colors.$blue, $key: "100");
+    box-shadow: 0 15px 35px -20px map.get($map: colors.$blue, $key: "300");
     background-color: map.get($map: colors.$blue, $key: "50");
-    width: 300px;
-    height: 300px;
+    width: 325px;
+    height: 325px;
 
     .weighing-number {
-      color: map.get($map: colors.$blue, $key: "500");
-      font-size: 56px;
+      color: map.get($map: colors.$blue, $key: "900");
+      font-family: sans-serif;
+      font-size: 72px;
     }
   }
 
   .circle-outside {
+    position: relative;
     z-index: 0;
     border-radius: 50%;
-    box-shadow: 0 20px 60px 5px map.get($map: colors.$blue, $key: "200");
+
+    // box-shadow: 0 20px 40px -10px map.get($map: colors.$blue, $key: "50");
     background-color: map.get($map: colors.$blue, $key: "100");
     width: 400px;
     height: 400px;
-    overflow: hidden;
-  }
 
-  .triangle-mask {
-    z-index: 0;
-    border-top: 200px solid transparent;
-    border-right: 200px solid transparent;
-    border-bottom: 200px solid map.get($map: colors.$black, $key: "200");
-    border-left: 200px solid transparent;
+    &::before {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      box-shadow: 0 20px 115px -10px map.get($map: colors.$blue, $key: "300");
+      width: 325px;
+      height: 325px;
+      content: "";
+    }
+
+    // overflow: hidden;
+    .triangle-mask {
+      z-index: 0;
+      border-top: 200px solid transparent;
+      border-right: 200px solid transparent;
+      border-bottom: 200px solid map.get($map: colors.$blue, $key: "50");
+      border-left: 200px solid transparent;
+    }
   }
 
   .pointer-container {
@@ -115,7 +131,20 @@ export default defineComponent({
       background-color: white;
       width: $circle-size;
       height: $circle-size;
-      filter: drop-shadow(0 0 10px map.get($map: colors.$blue, $key: "200"));
+      filter: drop-shadow(0 0 5px map.get($map: colors.$blue, $key: "200"));
+
+      &::before {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+        border-radius: 50%;
+        background-color: map.get($map: colors.$blue, $key: "500");
+        width: 20%;
+        height: 20%;
+        content: "";
+      }
 
       .triangle-mask {
         position: absolute;
