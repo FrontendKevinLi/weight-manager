@@ -32,11 +32,12 @@ export default defineComponent({
     initAnimations() {
       const timeline = gsap.timeline()
       timeline.set('.page-layout', {
-        backgroundImage: 'linear-gradient(135deg, #fff 0%, #fff 100%)',
+        backgroundColor: '#e8ecf3',
+
       })
 
       timeline.to('.page-layout', {
-        backgroundImage: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)',
+        backgroundColor: '#e8ecf3',
         duration: 0.25,
       })
     },

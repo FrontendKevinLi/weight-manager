@@ -100,7 +100,7 @@ export default defineComponent({
     },
     handleLoginButtonClick() {
       const vm = this
-      gsap.to('.login', {
+      gsap.to('.login-box', {
         opacity: 0,
         duration: 0.25,
         ease: 'power2',
@@ -137,7 +137,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background-color: #e8ecf3;
   background-blend-mode: screen;
   height: 100vh;
   overflow: hidden;
@@ -210,7 +210,7 @@ export default defineComponent({
       z-index: -1;
       border-radius: 12px;
       box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
-      background-color: map.get($map: colors.$blue, $key: "700");
+      background-color: map.get($map: colors.$blue, $key: "500");
       width: calc($login-box-width / 2);
       will-change: opacity;
 
