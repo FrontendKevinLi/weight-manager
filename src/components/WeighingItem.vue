@@ -116,7 +116,8 @@ export default defineComponent({
       }
 
       .unit {
-        color: map.get(colors.$blue, "700");
+        color: map.get(colors.$blue, "900");
+        font-family: sans-serif;
         font-size: 36px;
       }
     }
