@@ -13,7 +13,13 @@
         <div class="triangle-mask" />
       </div>
     </div>
-    <!-- <div v-for="i in " class="indicator"></div> -->
+    <div class="indicators">
+      <div
+        v-for="i in 19"
+        :key="i"
+        :class="['indicator',`indicator-${i}`]"
+      />
+    </div>
   </div>
 </template>
 
@@ -28,7 +34,7 @@ export default defineComponent({
       weight: {
         displayValue: 0,
         tweenValue: 0,
-        value: 150,
+        value: 58.7,
       },
     }
   },
@@ -57,7 +63,7 @@ export default defineComponent({
         tweenValue: this.weight.value,
         ease: Back.easeOut,
         onUpdate: () => {
-          this.weight.displayValue = Math.ceil(this.weight.tweenValue)
+          this.weight.displayValue = parseFloat(this.weight.tweenValue.toFixed(1))
         },
       }, 0)
     },
@@ -135,6 +141,8 @@ export default defineComponent({
   }
 
   .pointer-container {
+    position: relative;
+    z-index: 2;
     width: 100%;
     height: 100%;
 
@@ -173,6 +181,45 @@ export default defineComponent({
         border-right: 40px solid white;
         border-bottom: 15px solid transparent;
         border-left: 15px solid transparent;
+      }
+    }
+  }
+
+  .indicators {
+    position: relative;
+    z-index: 1;
+    width: 125%;
+    height: 125%;
+
+    .indicator {
+      @for $i from 1 through 19 {
+        &.indicator {
+          &-#{$i} {
+            position: absolute;
+            left: 0;
+            transform: rotate(calc((#{$i} - 1) * 15deg - 45deg));
+            z-index: 0;
+            width: 100%;
+            height: 100%;
+            translate: 0 0;
+
+            &::before {
+              position: absolute;
+              top: 50%;
+              left: 0;
+              transform: translateY(-50%);
+              background: map.get(colors.$blue, "200");
+              width: 12px;
+              height: 1px;
+              content: "";
+            }
+          }
+        }
+      }
+
+      &:is(:first-child, :last-child, :nth-child(3n + 4))::before {
+        background: map.get(colors.$blue, "900");
+        width: 20px;
       }
     }
   }
