@@ -1,9 +1,12 @@
 <template>
   <div class="weighing-item">
     <div class="circle-inside">
-      <div class="weighing-number">
-        {{ weight.displayValue }}
-      </div>
+      <span class="weighing-text">
+        <span class="number">
+          {{ weight.displayValue }}
+        </span>
+        <span class="unit">KG</span>
+      </span>
     </div>
     <div class="circle-outside">
       <div class="triangle-mask" />
@@ -32,9 +35,9 @@ export default defineComponent({
   data() {
     return {
       weight: {
-        displayValue: 0,
+        displayValue: '',
         tweenValue: 0,
-        value: 58.7,
+        value: 67.8,
       },
     }
   },
@@ -63,7 +66,7 @@ export default defineComponent({
         tweenValue: this.weight.value,
         ease: Back.easeOut,
         onUpdate: () => {
-          this.weight.displayValue = parseFloat(this.weight.tweenValue.toFixed(1))
+          this.weight.displayValue = this.weight.tweenValue.toFixed(1)
         },
       }, 0)
     },
@@ -101,10 +104,21 @@ export default defineComponent({
     width: 325px;
     height: 325px;
 
-    .weighing-number {
-      color: map.get($map: colors.$blue, $key: "900");
-      font-family: sans-serif;
-      font-size: 72px;
+    .weighing-text {
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+
+      .number {
+        color: map.get($map: colors.$blue, $key: "900");
+        font-family: sans-serif;
+        font-size: 72px;
+      }
+
+      .unit {
+        color: map.get(colors.$blue, "700");
+        font-size: 36px;
+      }
     }
   }
 
