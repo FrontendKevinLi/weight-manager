@@ -2,7 +2,7 @@
   <div class="weighing-item">
     <div class="circle-inside">
       <div class="weighing-number">
-        50
+        {{ weight.displayValue }}
       </div>
     </div>
     <div class="circle-outside">
@@ -13,15 +13,25 @@
         <div class="triangle-mask" />
       </div>
     </div>
+    <!-- <div v-for="i in " class="indicator"></div> -->
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import gsap from 'gsap'
+import gsap, { Back } from 'gsap'
 
 export default defineComponent({
   name: 'WeighingItem',
+  data() {
+    return {
+      weight: {
+        displayValue: 0,
+        tweenValue: 0,
+        value: 150,
+      },
+    }
+  },
   mounted() {
     this.initAnimation()
   },
@@ -31,16 +41,25 @@ export default defineComponent({
       const initRotateDeg = 315
       const maxRotateDeg = 360 - 90
       const maxKG = 200
-      const currentKG = 50
+      const currentKG = this.weight.value
       timeline.set('.pointer-container', {
         rotate: initRotateDeg,
       })
 
       timeline.to('.pointer-container', {
         rotate: initRotateDeg + (maxRotateDeg / maxKG) * currentKG,
-        ease: 'back',
-        duration: 0.75,
+        ease: Back.easeOut,
+        duration: 0.5,
       })
+
+      timeline.to(this.weight, {
+        duration: 0.5,
+        tweenValue: this.weight.value,
+        ease: Back.easeOut,
+        onUpdate: () => {
+          this.weight.displayValue = Math.ceil(this.weight.tweenValue)
+        },
+      }, 0)
     },
   },
 })
