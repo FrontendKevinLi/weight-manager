@@ -4,15 +4,14 @@
       ref="login-box"
       class="login-box"
     >
-      <!-- <div ref="bottom-left" class="bottom-left"></div>
-      <div ref="top-right" class="top-right"></div> -->
       <div
         ref="white-section"
         class="white-section"
       >
-        <div class="white-section-item title">
-          Weight Manager
-        </div>
+        <InlineSvg
+          class="logo"
+          :src="LogoFullSvg"
+        />
         <CustomInput
           v-model:inputText="username"
           :placeholder="'Username'"
@@ -40,12 +39,6 @@
           :src="BodyWeightingImg"
           alt=""
         >
-        <div
-          ref="slogan"
-          class="slogan"
-        >
-          Start Record Yourself Today!
-        </div>
         <!-- <a href="http://www.freepik.com">Designed by vectorjuice / Freepik</a> -->
       </div>
     </div>
@@ -54,22 +47,28 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import BodyWeightingImg from '@/assets/bodyWeighting.png'
 import gsap from 'gsap'
+import InlineSvg from 'vue-inline-svg'
+
 import CustomInput from '@/components/CustomInput.vue'
 import CustomButton from '@/components/CustomButton.vue'
+
+import BodyWeightingImg from '@/assets/login-page-pictures/bodyWeighting.png'
+import LogoFullSvg from '@/assets/logo-full/svg/logo-no-background.svg'
 
 export default defineComponent({
   name: 'LoginView',
   components: {
     CustomInput,
     CustomButton,
+    InlineSvg,
   },
   data() {
     return {
       username: '',
       password: '',
       BodyWeightingImg,
+      LogoFullSvg,
     }
   },
   mounted() {
@@ -101,7 +100,7 @@ export default defineComponent({
     },
     handleLoginButtonClick() {
       const vm = this
-      gsap.to('.login', {
+      gsap.to('.login-box', {
         opacity: 0,
         duration: 0.25,
         ease: 'power2',
@@ -138,7 +137,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background-color: #e8ecf3;
   background-blend-mode: screen;
   height: 100vh;
   overflow: hidden;
@@ -172,12 +171,9 @@ export default defineComponent({
       min-width: 320px;
       height: 100%;
 
-      .title {
-        margin-right: 10px;
-        margin-left: 10px;
-        text-align: center;
-        font-family: Tomatoes, sans-serif;
-        font-size: 34px;
+      .logo {
+        width: 300px;
+        height: 300px;
       }
 
       .username-input {
@@ -205,7 +201,7 @@ export default defineComponent({
     }
 
     .blue-section {
-      display: flex;
+      display: none;
       flex-direction: column;
       row-gap: 30px;
       align-items: center;
@@ -214,7 +210,7 @@ export default defineComponent({
       z-index: -1;
       border-radius: 12px;
       box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
-      background-color: map.get($map: colors.$blue, $key: "700");
+      background-color: map.get($map: colors.$blue, $key: "500");
       width: calc($login-box-width / 2);
       will-change: opacity;
 
