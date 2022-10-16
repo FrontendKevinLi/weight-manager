@@ -201,7 +201,7 @@ export default defineComponent({
     }
 
     .blue-section {
-      display: flex;
+      display: none;
       flex-direction: column;
       row-gap: 30px;
       align-items: center;
