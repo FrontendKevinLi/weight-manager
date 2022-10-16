@@ -138,8 +138,8 @@ export default defineComponent({
 
     // box-shadow: 0 20px 40px -10px map.get($map: colors.$blue, $key: "50");
     background-color: map.get($map: colors.$blue, $key: "100");
-    width: 400px;
-    height: 400px;
+    width: 375px;
+    height: 375px;
 
     &::before {
       position: absolute;
@@ -170,7 +170,7 @@ export default defineComponent({
     height: 325px;
 
     .pointer {
-      $circle-size: 30px;
+      $circle-size: 40px;
 
       position: absolute;
       top: 50%;
@@ -198,12 +198,12 @@ export default defineComponent({
 
       .triangle-mask {
         position: absolute;
-        left: -40px;
+        left: -$circle-size;
         z-index: 0;
-        border-top: 15px solid transparent;
-        border-right: 40px solid white;
-        border-bottom: 15px solid transparent;
-        border-left: 15px solid transparent;
+        border-top: $circle-size / 2 solid transparent;
+        border-right: $circle-size solid white;
+        border-bottom: $circle-size / 2  solid transparent;
+        border-left: $circle-size / 2 solid transparent;
       }
     }
   }
