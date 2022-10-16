@@ -40,7 +40,7 @@ export default defineComponent({
       weight: {
         displayValue: '',
         tweenValue: 0,
-        value: 48.3,
+        value: 65.3,
         maxValue: 200,
       },
     }
@@ -68,7 +68,7 @@ export default defineComponent({
         rotate: initRotateDeg + (maxRotateDeg / maxKG) * currentKG,
         ease: Back.easeOut,
         duration: 0.5,
-      }, 0.2)
+      }, 0)
       timeline.to(this.weight, {
         duration: 0.5,
         tweenValue: this.weight.value,

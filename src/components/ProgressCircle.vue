@@ -108,7 +108,7 @@ export default defineComponent({
         duration: 0.5,
         ease: Linear.easeNone,
         strokeDashoffset: this.firstHalfPathStrokeDashOffset,
-      })
+      }, 0.5)
       timeline.to('.second-half-path', {
         duration: 0.5,
         ease: Linear.easeNone,
