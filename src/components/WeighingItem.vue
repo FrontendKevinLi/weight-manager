@@ -84,7 +84,7 @@ export default defineComponent({
   display: grid;
   position: relative;
   place-items: center;
-  margin: 20px;
+  margin: 30px;
   padding: 20px;
   width: fit-content;
   height: fit-content;
