@@ -7,6 +7,7 @@
         </span>
         <span class="unit">KG</span>
       </span>
+      <ProgressCircle :percentage="weighingPercentage" />
     </div>
     <div class="circle-outside">
       <div class="triangle-mask" />
@@ -29,17 +30,26 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import gsap, { Back } from 'gsap'
+import ProgressCircle from './ProgressCircle.vue'
 
 export default defineComponent({
   name: 'WeighingItem',
+  components: { ProgressCircle },
   data() {
     return {
       weight: {
         displayValue: '',
         tweenValue: 0,
-        value: 67.8,
+        value: 48.3,
+        maxValue: 200,
       },
     }
+  },
+  computed: {
+    weighingPercentage() {
+      const weighingPercentage = Math.min(1, this.weight.value / this.weight.maxValue)
+      return weighingPercentage
+    },
   },
   mounted() {
     this.initAnimation()
@@ -49,18 +59,16 @@ export default defineComponent({
       const timeline = gsap.timeline()
       const initRotateDeg = 315
       const maxRotateDeg = 360 - 90
-      const maxKG = 200
-      const currentKG = this.weight.value
+      const maxKG = this.weight.maxValue
+      const currentKG = Math.min(this.weight.value, this.weight.maxValue)
       timeline.set('.pointer-container', {
         rotate: initRotateDeg,
       })
-
       timeline.to('.pointer-container', {
         rotate: initRotateDeg + (maxRotateDeg / maxKG) * currentKG,
         ease: Back.easeOut,
         duration: 0.5,
-      })
-
+      }, 0.2)
       timeline.to(this.weight, {
         duration: 0.5,
         tweenValue: this.weight.value,
@@ -158,8 +166,8 @@ export default defineComponent({
   .pointer-container {
     position: relative;
     z-index: 2;
-    width: 100%;
-    height: 100%;
+    width: 325px;
+    height: 325px;
 
     .pointer {
       $circle-size: 30px;
@@ -237,6 +245,14 @@ export default defineComponent({
         width: 20px;
       }
     }
+  }
+
+  .progress-circle {
+    $size: 326px;
+
+    position: absolute;
+    width: $size;
+    height: $size;
   }
 }
 </style>
