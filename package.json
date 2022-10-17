@@ -61,7 +61,7 @@
     "rules": {
       "linebreak-style": [
         "error",
-        "windows"
+        "unix"
       ],
       "vuejs-accessibility/label-has-for": [
         "error",
