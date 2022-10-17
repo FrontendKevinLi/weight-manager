@@ -14,7 +14,10 @@ import WeighingItem from '@/components/WeighingItem.vue'
 
 export default defineComponent({
   name: 'DashboardView',
-  components: { PageLayout, WeighingItem },
+  components: {
+    PageLayout,
+    WeighingItem,
+  },
   data() {
     return {}
   },
