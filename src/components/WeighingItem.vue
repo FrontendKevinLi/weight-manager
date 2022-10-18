@@ -12,10 +12,10 @@
       :config="outerProgressCircleConfig"
       class="outer-progress-circle"
     />
-    <ProgressCircle2
+    <!-- <ProgressCircle2
       :config="innerProgressCircleConfig"
       class="inner-progress-circle"
-    />
+    /> -->
     <div class="pointer-container">
       <div class="pointer">
         <div class="triangle-mask" />
@@ -47,7 +47,7 @@ export default defineComponent({
       weight: {
         displayValue: '',
         tweenValue: 0,
-        value: 54.5,
+        value: 114.5,
         maxValue: 200,
       },
     }
@@ -62,12 +62,16 @@ export default defineComponent({
         percentage: this.weighingPercentage,
         colorConfig: {
           linearGradient: {
-            from: '#fff',
-            to: '#003584',
+            from: '#003584',
+            to: '#c3cfe2',
           },
         },
         animationConfig: {
           enabled: true,
+        },
+        stroke: {
+          linecap: 'round',
+          width: 6,
         },
       }
       return outerProgressCircleConfig
@@ -80,6 +84,10 @@ export default defineComponent({
         },
         animationConfig: {
           enabled: false,
+        },
+        stroke: {
+          linecap: 'square',
+          width: 12,
         },
       }
       return innerProgressCircleConfig
@@ -144,7 +152,7 @@ export default defineComponent({
     justify-content: center;
     z-index: 1;
     border-radius: 50%;
-    box-shadow: 0 15px 35px -20px map.get($map: colors.$blue, $key: "300");
+    box-shadow: 0 15px 95px -35px map.get($map: colors.$blue, $key: "300");
     background-color: map.get($map: colors.$blue, $key: "50");
     width: $inner-circle-size;
     height: $inner-circle-size;
@@ -293,13 +301,13 @@ export default defineComponent({
   }
 
   .outer-progress-circle {
-    $size: $outer-circle-size + 105px;
+    $size: $outer-circle-size + 88px;
 
     position: absolute;
     transform: translate(-10px, -10px);
     width: $size;
     height: $size;
-    filter: drop-shadow(0 0 3px map.get(colors.$blue, "900"));
+    filter: drop-shadow(0 0 8px map.get(colors.$blue, "200")) brightness(1.15);
 
     ::v-deep svg {
       transform: rotate(135deg);
@@ -309,10 +317,13 @@ export default defineComponent({
   .inner-progress-circle {
     $size: $outer-circle-size + 50px;
 
+    filter: brightness(1.1);
     position: absolute;
     transform: translate(-10px, -10px);
     width: $size;
     height: $size;
+
+    // filter: brightness(1.05);
 
     &::before {
       position: absolute;
