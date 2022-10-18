@@ -33,8 +33,9 @@
         d="M 300 200 A 100 100 0 1 1 200 100"
         fill="none"
         :stroke="`url(#${id})`"
-        stroke-width="12"
+        :stroke-width="config.stroke.width"
         class="circle-path"
+        :stroke-linecap="config.stroke.linecap"
       />
     </svg>
   </div>
