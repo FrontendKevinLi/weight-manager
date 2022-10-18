@@ -1,7 +1,6 @@
 <template>
   <div :class="['custom-input-wrapper', (isInputFocused || !isInputTextEmpty) && 'focus']">
     <input
-      id="input"
       class="input"
       :value="inputText"
       :type="type"
