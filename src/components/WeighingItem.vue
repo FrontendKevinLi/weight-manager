@@ -12,10 +12,6 @@
       :config="outerProgressCircleConfig"
       class="outer-progress-circle"
     />
-    <!-- <ProgressCircle2
-      :config="innerProgressCircleConfig"
-      class="inner-progress-circle"
-    /> -->
     <div class="pointer-container">
       <div class="pointer">
         <div class="triangle-mask" />
@@ -76,22 +72,6 @@ export default defineComponent({
       }
       return outerProgressCircleConfig
     },
-    innerProgressCircleConfig() {
-      const innerProgressCircleConfig: ProgressCircle2Config = {
-        percentage: 1,
-        colorConfig: {
-          color: '#99b0d3',
-        },
-        animationConfig: {
-          enabled: false,
-        },
-        stroke: {
-          linecap: 'square',
-          width: 12,
-        },
-      }
-      return innerProgressCircleConfig
-    },
   },
   mounted() {
     this.initAnimation()
@@ -132,7 +112,7 @@ export default defineComponent({
 
 .weighing-item {
   $inner-circle-size: 325px;
-  $outer-circle-size: 375px;
+  $outer-circle-size: 440px;
 
   display: grid;
   position: relative;
@@ -181,8 +161,6 @@ export default defineComponent({
     opacity: 0;
     z-index: 0;
     border-radius: 50%;
-
-    // box-shadow: 0 20px 40px -10px map.get($map: colors.$blue, $key: "50");
     background-color: map.get($map: colors.$blue, $key: "100");
     width: $outer-circle-size;
     height: $outer-circle-size;
@@ -212,8 +190,8 @@ export default defineComponent({
   }
 
   .pointer-container {
-    // $pointer-wrapper-size: $inner-circle-size + ($outer-circle-size - $inner-circle-size) / 2;
-    $pointer-wrapper-size: $outer-circle-size + 10px;
+    $offset: -40px;
+    $pointer-wrapper-size: $outer-circle-size + $offset;
 
     position: relative;
     z-index: 2;
@@ -242,8 +220,8 @@ export default defineComponent({
         z-index: 1;
         border-radius: 50%;
         background-color: map.get($map: colors.$blue, $key: "500");
-        width: 20%;
-        height: 20%;
+        width: 12px;
+        height: 12px;
         content: "";
       }
 
@@ -260,7 +238,9 @@ export default defineComponent({
   }
 
   .indicators {
-    $indicator-wrapper-size: $outer-circle-size + 105px;
+    $offset: 10px;
+    $padding: 50px;
+    $indicator-wrapper-size: $outer-circle-size + $offset + $padding;
 
     position: relative;
     z-index: 1;
@@ -301,7 +281,8 @@ export default defineComponent({
   }
 
   .outer-progress-circle {
-    $size: $outer-circle-size + 88px;
+    $offset: 5px;
+    $size: $outer-circle-size - $offset;
 
     position: absolute;
     transform: translate(-10px, -10px);
@@ -322,8 +303,6 @@ export default defineComponent({
     transform: translate(-10px, -10px);
     width: $size;
     height: $size;
-
-    // filter: brightness(1.05);
 
     &::before {
       position: absolute;
