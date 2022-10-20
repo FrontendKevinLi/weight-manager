@@ -7,6 +7,7 @@
       <div
         ref="white-section"
         class="white-section"
+        @keyup.enter="handleLoginButtonClick"
       >
         <InlineSvg
           class="logo"
