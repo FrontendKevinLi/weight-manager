@@ -45,5 +45,9 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   height: 100%;
+
+  .weighing-item {
+    transform: scale(0.9);
+  }
 }
 </style>
