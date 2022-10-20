@@ -7,7 +7,9 @@ export type ColorConfig = {
 }
 
 export type AnimationConfig = {
-  enabled: boolean
+  enabled: boolean,
+  duration: number
+  delay: string
 }
 
 export type ProgressCircle2Config = {

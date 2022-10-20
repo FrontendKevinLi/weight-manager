@@ -43,9 +43,12 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { ProgressCircle2Config } from '@/types/ProgressCircle2'
-import gsap from 'gsap'
 import { v4 as uuid } from 'uuid'
+import gsap from 'gsap'
+
+import { CustomEase } from '@/utils/gsap/CustomEase'
+import { ProgressCircle2Config } from '@/types/ProgressCircle2'
+import Constants from '@/utils/constant'
 
 export default defineComponent({
   name: 'ProgressCircle2',
@@ -112,10 +115,10 @@ export default defineComponent({
       })
 
       timeline.to(this.$refs['progress-path'] as string, {
-        duration: this.config.animationConfig?.enabled ? 0.75 : 0,
-        ease: 'back',
+        duration: this.config.animationConfig?.enabled ? this.config.animationConfig.duration : 0,
+        ease: CustomEase.create('custom', Constants.customElasticPath),
         strokeDasharray: `${this.strokeDasharray * this.config.percentage} ${this.strokeDasharray * (1 - this.config.percentage)}`,
-      })
+      }, this.config.animationConfig.delay)
     },
   },
 })

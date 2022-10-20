@@ -29,9 +29,11 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import gsap, { Back } from 'gsap'
-import { ProgressCircle2Config } from '@/types/ProgressCircle2'
-import ProgressCircle2 from './ProgressCircle2.vue'
+import gsap from 'gsap'
+import { ProgressCircle2Config, AnimationConfig } from '@/types/ProgressCircle2'
+import Constants from '@/utils/constant'
+import { CustomEase } from '@/utils/gsap/CustomEase'
+import ProgressCircle2 from '@/components/ProgressCircle2.vue'
 
 export default defineComponent({
   name: 'WeighingItem',
@@ -41,11 +43,16 @@ export default defineComponent({
   data() {
     return {
       weight: {
-        displayValue: '',
+        displayValue: '0.0',
         tweenValue: 0,
-        value: 114.5,
+        value: 121.5,
         maxValue: 200,
       },
+      animationConfig: {
+        enabled: true,
+        duration: 1,
+        delay: '0.15',
+      } as AnimationConfig,
     }
   },
   computed: {
@@ -62,9 +69,7 @@ export default defineComponent({
             to: '#c3cfe2',
           },
         },
-        animationConfig: {
-          enabled: true,
-        },
+        animationConfig: this.animationConfig,
         stroke: {
           linecap: 'round',
           width: 6,
@@ -88,17 +93,17 @@ export default defineComponent({
       })
       timeline.to('.pointer-container', {
         rotate: initRotateDeg + (maxRotateDeg / maxKG) * currentKG,
-        ease: Back.easeOut,
-        duration: 0.75,
-      }, 0)
+        ease: CustomEase.create('custom', Constants.customElasticPath),
+        duration: this.animationConfig.duration,
+      }, this.animationConfig.delay)
       timeline.to(this.weight, {
-        duration: 0.75,
+        duration: this.animationConfig.duration,
         tweenValue: this.weight.value,
-        ease: Back.easeOut,
+        ease: CustomEase.create('custom', Constants.customElasticPath),
         onUpdate: () => {
           this.weight.displayValue = this.weight.tweenValue.toFixed(1)
         },
-      }, 0)
+      }, this.animationConfig.delay)
     },
   },
 })
