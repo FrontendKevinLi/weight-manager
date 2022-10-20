@@ -11,6 +11,7 @@
     "stylefix": "stylelint \"**/*.{scss,sass,vue}\" --fix"
   },
   "dependencies": {
+    "echarts": "^5.4.0",
     "gsap": "^3.11.1",
     "uuid": "^9.0.0",
     "vue": "^3.2.13",
