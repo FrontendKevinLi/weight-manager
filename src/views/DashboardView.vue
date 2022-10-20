@@ -29,7 +29,7 @@ export default defineComponent({
       const timeline = gsap.timeline()
       timeline.from('.weighing-item', {
         opacity: 0,
-        ease: 'power4',
+        ease: 'power1',
       }, 0)
     },
   },
