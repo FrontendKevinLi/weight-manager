@@ -35,6 +35,8 @@ import Constants from '@/utils/constant'
 import { CustomEase } from '@/utils/gsap/CustomEase'
 import ProgressCircle2 from '@/components/ProgressCircle2.vue'
 
+gsap.registerPlugin(CustomEase)
+
 export default defineComponent({
   name: 'WeighingItem',
   components: {

@@ -50,6 +50,8 @@ import { CustomEase } from '@/utils/gsap/CustomEase'
 import { ProgressCircle2Config } from '@/types/ProgressCircle2'
 import Constants from '@/utils/constant'
 
+gsap.registerPlugin(CustomEase)
+
 export default defineComponent({
   name: 'ProgressCircle2',
   props: {
