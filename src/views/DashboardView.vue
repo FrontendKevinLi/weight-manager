@@ -2,6 +2,7 @@
   <PageLayout>
     <div class="dashboard-view">
       <WeighingItem />
+      <LastDaysWeightBarChart />
     </div>
   </PageLayout>
 </template>
@@ -11,12 +12,14 @@ import { defineComponent } from 'vue'
 import gsap from 'gsap'
 import PageLayout from '@/components/PageLayout.vue'
 import WeighingItem from '@/components/WeighingItem.vue'
+import LastDaysWeightBarChart from '@/components/LastDaysWeightBarChart.vue'
 
 export default defineComponent({
   name: 'DashboardView',
   components: {
     PageLayout,
     WeighingItem,
+    LastDaysWeightBarChart,
   },
   data() {
     return {}
@@ -42,8 +45,9 @@ export default defineComponent({
 @use "@/style/colors" as colors;
 
 .dashboard-view {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  place-items: center;
   height: 100%;
 
   .weighing-item {
