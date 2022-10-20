@@ -2,7 +2,7 @@
   <div class="progress-circle-2">
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="75 75 250 250"
+      viewBox="90 90 220 220"
       class="circle-container"
     >
       <defs>
