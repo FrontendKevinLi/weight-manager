@@ -57,7 +57,7 @@ export default defineComponent({
   grid-template-areas:
     "sidebar header"
     "sidebar body";
-  grid-template-rows: 70px 1fr;
+  grid-template-rows: 90px 1fr;
   grid-template-columns: 120px 1fr;
   width: 100vw;
   min-height: 100vh;
