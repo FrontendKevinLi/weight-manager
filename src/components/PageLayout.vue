@@ -68,44 +68,7 @@ export default defineComponent({
   }
 
   .custom-header {
-    display: flex;
     grid-area: header;
-    justify-content: space-between;
-    width: 100%;
-
-    .product-name {
-      margin-right: 10px;
-      margin-left: 10px;
-      text-align: center;
-      font-family: Tomatoes, sans-serif;
-      font-size: 34px;
-    }
-
-    .user-info {
-      display: flex;
-      column-gap: 20px;
-      align-items: center;
-      justify-content: center;
-      border-radius: constants.$border-radius;
-      box-shadow: constants.$card-shadow;
-      background-color: white;
-      padding-top: 10px;
-      padding-right: 20px;
-      padding-bottom: 10px;
-      padding-left: 20px;
-
-      .notification {
-        width: 25px;
-        height: 25px;
-        fill: map.get(colors.$blue, "700");
-      }
-
-      .user-icon {
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-      }
-    }
   }
 }
 </style>
