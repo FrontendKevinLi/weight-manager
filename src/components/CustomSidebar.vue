@@ -170,7 +170,7 @@ export default defineComponent({
     $route-item-size: 30px;
 
     display: grid;
-    gap: $route-item-size;
+    gap: $route-item-size * 0.5;
     place-items: center;
     width: 100%;
 
