@@ -1,20 +1,28 @@
 <template>
   <div class="custom-sidebar">
-    <div
-      v-for="sidebarItem in sidebarItems"
-      :key="sidebarItem.className"
-      :class="[
-        'custom-sidebar-item',
-        sidebarItem.className,
-        sidebarItem.slideIn && 'slide-in',
-        sidebarItem.background && 'card-view',
-        sidebarItem.clickable && 'clickable',
-        sidebarItem.path === currentRoute && 'active'
-      ]"
-    >
+    <div class="logo">
       <InlineSvg
-        :src="sidebarItem.icon"
+        :src="LogoSvg"
       />
+    </div>
+    <div class="route-list">
+      <div
+        v-for="routeItem in routeItemList"
+        :key="routeItem.className"
+        :class="[
+          'route-item',
+          routeItem.className,
+          routeItem.slideIn && 'slide-in',
+          // routeItem.background && 'card-view',
+          routeItem.clickable && 'clickable',
+          routeItem.path === currentRoute && 'active'
+        ]"
+      >
+        <div class="active-indicator" />
+        <InlineSvg
+          :src="routeItem.icon"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -24,7 +32,7 @@ import { defineComponent } from 'vue'
 import InlineSvg from 'vue-inline-svg'
 import gsap from 'gsap'
 
-import CustomSidebarItem from '@/types/CustomSidebarItem'
+import RouteItem from '@/types/RouteItem'
 
 import LogoSvg from '@/assets/logo/svg/logo-no-background.svg'
 import TableSvg from '@/assets/sidebar-icons/table-columns-solid.svg'
@@ -47,38 +55,30 @@ export default defineComponent({
     }
   },
   computed: {
-    sidebarItems() {
-      const sidebarItems: CustomSidebarItem[] = [
-        new CustomSidebarItem({
-          icon: this.LogoSvg,
-          className: 'logo',
-          path: '',
-          slideIn: false,
-          background: false,
-          clickable: false,
-        }),
-        new CustomSidebarItem({
+    routeItemList() {
+      const routeItemList: RouteItem[] = [
+        new RouteItem({
           icon: this.TableSvg,
           className: 'dashboard',
           path: '/dashboard',
         }),
-        new CustomSidebarItem({
+        new RouteItem({
           icon: this.RecordSvg,
           className: 'records',
           path: '/records',
         }),
-        new CustomSidebarItem({
+        new RouteItem({
           icon: this.ChartSvg,
           className: 'graphs',
           path: '/graphs',
         }),
-        new CustomSidebarItem({
+        new RouteItem({
           icon: this.SettingsSvg,
           className: 'settings',
           path: '/settings',
         }),
       ]
-      return sidebarItems
+      return routeItemList
     },
     currentRoute() {
       const currentRoute = this.$router.currentRoute.value.fullPath
@@ -86,28 +86,32 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.initListeners()
+    // this.initListeners()
     this.initAnimation()
   },
   methods: {
     initAnimation() {
       const timeline = gsap.timeline()
-      timeline.from('.custom-sidebar-item', {
+      timeline.from('.route-item', {
         y: -150,
         opacity: 0,
         stagger: 0.10,
         ease: 'back',
       }, 0)
-      timeline.set('.custom-sidebar-item.active', {
-        scale: 1.2,
+      timeline.set('.route-item.active', {
         duration: 0.15,
         ease: 'power4',
         fill: '#0050a4',
-        marginBottom: 20,
       }, 0)
+      timeline.from('.route-item.active .active-indicator', {
+        duration: 0.5,
+        y: -150,
+        opacity: 0,
+        ease: 'back',
+      }, '-=0.2')
     },
     initListeners() {
-      const sideBarItems = gsap.utils.toArray('.custom-sidebar-item.slide-in') as HTMLElement[]
+      const sideBarItems = gsap.utils.toArray('.route-item.slide-in') as HTMLElement[]
 
       sideBarItems.forEach((sideBarItem) => {
         gsap.set(sideBarItem, {
@@ -145,40 +149,65 @@ export default defineComponent({
 @use "@/style/colors" as colors;
 
 .custom-sidebar {
-  display: flex;
-  flex-direction: column;
-  row-gap: 20px;
-  align-items: center;
-  width: 120px;
+  $logo-height: 70px;
+
+  display: grid;
+  grid-template-rows: $logo-height 1fr $logo-height;
+  grid-template-columns: 120px;
+  place-items: center;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  background-color: white;
+  padding-top: 20px;
+  padding-bottom: 20px;
 
   .logo {
-    width: 70px;
-    height: 70px;
+    height: $logo-height;
+    aspect-ratio: 1000 / 1125;
   }
 
-  .custom-sidebar-item {
-    box-sizing: border-box;
-    padding: 10px;
-    width: 70px;
-    height: 70px;
+  .route-list {
+    $route-item-size: 30px;
 
-    &.card-view {
-      border-radius: constants.$border-radius;
-      box-shadow: constants.$card-shadow;
-      background-color: white;
-    }
+    display: grid;
+    gap: $route-item-size;
+    place-items: center;
+    width: 100%;
 
-    &.clickable {
-      cursor: pointer;
-    }
-
-    &.logo {
-      padding: 0;
-    }
-
-    svg {
+    .route-item {
+      box-sizing: border-box;
+      display: grid;
+      position: relative;
+      place-items: center;
       width: 100%;
-      height: 100%;
+      aspect-ratio: 1 / 1;
+      fill: colors.$blue-200;
+
+      &:is(.clickable) {
+        cursor: pointer;
+      }
+
+      &:is(.card-view) {
+        border-radius: constants.$border-radius;
+        box-shadow: constants.$card-shadow;
+        background-color: white;
+      }
+
+      &:is(.active) .active-indicator {
+        position: absolute;
+        right: 0;
+        border-top-left-radius: 8px;
+        border-bottom-left-radius: 8px;
+        background-color: colors.$blue-700;
+        width: 6px;
+        height: 80%;
+        content: "";
+      }
+
+      svg {
+        width: $route-item-size;
+        height: $route-item-size;
+      }
     }
   }
 }
