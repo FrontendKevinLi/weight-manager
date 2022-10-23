@@ -91,6 +91,9 @@ function initChart(barChartRefParam: Ref<HTMLElement | undefined>, weightList: W
       show: true,
       text: 'Last Days',
       left: '0',
+      textStyle: {
+        color: '#0050a4',
+      },
     },
     tooltip: {},
     legend: {},
