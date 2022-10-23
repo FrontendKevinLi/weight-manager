@@ -77,7 +77,7 @@ export default defineComponent({
     margin-left: 10px;
     text-align: center;
     color: map.get(colors.$blue, "700");
-    font-family: Tomatoes, sans-serif;
+    font-family: sans-serif;
     font-size: 34px;
   }
 
