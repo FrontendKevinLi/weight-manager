@@ -53,5 +53,9 @@ export default defineComponent({
   .weighing-item {
     transform: scale(0.9);
   }
+
+  .last-days-weight-bar-chart-wrapper {
+    padding: 20px;
+  }
 }
 </style>
