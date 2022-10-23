@@ -67,9 +67,10 @@ export default defineComponent({
 
 .custom-header {
   display: flex;
-  grid-area: header;
   justify-content: space-between;
-  width: 100%;
+  padding-top: 20px;
+  padding-right: 20px;
+  padding-left: 20px;
 
   .page-name {
     margin-right: 10px;
