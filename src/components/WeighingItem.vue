@@ -139,7 +139,7 @@ export default defineComponent({
     z-index: 1;
     border-radius: 50%;
     box-shadow: 0 15px 95px -35px map.get($map: colors.$blue, $key: "300");
-    background-color: map.get($map: colors.$blue, $key: "50");
+    background-color: white;
     width: $inner-circle-size;
     height: $inner-circle-size;
 
@@ -177,7 +177,7 @@ export default defineComponent({
       left: 50%;
       transform: translate(-50%, -50%);
       border-radius: 50%;
-      box-shadow: 0 20px 115px -10px map.get($map: colors.$blue, $key: "300");
+      box-shadow: 0 0 115px -10px map.get($map: colors.$blue, $key: "300");
       width: $inner-circle-size;
       height: $inner-circle-size;
       content: "";
@@ -216,7 +216,7 @@ export default defineComponent({
       background-color: white;
       width: $circle-size;
       height: $circle-size;
-      filter: drop-shadow(0 0 5px map.get($map: colors.$blue, $key: "200"));
+      filter: drop-shadow(0 0 12px map.get($map: colors.$blue, $key: "200"));
 
       &::before {
         position: absolute;
@@ -294,7 +294,7 @@ export default defineComponent({
     transform: translate(-10px, -10px);
     width: $size;
     height: $size;
-    filter: drop-shadow(0 0 8px map.get(colors.$blue, "200")) brightness(1.15);
+    filter: drop-shadow(0 0 8px map.get(colors.$blue, "300")) brightness(1.15);
 
     ::v-deep svg {
       transform: rotate(135deg);
