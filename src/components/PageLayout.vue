@@ -59,12 +59,9 @@ export default defineComponent({
     "sidebar body";
   grid-template-rows: 70px 1fr;
   grid-template-columns: 120px 1fr;
-  row-gap: 20px;
-  padding-top: 20px;
-  padding-right: 40px;
-  padding-bottom: 20px;
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
 
   .custom-sidebar {
     grid-area: sidebar;
