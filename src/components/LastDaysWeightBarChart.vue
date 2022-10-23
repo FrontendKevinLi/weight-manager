@@ -90,7 +90,7 @@ function initChart(barChartRefParam: Ref<HTMLElement | undefined>, weightList: W
     title: {
       show: true,
       text: 'Last Days',
-      left: 'center',
+      left: '0',
     },
     tooltip: {},
     legend: {},
@@ -146,15 +146,10 @@ onMounted(() => {
 .last-days-weight-bar-chart-wrapper {
   $size: 100%;
 
+  box-sizing: border-box;
+  display: grid;
   width: $size;
   height: $size;
-
-  .last-days-weight-bar-chart-chart {
-    $size: 100%;
-
-    width: $size;
-    height: $size;
-  }
 }
 
 </style>
