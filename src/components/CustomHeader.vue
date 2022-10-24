@@ -3,7 +3,10 @@
     <span class="page-name">
       Dashboard
     </span>
-    <div class="user-info">
+    <div
+      v-if="false"
+      class="user-info"
+    >
       <InlineSvg
         :src="BellSvg"
         class="notification"
