@@ -1,8 +1,8 @@
 <template>
   <div class="custom-header">
-    <div class="page-name">
+    <span class="page-name">
       Dashboard
-    </div>
+    </span>
     <div class="user-info">
       <InlineSvg
         :src="BellSvg"
@@ -67,6 +67,7 @@ export default defineComponent({
 
 .custom-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   padding-top: 20px;
   padding-right: 20px;
