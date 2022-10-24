@@ -1,3 +1,5 @@
+@use "sass:color";
+
 $black: (
   "900": #2b2c2d,
   "800": #4d4e50,
@@ -68,3 +70,11 @@ $red-300: #d86860;
 $red-200: #e6928c;
 $red-100: #fbc8ca;
 $red-50: #fee9eb;
+
+// header colors
+$h1-color: color.adjust($blue-900, $lightness: -10%);
+$h2-color: color.adjust($blue-900, $lightness: -5%);
+$h3-color: color.adjust($blue-900, $lightness: 0%);
+$h4-color: $blue-800;
+$h5-color: $blue-700;
+$h6-color: $blue-600;
