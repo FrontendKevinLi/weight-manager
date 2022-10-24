@@ -5,6 +5,7 @@
     <div class="body">
       <slot />
     </div>
+    <InfoPanel />
   </div>
 </template>
 
@@ -14,12 +15,14 @@ import gsap from 'gsap'
 
 import CustomSidebar from '@/components/CustomSidebar.vue'
 import CustomHeader from '@/components/CustomHeader.vue'
+import InfoPanel from '@/components/InfoPanel.vue'
 
 export default defineComponent({
   name: 'DashboardView',
   components: {
     CustomSidebar,
     CustomHeader,
+    InfoPanel,
   },
   data() {
     return {
@@ -55,12 +58,13 @@ export default defineComponent({
   display: grid;
   flex-direction: column;
   grid-template-areas:
-    "sidebar header"
-    "sidebar body";
+    "sidebar header info-panel"
+    "sidebar body info-panel";
   grid-template-rows: 90px 1fr;
-  grid-template-columns: 120px 1fr;
+  grid-template-columns: 120px 1fr 420px;
   width: 100vw;
   min-height: 100vh;
+  max-height: 100vh;
   overflow: hidden;
 
   .custom-sidebar {
@@ -69,6 +73,10 @@ export default defineComponent({
 
   .custom-header {
     grid-area: header;
+  }
+
+  .info-panel {
+    grid-area: info-panel;
   }
 }
 </style>
