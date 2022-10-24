@@ -155,8 +155,8 @@ export default defineComponent({
   grid-template-rows: $logo-height 1fr $logo-height;
   grid-template-columns: 120px;
   place-items: center;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-top-right-radius: constants.$border-radius;
+  border-bottom-right-radius: constants.$border-radius;
   background-color: white;
   padding-top: 20px;
   padding-bottom: 20px;
@@ -196,8 +196,8 @@ export default defineComponent({
       &:is(.active) .active-indicator {
         position: absolute;
         right: 0;
-        border-top-left-radius: 8px;
-        border-bottom-left-radius: 8px;
+        border-top-left-radius: constants.$border-radius;
+        border-bottom-left-radius: constants.$border-radius;
         background-color: colors.$blue-700;
         width: 6px;
         height: 80%;
