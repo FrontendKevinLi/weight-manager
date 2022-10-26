@@ -67,7 +67,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use "sass:map";
 @use "@/style/colors" as colors;
 @use "@/style/font-sizes.scss" as font-sizes;
 
@@ -84,15 +83,17 @@ export default defineComponent({
   grid-template-rows: (font-sizes.$extra-small + 2px) 1fr;
   gap: $gap;
   align-items: center;
-  border-bottom: $underline-height solid map.get($map: colors.$black, $key: "500");
+  border-bottom: $underline-height solid colors.$darkblue-200;
+  padding-bottom: 5px;
   width: 500px;
 
+  // colored underline
   &::after {
     position: absolute;
     bottom: -$underline-height;
     left: 0;
     transition: width 0.15s ease-in-out;
-    background-color: map.get($map: colors.$blue, $key: "700");
+    background-color: colors.$darkblue-700;
     width: 0;
     height: $underline-height;
     content: "";
@@ -109,6 +110,7 @@ export default defineComponent({
     padding-left: $input-left-right-indent;
     width: 100%;
     height: 100%;
+    color: colors.$darkblue-700;
     font-size: $input-font-size;
   }
 
@@ -127,7 +129,7 @@ export default defineComponent({
     margin-left: $input-left-right-indent;
     cursor: text;
     height: 100%;
-    color: map.get($map: colors.$black, $key: "500");
+    color: colors.$darkblue-200;
     font-size: $place-holder-font-size;
     pointer-events: none;
   }
@@ -139,7 +141,6 @@ export default defineComponent({
 
     .placeholder {
       transform: translateY(-($input-font-size + $gap));
-      color: map.get($map: colors.$blue, $key: "500");
       font-size: $place-holder-focus-font-size;
     }
   }

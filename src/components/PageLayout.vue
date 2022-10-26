@@ -29,7 +29,7 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.initAnimations()
+    // this.initAnimations()
   },
   methods: {
     initAnimations() {

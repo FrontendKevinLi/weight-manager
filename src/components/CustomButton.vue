@@ -8,7 +8,6 @@
 </template>
 
 <script lang="ts">
-import gsap from 'gsap'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
@@ -19,44 +18,24 @@ export default defineComponent({
       default: '',
     },
   },
-  data() {
-    return {
-    }
-  },
-  mounted() {
-    (this.$refs['custom-btn'] as HTMLElement).addEventListener('mouseenter', () => {
-      gsap.to(this.$refs['custom-btn'] as gsap.TweenTarget, {
-        scale: 1.2,
-        boxShadow: '0px 0px 20px -3px map.get($map: colors.$blue, $key: "200")',
-        duration: 0.1,
-      })
-    });
-    (this.$refs['custom-btn'] as HTMLElement).addEventListener('mouseleave', () => {
-      gsap.to(this.$refs['custom-btn'] as gsap.TweenTarget, {
-        scale: 1,
-        boxShadow: '0px 0px 10px -3px map.get($map: colors.$blue, $key: "200")',
-        duration: 0.1,
-      })
-    })
-  },
-  methods: {
-    test(a: number) {
-      return a
-    },
-  },
 })
 </script>
 
 <style lang="scss" scoped>
 @use "sass:map";
+@use "sass:color";
 @use "@/style/colors.scss" as colors;
 @use "@/style/font-sizes.scss" as font-sizes;
 @use "@/style/constants.scss" as constants;
 
 .custom-btn {
+  $background-color: colors.$blue-400;
+
+  user-select: none;
+  transition: box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out;
   border-radius: constants.$border-radius - 2px;
-  box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
-  background: map.get($map: colors.$blue, $key: "500");
+  box-shadow: 0 3px 4px -1px colors.$darkblue-800;
+  background-color: colors.$blue-400;
   cursor: pointer;
   padding-top: 10px;
   padding-right: 20px;
@@ -65,5 +44,14 @@ export default defineComponent({
   width: fit-content;
   color: map.get($map: colors.$black, $key: "100");
   font-size: font-sizes.$small;
+
+  &:hover {
+    box-shadow: 0 3px 6px -1px colors.$darkblue-800;
+    background-color: color.adjust($background-color, $lightness: 5%);
+  }
+
+  &:active {
+    background-color: color.adjust($background-color, $lightness: -5%);
+  }
 }
 </style>
