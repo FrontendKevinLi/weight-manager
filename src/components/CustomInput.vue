@@ -1,5 +1,9 @@
 <template>
   <div :class="['custom-input-wrapper', (isInputFocused || !isInputTextEmpty) && 'focus']">
+    <label
+      for="input"
+      :class="['placeholder']"
+    >{{ placeholder }}</label>
     <input
       class="input"
       :value="inputText"
@@ -10,10 +14,6 @@
       @blur="setInputFocus(false)"
       @keyup.enter="handleKeyUpEnter"
     >
-    <label
-      for="input"
-      :class="['placeholder']"
-    >{{ placeholder }}</label>
   </div>
 </template>
 
@@ -73,14 +73,19 @@ export default defineComponent({
 
 .custom-input-wrapper {
   $underline-height: 2px;
-  $input-indent: 10px;
+  $input-left-right-indent: 10px;
+  $input-font-size: font-sizes.$medium;
+  $place-holder-font-size: font-sizes.$medium;
+  $place-holder-focus-font-size: font-sizes.$extra-small;
+  $gap: 5px;
 
   display: grid;
   position: relative;
+  grid-template-rows: (font-sizes.$extra-small + 2px) 1fr;
+  gap: $gap;
   align-items: center;
   border-bottom: $underline-height solid map.get($map: colors.$black, $key: "500");
   width: 500px;
-  height: 35px;
 
   &::after {
     position: absolute;
@@ -93,33 +98,37 @@ export default defineComponent({
     content: "";
   }
 
-  & > * {
-    grid-area: 1 / 1;
-  }
-
   .input {
     box-sizing: border-box;
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
     outline: none;
     border: none;
     background: transparent;
-    padding-right: $input-indent;
-    padding-left: $input-indent;
+    padding-right: $input-left-right-indent;
+    padding-left: $input-left-right-indent;
     width: 100%;
     height: 100%;
-    font-size: font-sizes.$medium;
+    font-size: $input-font-size;
   }
 
   .placeholder {
-    transform: translateY(0);
+    $time-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+    display: grid;
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+    align-items: center;
     transition:
-      transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
-      font-size 0.15s cubic-bezier(0.4, 0, 0.2, 1),
-      color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-    margin-right: $input-indent;
-    margin-left: $input-indent;
+      transform 0.15s $time-function,
+      font-size 0.15s $time-function,
+      color 0.15s $time-function;
+    margin-right: $input-left-right-indent;
+    margin-left: $input-left-right-indent;
     cursor: text;
+    height: 100%;
     color: map.get($map: colors.$black, $key: "500");
-    font-size: font-sizes.$medium;
+    font-size: $place-holder-font-size;
     pointer-events: none;
   }
 
@@ -129,9 +138,9 @@ export default defineComponent({
     }
 
     .placeholder {
-      transform: translate(0, -20px);
+      transform: translateY(-($input-font-size + $gap));
       color: map.get($map: colors.$blue, $key: "500");
-      font-size: font-sizes.$small;
+      font-size: $place-holder-focus-font-size;
     }
   }
 }
