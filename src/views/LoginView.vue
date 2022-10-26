@@ -161,7 +161,7 @@ export default defineComponent({
       display: flex;
       position: relative;
       flex-direction: column;
-      row-gap: 50px;
+      row-gap: 30px;
       align-items: center;
       justify-content: center;
       border-radius: 12px;
