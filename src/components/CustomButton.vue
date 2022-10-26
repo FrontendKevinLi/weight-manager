@@ -50,10 +50,11 @@ export default defineComponent({
 <style lang="scss" scoped>
 @use "sass:map";
 @use "@/style/colors.scss" as colors;
+@use "@/style/font-sizes.scss" as font-sizes;
 @use "@/style/constants.scss" as constants;
 
 .custom-btn {
-  border-radius: constants.$border-radius;
+  border-radius: constants.$border-radius - 2px;
   box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
   background: map.get($map: colors.$blue, $key: "500");
   cursor: pointer;
@@ -63,6 +64,6 @@ export default defineComponent({
   padding-left: 20px;
   width: fit-content;
   color: map.get($map: colors.$black, $key: "100");
-  font-size: 20px;
+  font-size: font-sizes.$small;
 }
 </style>
