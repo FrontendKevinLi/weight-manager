@@ -36,12 +36,13 @@ export default defineComponent({
       const timeline = gsap.timeline()
       timeline.set('.page-layout', {
         backgroundColor: '#e8ecf3',
-
+        opacity: 0,
       })
 
       timeline.to('.page-layout', {
         backgroundColor: '#e8ecf3',
-        duration: 0.25,
+        duration: 0.5,
+        opacity: 1,
       })
     },
   },
