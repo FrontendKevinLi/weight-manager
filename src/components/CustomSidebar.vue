@@ -102,14 +102,14 @@ export default defineComponent({
       timeline.set('.route-item.active', {
         duration: 0.15,
         ease: 'power4',
-        fill: '#004698',
+        fill: '#e0ebfc',
       }, 0)
       timeline.from('.route-item.active .active-indicator', {
         duration: 0.5,
         y: -150,
         opacity: 0,
         ease: 'back',
-      }, '-=0.2')
+      }, '-=0.50')
     },
     initListeners() {
       const sideBarItems = gsap.utils.toArray('.route-item.slide-in') as HTMLElement[]
@@ -146,6 +146,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @use "sass:map";
+@use "sass:color";
 @use "@/style/constants.scss" as constants;
 @use "@/style/colors" as colors;
 
@@ -158,7 +159,7 @@ export default defineComponent({
   place-items: center;
   border-top-right-radius: constants.$border-radius;
   border-bottom-right-radius: constants.$border-radius;
-  background-color: colors.$blue-50;
+  background-color: colors.$darkblue-800;
   padding-top: 20px;
   padding-bottom: 20px;
 
@@ -182,7 +183,7 @@ export default defineComponent({
       place-items: center;
       width: 100%;
       aspect-ratio: 1 / 1;
-      fill: colors.$darkblue-200;
+      fill: colors.$darkblue-400;
 
       &:is(.clickable) {
         cursor: pointer;
@@ -194,15 +195,19 @@ export default defineComponent({
         background-color: white;
       }
 
-      &:is(.active) .active-indicator {
-        position: absolute;
-        right: 0;
-        border-top-left-radius: constants.$border-radius;
-        border-bottom-left-radius: constants.$border-radius;
-        background-color: colors.$blue-800;
-        width: 6px;
-        height: 80%;
-        content: "";
+      &:is(.active) {
+        // background-color: color.adjust(colors.$darkblue-800, $lightness: 5%);
+
+        .active-indicator {
+          position: absolute;
+          left: 0;
+          border-top-right-radius: constants.$border-radius;
+          border-bottom-right-radius: constants.$border-radius;
+          background-color: colors.$black-100;
+          width: 6px;
+          height: 80%;
+          content: "";
+        }
       }
 
       svg {
