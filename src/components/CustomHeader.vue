@@ -3,26 +3,11 @@
     <span class="page-name">
       Dashboard
     </span>
-    <div
-      v-if="false"
-      class="user-info"
-    >
-      <InlineSvg
-        :src="BellSvg"
-        class="notification"
-      />
-      <img
-        :src="ProfilePng"
-        class="user-icon"
-        alt="icon"
-      >
-    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import InlineSvg from 'vue-inline-svg'
 import gsap from 'gsap'
 
 import ProfilePng from '@/assets/header-icons/profile.png'
@@ -31,7 +16,6 @@ import BellSvg from '@/assets/header-icons/bell-regular.svg'
 export default defineComponent({
   name: 'DashboardView',
   components: {
-    InlineSvg,
   },
   data() {
     return {
@@ -64,7 +48,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use "sass:map";
 @use "@/style/constants.scss" as constants;
 @use "@/style/colors" as colors;
 
@@ -80,35 +63,8 @@ export default defineComponent({
     margin-right: 10px;
     margin-left: 10px;
     text-align: center;
-    color: map.get(colors.$blue, "900");
-    font-family: sans-serif;
+    color: colors.$darkblue-700;
     font-size: 34px;
-  }
-
-  .user-info {
-    display: flex;
-    column-gap: 20px;
-    align-items: center;
-    justify-content: center;
-    border-radius: constants.$border-radius;
-    box-shadow: constants.$card-shadow;
-    background-color: white;
-    padding-top: 10px;
-    padding-right: 20px;
-    padding-bottom: 10px;
-    padding-left: 20px;
-
-    .notification {
-      width: 25px;
-      height: 25px;
-      fill: map.get(colors.$blue, "700");
-    }
-
-    .user-icon {
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-    }
   }
 }
 </style>

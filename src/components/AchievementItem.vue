@@ -27,6 +27,7 @@ const config = computed(() => props.config)
 <style lang='scss' scoped>
 @use "@/style/constants.scss" as constants;
 @use "@/style/colors.scss" as colors;
+@use "@/style/box-shadows.scss" as box-shadows;
 
 .achievement-item {
   display: grid;
@@ -35,11 +36,24 @@ const config = computed(() => props.config)
     "icon date";
   grid-template-columns: 50px 1fr;
   gap: 10px 20px;
+  transition: box-shadow 0.2s ease-in-out;
+  border-radius: constants.$border-radius;
+  box-shadow: box-shadows.$level-1;
+  background-color: white;
+  padding: 20px;
+  padding-right: 10px;
+  padding-left: 10px;
+
+  &:hover {
+    box-shadow: box-shadows.$level-3;
+    cursor: pointer;
+  }
 
   .icon {
     $size: 50px;
 
     grid-area: icon;
+    place-self: center;
     border-radius: constants.$border-radius;
     background-color: colors.$blue-100;
     width: $size;
@@ -48,14 +62,14 @@ const config = computed(() => props.config)
 
   .title {
     grid-area: title;
-    color: colors.$h3-color;
+    color: colors.$darkblue-500;
     font-size: 14px;
     font-weight: bold;
   }
 
   .date {
     grid-area: date;
-    color: colors.$blue-200;
+    color: colors.$darkblue-200;
     font-size: 14px;
     font-weight: bold;
   }

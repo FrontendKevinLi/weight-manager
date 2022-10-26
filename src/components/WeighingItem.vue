@@ -149,13 +149,13 @@ export default defineComponent({
       align-items: baseline;
 
       .number {
-        color: map.get($map: colors.$blue, $key: "900");
+        color: colors.$darkblue-700;
         font-family: sans-serif;
         font-size: 72px;
       }
 
       .unit {
-        color: map.get(colors.$blue, "900");
+        color: colors.$darkblue-700;
         font-family: sans-serif;
         font-size: 36px;
       }

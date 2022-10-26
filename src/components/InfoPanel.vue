@@ -108,7 +108,7 @@ const achievementList: AchievementItemType[] = [
   gap: 80px;
   border-top-left-radius: constants.$border-radius;
   border-bottom-left-radius: constants.$border-radius;
-  background-color: white;
+  background-color: colors.$blue-50;
   padding: 50px;
 
   .user-info {
@@ -122,7 +122,7 @@ const achievementList: AchievementItemType[] = [
 
     .username {
       text-align: center;
-      color: color.adjust(colors.$blue-900, $lightness: -10%);
+      color: colors.$darkblue-700;
       font-size: 20px;
       font-weight: bold;
     }
@@ -133,7 +133,7 @@ const achievementList: AchievementItemType[] = [
 
     // grid-template-rows: auto minmax(0, 1fr);
     grid-template-rows: auto 1fr;
-    gap: 40px;
+    gap: 20px;
     overflow-y: hidden;
 
     &::-webkit-scrollbar {
@@ -149,15 +149,20 @@ const achievementList: AchievementItemType[] = [
     }
 
     .title {
-      color: colors.$h2-color;
+      margin-left: (constants.$border-radius / 2);
+      color: colors.$darkblue-700;
       font-weight: bold;
     }
 
     .achievement-list {
-      @include constants.custom-scrollbar($track-color: colors.$blue-50, $thumb-color: colors.$blue-900);
+      @include constants.custom-scrollbar;
 
       display: grid;
-      gap: 20px;
+      gap: 5px;
+      padding-top: 5px;
+      padding-right: 20px;
+      padding-bottom: 5px;
+      padding-left: 5px;
       overflow: auto;
     }
   }

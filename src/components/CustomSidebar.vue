@@ -34,11 +34,12 @@ import gsap from 'gsap'
 
 import RouteItem from '@/types/RouteItem'
 
-import LogoSvg from '@/assets/logo/svg/logo-no-background.svg'
+// import LogoSvg from '@/assets/logo/svg/logo-no-background.svg'
 import TableSvg from '@/assets/sidebar-icons/table-columns-solid.svg'
 import RecordSvg from '@/assets/sidebar-icons/clipboard-regular.svg'
 import ChartSvg from '@/assets/sidebar-icons/chart-simple-solid.svg'
 import SettingsSvg from '@/assets/sidebar-icons/gear-solid.svg'
+import LogoSvg from '@/assets/logo/svg/mixblue/logo-no-background.svg'
 
 export default defineComponent({
   name: 'CustomSidebar',
@@ -101,7 +102,7 @@ export default defineComponent({
       timeline.set('.route-item.active', {
         duration: 0.15,
         ease: 'power4',
-        fill: '#0050a4',
+        fill: '#004698',
       }, 0)
       timeline.from('.route-item.active .active-indicator', {
         duration: 0.5,
@@ -157,7 +158,7 @@ export default defineComponent({
   place-items: center;
   border-top-right-radius: constants.$border-radius;
   border-bottom-right-radius: constants.$border-radius;
-  background-color: white;
+  background-color: colors.$blue-50;
   padding-top: 20px;
   padding-bottom: 20px;
 
@@ -181,7 +182,7 @@ export default defineComponent({
       place-items: center;
       width: 100%;
       aspect-ratio: 1 / 1;
-      fill: colors.$blue-200;
+      fill: colors.$darkblue-200;
 
       &:is(.clickable) {
         cursor: pointer;
@@ -198,7 +199,7 @@ export default defineComponent({
         right: 0;
         border-top-left-radius: constants.$border-radius;
         border-bottom-left-radius: constants.$border-radius;
-        background-color: colors.$blue-700;
+        background-color: colors.$blue-800;
         width: 6px;
         height: 80%;
         content: "";

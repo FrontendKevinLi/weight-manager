@@ -25,6 +25,7 @@ export default defineComponent({
 @use "sass:map";
 @use "sass:color";
 @use "@/style/colors.scss" as colors;
+@use "@/style/box-shadows.scss" as box-shadows;
 @use "@/style/font-sizes.scss" as font-sizes;
 @use "@/style/constants.scss" as constants;
 
@@ -34,7 +35,7 @@ export default defineComponent({
   user-select: none;
   transition: box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out;
   border-radius: constants.$border-radius - 2px;
-  box-shadow: 0 3px 4px -1px colors.$darkblue-800;
+  box-shadow: box-shadows.$level-1;
   background-color: colors.$blue-400;
   cursor: pointer;
   padding-top: 10px;
@@ -46,7 +47,6 @@ export default defineComponent({
   font-size: font-sizes.$small;
 
   &:hover {
-    box-shadow: 0 3px 6px -1px colors.$darkblue-800;
     background-color: color.adjust($background-color, $lightness: 5%);
   }
 
