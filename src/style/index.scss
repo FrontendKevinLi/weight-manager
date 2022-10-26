@@ -1,4 +1,10 @@
+@use "@/style/colors.scss" as colors;
+
 * {
   margin: 0;
   font-family: sans-serif;
+}
+
+body {
+  background-color: colors.$black-100;
 }
