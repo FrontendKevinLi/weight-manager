@@ -81,7 +81,7 @@ export default defineComponent({
 
       timeLine.from(this.$refs['white-section'] as gsap.TweenTarget, {
         opacity: 0.001,
-        x: 100,
+        y: -100,
         ease: 'power2',
         delay: 0.1,
         duration: 0.75,
@@ -134,14 +134,34 @@ export default defineComponent({
   height: $size;
 }
 
+@keyframes float {
+  from {
+    transform: translate(-2%, -5%);
+  }
+
+  to {
+    transform: translate(3%, 5%);
+  }
+}
+
 .login {
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: center;
-  background-color: #e8ecf3;
-  background-blend-mode: screen;
   height: 100vh;
   overflow: hidden;
+
+  &::before {
+    position: absolute;
+    background-image: url("@/assets/backgrounds/low-poly-grid-haikei.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 108vw;
+    height: 115vh;
+    animation: float 7s infinite alternate ease-in-out;
+    content: "";
+  }
 
   .login-box {
     $login-box-width: 75vw;
@@ -165,7 +185,8 @@ export default defineComponent({
       align-items: center;
       justify-content: center;
       border-radius: 12px;
-      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
+
+      // box-shadow: 0 0 6px 0 colors.$black-400;
       background-color: white;
       padding: 20px;
       width: calc($login-box-width / 2.5);
