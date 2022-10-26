@@ -55,7 +55,7 @@ export default defineComponent({
   }
 
   .last-days-weight-bar-chart-wrapper {
-    padding: 20px;
+    padding: 40px;
   }
 }
 </style>

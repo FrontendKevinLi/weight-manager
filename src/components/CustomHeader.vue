@@ -55,9 +55,9 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 20px;
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-top: 40px;
+  padding-right: 40px;
+  padding-left: 40px;
 
   .page-name {
     margin-right: 10px;
