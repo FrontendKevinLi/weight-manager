@@ -69,11 +69,15 @@ export default defineComponent({
 <style lang="scss" scoped>
 @use "sass:map";
 @use "@/style/colors" as colors;
+@use "@/style/font-sizes.scss" as font-sizes;
 
 .custom-input-wrapper {
   $underline-height: 2px;
+  $input-indent: 10px;
 
+  display: grid;
   position: relative;
+  align-items: center;
   border-bottom: $underline-height solid map.get($map: colors.$black, $key: "500");
   width: 500px;
   height: 35px;
@@ -89,31 +93,33 @@ export default defineComponent({
     content: "";
   }
 
+  & > * {
+    grid-area: 1 / 1;
+  }
+
   .input {
     box-sizing: border-box;
     outline: none;
     border: none;
     background: transparent;
-    padding-right: 10px;
-    padding-bottom: 0;
-    padding-left: 10px;
+    padding-right: $input-indent;
+    padding-left: $input-indent;
     width: 100%;
     height: 100%;
-    font-size: 24px;
+    font-size: font-sizes.$medium;
   }
 
   .placeholder {
-    position: absolute;
-    top: 0;
-    left: 10px;
     transform: translateY(0);
     transition:
       transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
       font-size 0.15s cubic-bezier(0.4, 0, 0.2, 1),
       color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-right: $input-indent;
+    margin-left: $input-indent;
     cursor: text;
     color: map.get($map: colors.$black, $key: "500");
-    font-size: 24px;
+    font-size: font-sizes.$medium;
     pointer-events: none;
   }
 
@@ -125,7 +131,7 @@ export default defineComponent({
     .placeholder {
       transform: translate(0, -20px);
       color: map.get($map: colors.$blue, $key: "500");
-      font-size: 16px;
+      font-size: font-sizes.$small;
     }
   }
 }
