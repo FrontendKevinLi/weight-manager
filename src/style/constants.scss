@@ -4,7 +4,7 @@
 $border-radius: 16px;
 $card-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "100");
 
-@mixin custom-scrollbar($track-color: colors.$darkblue-50, $thumb-color: colors.$darkblue-700) {
+@mixin custom-scrollbar($track-color: transparent, $thumb-color: colors.$darkblue-700) {
   &::-webkit-scrollbar {
     border-radius: 12px;
     width: 5px;
