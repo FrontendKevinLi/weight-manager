@@ -185,11 +185,13 @@ export default defineComponent({
       .username-input {
         width: 100%;
         min-width: 260px;
+        letter-spacing: 0.1rem;
       }
 
       .password-input {
         width: 100%;
         min-width: 260px;
+        letter-spacing: 0.1rem;
       }
 
       .login-btn {
