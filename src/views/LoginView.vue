@@ -144,6 +144,7 @@ export default defineComponent({
     height: 115vh;
     animation: float 7s infinite alternate ease-in-out;
     content: "";
+    filter: brightness(0.8) blur(3px);
   }
 
   .login-box {
