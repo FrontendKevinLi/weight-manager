@@ -45,7 +45,7 @@ const config = computed(() => props.config)
   padding-left: 10px;
 
   &:hover {
-    box-shadow: box-shadows.$level-3;
+    // box-shadow: box-shadows.$level-2;
     cursor: pointer;
   }
 
