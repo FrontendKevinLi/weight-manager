@@ -25,6 +25,7 @@ const config = computed(() => props.config)
 </script>
 
 <style lang='scss' scoped>
+@use "sass:color";
 @use "@/style/constants.scss" as constants;
 @use "@/style/colors.scss" as colors;
 @use "@/style/box-shadows.scss" as box-shadows;
@@ -38,14 +39,12 @@ const config = computed(() => props.config)
   gap: 10px 20px;
   transition: box-shadow 0.2s ease-in-out;
   border-radius: constants.$border-radius;
-  box-shadow: box-shadows.$level-1;
-  background-color: white;
+  background-color: color.adjust(colors.$primary-50, $lightness: 4%);
   padding: 20px;
   padding-right: 10px;
   padding-left: 10px;
 
   &:hover {
-    // box-shadow: box-shadows.$level-2;
     cursor: pointer;
   }
 
@@ -55,7 +54,7 @@ const config = computed(() => props.config)
     grid-area: icon;
     place-self: center;
     border-radius: constants.$border-radius;
-    background-color: colors.$blue-100;
+    background-color: colors.$primary-100;
     width: $size;
     height: $size;
   }

@@ -18,7 +18,10 @@
           routeItem.path === currentRoute && 'active'
         ]"
       >
-        <div class="active-indicator" />
+        <div class="active-indicator">
+          <div class="side-indicator" />
+          <div class="background-indicator" />
+        </div>
         <InlineSvg
           :src="routeItem.icon"
         />
@@ -102,7 +105,7 @@ export default defineComponent({
       timeline.set('.route-item.active', {
         duration: 0.15,
         ease: 'power4',
-        fill: '#e0ebfc',
+        fill: '#e8ecf3',
       }, 0)
       timeline.from('.route-item.active .active-indicator', {
         duration: 0.5,
@@ -159,7 +162,7 @@ export default defineComponent({
   place-items: center;
   border-top-right-radius: constants.$border-radius;
   border-bottom-right-radius: constants.$border-radius;
-  background-color: colors.$darkblue-800;
+  background-color: colors.$primary-900;
   padding-top: 20px;
   padding-bottom: 20px;
 
@@ -182,8 +185,10 @@ export default defineComponent({
       position: relative;
       place-items: center;
       width: 100%;
-      aspect-ratio: 1 / 1;
-      fill: colors.$darkblue-400;
+      aspect-ratio: 5 / 4;
+      fill: colors.$blue-200;
+
+      // fill: colors.$primary-700;
 
       &:is(.clickable) {
         cursor: pointer;
@@ -199,14 +204,32 @@ export default defineComponent({
         // background-color: color.adjust(colors.$darkblue-800, $lightness: 5%);
 
         .active-indicator {
+          display: grid;
           position: absolute;
           left: 0;
-          border-top-right-radius: constants.$border-radius;
-          border-bottom-right-radius: constants.$border-radius;
-          background-color: colors.$black-100;
-          width: 6px;
-          height: 80%;
-          content: "";
+          align-items: center;
+          width: 100%;
+          height: 100%;
+
+          & > * {
+            grid-area: 1 / 1;
+          }
+
+          .side-indicator {
+            border-top-right-radius: constants.$border-radius;
+            border-bottom-right-radius: constants.$border-radius;
+            background-color: colors.$primary-200;
+            width: 6px;
+            height: 100%;
+          }
+
+          .background-indicator {
+            margin-left: 6px;
+            background-color: white;
+            width: 100%;
+            height: calc(100% - (constants.$border-radius / 2));
+            filter: opacity(0.1);
+          }
         }
       }
 

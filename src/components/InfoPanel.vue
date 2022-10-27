@@ -108,7 +108,7 @@ const achievementList: AchievementItemType[] = [
   gap: 80px;
   border-top-left-radius: constants.$border-radius;
   border-bottom-left-radius: constants.$border-radius;
-  background-color: colors.$blue-50;
+  background-color: white;
   padding: 50px;
 
   .user-info {
@@ -117,12 +117,13 @@ const achievementList: AchievementItemType[] = [
     place-content: center;
 
     .icon {
+      border-radius: 50%;
       height: 150px;
     }
 
     .username {
       text-align: center;
-      color: colors.$darkblue-700;
+      color: colors.$darkblue-600;
       font-size: 20px;
       font-weight: bold;
     }
@@ -150,7 +151,7 @@ const achievementList: AchievementItemType[] = [
 
     .title {
       margin-left: (constants.$border-radius / 2);
-      color: colors.$darkblue-700;
+      color: colors.$darkblue-600;
       font-weight: bold;
     }
 
@@ -158,7 +159,7 @@ const achievementList: AchievementItemType[] = [
       @include constants.custom-scrollbar;
 
       display: grid;
-      gap: 5px;
+      gap: 15px;
       padding-top: 5px;
       padding-right: 20px;
       padding-bottom: 5px;

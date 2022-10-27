@@ -35,7 +35,8 @@ export default defineComponent({
   user-select: none;
   transition: box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out;
   border-radius: constants.$border-radius - 2px;
-  box-shadow: box-shadows.$level-1;
+
+  // box-shadow: box-shadows.$level-1;
   background-color: colors.$blue-400;
   cursor: pointer;
   padding-top: 10px;

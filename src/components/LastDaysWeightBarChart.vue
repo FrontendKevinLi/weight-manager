@@ -50,9 +50,9 @@ function getMinAndMaxWeight(weightListParam: WeightItem[]): [number, number] {
 }
 
 function getBarColor(weightParam: number, minWeightParam: number, maxWeightParam: number): string {
-  if (weightParam === minWeightParam) return '#c3cfe2'
-  if (weightParam === maxWeightParam) return '#003584'
-  return '#6a92c8'
+  if (weightParam === minWeightParam) return '#9cc7ea'
+  if (weightParam === maxWeightParam) return '#314782'
+  return '#4f85c7'
 }
 
 function transformToChartData(weightListParam: WeightItem[], minWeightParam: number, maxWeightParam: number): ChartData {
@@ -92,7 +92,7 @@ function initChart(barChartRefParam: Ref<HTMLElement | undefined>, weightList: W
       text: 'Last Days',
       left: '0',
       textStyle: {
-        color: '#1f3c54',
+        color: '#2d4e69',
       },
     },
     tooltip: {},
@@ -117,8 +117,8 @@ function initChart(barChartRefParam: Ref<HTMLElement | undefined>, weightList: W
       data: chartData.seriesData,
       itemStyle: {
         borderRadius: 10,
-        shadowColor: '#c3cfe2',
-        shadowBlur: 4,
+        // shadowColor: '#c3cfe2',
+        // shadowBlur: 4,
       },
       type: 'bar',
     }],

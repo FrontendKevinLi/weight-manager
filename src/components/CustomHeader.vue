@@ -63,7 +63,7 @@ export default defineComponent({
     margin-right: 10px;
     margin-left: 10px;
     text-align: center;
-    color: colors.$darkblue-700;
+    color: colors.$darkblue-600;
     font-size: 34px;
   }
 }

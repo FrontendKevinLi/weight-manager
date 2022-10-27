@@ -43,7 +43,7 @@ import CustomInput from '@/components/CustomInput.vue'
 import CustomButton from '@/components/CustomButton.vue'
 
 import BodyWeightingImg from '@/assets/login-page-pictures/bodyWeighting.png'
-import LogoFullSvg from '@/assets/logo-full/svg/mixblue/logo-no-background.svg'
+import LogoFullSvg from '@/assets/logo-full/svg/primaryblue/logo-no-background.svg'
 
 export default defineComponent({
   name: 'LoginView',
@@ -198,8 +198,6 @@ export default defineComponent({
       .login-btn {
         box-sizing: border-box;
         margin-top: 20px;
-
-        // box-shadow: 0 3px 8px -1px colors.$darkblue-900;
         padding-top: 20px;
         padding-bottom: 20px;
         width: 100%;

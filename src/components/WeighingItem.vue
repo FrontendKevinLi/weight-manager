@@ -67,8 +67,8 @@ export default defineComponent({
         percentage: this.weighingPercentage,
         colorConfig: {
           linearGradient: {
-            from: '#003584',
-            to: '#c3cfe2',
+            from: '#314782',
+            to: '#7bb1e0',
           },
         },
         animationConfig: this.animationConfig,
@@ -139,6 +139,8 @@ export default defineComponent({
     z-index: 1;
     border-radius: 50%;
     box-shadow: 0 15px 95px -35px map.get($map: colors.$blue, $key: "300");
+
+    // background-color: colors.$primary-800;
     background-color: white;
     width: $inner-circle-size;
     height: $inner-circle-size;
@@ -147,16 +149,15 @@ export default defineComponent({
       display: flex;
       gap: 10px;
       align-items: baseline;
+      color: colors.$darkblue-600;
+
+      // color: white;
 
       .number {
-        color: colors.$darkblue-700;
-        font-family: sans-serif;
         font-size: 72px;
       }
 
       .unit {
-        color: colors.$darkblue-700;
-        font-family: sans-serif;
         font-size: 36px;
       }
     }
