@@ -3,7 +3,7 @@
     <CustomHeader />
     <CustomSidebar />
     <div class="body">
-      <slot />
+      <router-view />
     </div>
     <InfoPanel />
   </div>

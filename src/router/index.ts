@@ -1,16 +1,57 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import LoginView from '../views/LoginView.vue'
+import PageLayout from '@/components/PageLayout.vue'
+import LoginView from '@/views/LoginView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
+    path: '/login',
     name: 'login',
     component: LoginView,
   },
   {
-    path: '/dashboard',
-    name: 'dashboard',
-    component: () => import('@/views/DashboardView.vue'),
+    path: '/',
+    component: PageLayout,
+    redirect: '/dashboard',
+    children: [
+      {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: () => import('@/views/DashboardView.vue'),
+      },
+    ],
+  },
+  {
+    path: '/records',
+    component: PageLayout,
+    children: [
+      {
+        path: '',
+        name: 'records',
+        component: () => import('@/views/RecordsView.vue'),
+      },
+    ],
+  },
+  {
+    path: '/analytics',
+    component: PageLayout,
+    children: [
+      {
+        path: '',
+        name: 'analytics',
+        component: () => import('@/views/AnalyticsView.vue'),
+      },
+    ],
+  },
+  {
+    path: '/settings',
+    component: PageLayout,
+    children: [
+      {
+        path: '',
+        name: 'settings',
+        component: () => import('@/views/SettingsView.vue'),
+      },
+    ],
   },
   // {
   //   path: '/about',
