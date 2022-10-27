@@ -44,7 +44,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import InlineSvg from 'vue-inline-svg'
-import gsap, { Power4, Power1, Expo } from 'gsap'
+import gsap, { Expo } from 'gsap'
 
 import RouteItem from '@/types/RouteItem'
 
