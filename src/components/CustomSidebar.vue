@@ -39,7 +39,7 @@ import TableSvg from '@/assets/sidebar-icons/table-columns-solid.svg'
 import RecordSvg from '@/assets/sidebar-icons/clipboard-regular.svg'
 import ChartSvg from '@/assets/sidebar-icons/chart-simple-solid.svg'
 import SettingsSvg from '@/assets/sidebar-icons/gear-solid.svg'
-import LogoSvg from '@/assets/logo/svg/mixblue/logo-no-background.svg'
+import LogoSvg from '@/assets/logo/svg/lightblue/logo-no-background.svg'
 
 export default defineComponent({
   name: 'CustomSidebar',
