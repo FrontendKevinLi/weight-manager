@@ -1,23 +1,21 @@
 <template>
-  <PageLayout>
-    <div class="dashboard-view">
-      <WeighingItem />
-      <LastDaysWeightBarChart />
-    </div>
-  </PageLayout>
+  <div class="dashboard-view">
+    <WeighingItem />
+    <LastDaysWeightBarChart />
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 import gsap from 'gsap'
-import PageLayout from '@/components/PageLayout.vue'
+// import PageLayout from '@/components/PageLayout.vue'
 import WeighingItem from '@/components/WeighingItem.vue'
 import LastDaysWeightBarChart from '@/components/LastDaysWeightBarChart.vue'
 
 export default defineComponent({
   name: 'DashboardView',
   components: {
-    PageLayout,
+    // PageLayout,
     WeighingItem,
     LastDaysWeightBarChart,
   },
