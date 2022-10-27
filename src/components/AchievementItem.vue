@@ -39,7 +39,7 @@ const config = computed(() => props.config)
   gap: 10px 20px;
   transition: box-shadow 0.2s ease-in-out;
   border-radius: constants.$border-radius;
-  background-color: color.adjust(colors.$primary-50, $lightness: 4%);
+  background-color: colors.$primary-50-variant;
   padding: 20px;
   padding-right: 10px;
   padding-left: 10px;
