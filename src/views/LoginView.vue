@@ -97,7 +97,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use "sass:map";
 @use "@/style/colors" as colors;
 @use "@/style/constants" as constants;
 @use "@/style/font-sizes.scss" as font-sizes;

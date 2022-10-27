@@ -22,7 +22,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use "sass:map";
 @use "sass:color";
 @use "@/style/colors.scss" as colors;
 @use "@/style/box-shadows.scss" as box-shadows;
@@ -30,21 +29,19 @@ export default defineComponent({
 @use "@/style/constants.scss" as constants;
 
 .custom-btn {
-  $background-color: colors.$blue-400;
+  $background-color: colors.$primary-600;
 
   user-select: none;
   transition: box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out;
   border-radius: constants.$border-radius - 2px;
-
-  // box-shadow: box-shadows.$level-1;
-  background-color: colors.$blue-400;
+  background-color: $background-color;
   cursor: pointer;
   padding-top: 10px;
   padding-right: 20px;
   padding-bottom: 10px;
   padding-left: 20px;
   width: fit-content;
-  color: map.get($map: colors.$black, $key: "100");
+  color: white;
   font-size: font-sizes.$small;
 
   &:hover {

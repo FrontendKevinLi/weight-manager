@@ -113,7 +113,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use "sass:map";
 @use "@/style/constants.scss" as constants;
 @use "@/style/colors" as colors;
 
@@ -138,9 +137,7 @@ export default defineComponent({
     justify-content: center;
     z-index: 1;
     border-radius: 50%;
-    box-shadow: 0 15px 95px -35px map.get($map: colors.$blue, $key: "300");
-
-    // background-color: colors.$primary-800;
+    box-shadow: 0 15px 95px -35px colors.$primary-800;
     background-color: white;
     width: $inner-circle-size;
     height: $inner-circle-size;
@@ -160,39 +157,6 @@ export default defineComponent({
       .unit {
         font-size: 36px;
       }
-    }
-  }
-
-  .circle-outside {
-    position: relative;
-    opacity: 0;
-    z-index: 0;
-    border-radius: 50%;
-    background-color: map.get($map: colors.$blue, $key: "100");
-    width: $outer-circle-size;
-    height: $outer-circle-size;
-
-    &::before {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      box-shadow: 0 0 115px -10px map.get($map: colors.$blue, $key: "300");
-      width: $inner-circle-size;
-      height: $inner-circle-size;
-      content: "";
-    }
-
-    // overflow: hidden;
-    .triangle-mask {
-      $triangle-mask-size: $outer-circle-size / 2;
-
-      z-index: 0;
-      border-top: $triangle-mask-size solid transparent;
-      border-right: $triangle-mask-size solid transparent;
-      border-bottom: $triangle-mask-size solid map.get($map: colors.$blue, $key: "50");
-      border-left: $triangle-mask-size solid transparent;
     }
   }
 
@@ -217,7 +181,7 @@ export default defineComponent({
       background-color: white;
       width: $circle-size;
       height: $circle-size;
-      filter: drop-shadow(0 0 12px map.get($map: colors.$blue, $key: "200"));
+      filter: drop-shadow(0 0 4px colors.$primary-800);
 
       &::before {
         position: absolute;
@@ -226,7 +190,7 @@ export default defineComponent({
         transform: translate(-50%, -50%);
         z-index: 1;
         border-radius: 50%;
-        background-color: map.get($map: colors.$blue, $key: "500");
+        background-color: colors.$primary-600;
         width: 12px;
         height: 12px;
         content: "";
@@ -271,9 +235,9 @@ export default defineComponent({
               top: 50%;
               left: 0;
               transform: translateY(-50%);
-              background: map.get(colors.$blue, "200");
+              background: colors.$darkblue-200;
               width: 12px;
-              height: 1px;
+              height: 2px;
               content: "";
             }
           }
@@ -281,7 +245,7 @@ export default defineComponent({
       }
 
       &:is(:first-child, :last-child, :nth-child(3n + 4))::before {
-        background: map.get(colors.$blue, "900");
+        background: colors.$darkblue-600;
         width: 20px;
       }
     }
@@ -295,33 +259,7 @@ export default defineComponent({
     transform: translate(-10px, -10px);
     width: $size;
     height: $size;
-    filter: drop-shadow(0 0 8px map.get(colors.$blue, "300")) brightness(1.15);
-
-    ::v-deep svg {
-      transform: rotate(135deg);
-    }
-  }
-
-  .inner-progress-circle {
-    $size: $outer-circle-size + 50px;
-
-    filter: brightness(1.1);
-    position: absolute;
-    transform: translate(-10px, -10px);
-    width: $size;
-    height: $size;
-
-    &::before {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      box-shadow: 0 20px 115px -10px map.get($map: colors.$blue, $key: "300");
-      width: $inner-circle-size;
-      height: $inner-circle-size;
-      content: "";
-    }
+    filter: drop-shadow(0 0 4px colors.$primary-800) brightness(1.15);
 
     ::v-deep svg {
       transform: rotate(135deg);

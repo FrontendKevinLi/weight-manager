@@ -50,7 +50,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use "sass:map";
 @use "@/style/constants.scss" as constants;
 @use "@/style/colors" as colors;
 

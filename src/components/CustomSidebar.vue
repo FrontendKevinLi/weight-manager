@@ -148,7 +148,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use "sass:map";
 @use "sass:color";
 @use "@/style/constants.scss" as constants;
 @use "@/style/colors" as colors;
@@ -186,9 +185,7 @@ export default defineComponent({
       place-items: center;
       width: 100%;
       aspect-ratio: 5 / 4;
-      fill: colors.$blue-200;
-
-      // fill: colors.$primary-700;
+      fill: colors.$primary-100;
 
       &:is(.clickable) {
         cursor: pointer;
