@@ -13,9 +13,13 @@
     </div>
     <div class="achievement-section">
       <span class="title">Achievements</span>
-      <div class="achievement-list">
+      <div
+        ref="achievementItemListEl"
+        class="achievement-list"
+      >
         <AchievementItem
           v-for="achievement in achievementList"
+          ref="achievementItemList"
           :key="achievement.id"
           :config="achievement"
         />
@@ -25,12 +29,20 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref, computed } from 'vue'
+import { v4 as uuid } from 'uuid'
+import gsap, { Power1 } from 'gsap'
+import ScrollTrigger from 'gsap/ScrollTrigger'
+
 import ProfilePng from '@/assets/header-icons/profile.png'
 import { AchievementItemType } from '@/types/AchievementItem'
-import { v4 as uuid } from 'uuid'
 import AchievementItem from './AchievementItem.vue'
 
+gsap.registerPlugin(ScrollTrigger)
+
 const username = 'Test user'
+const achievementItemList = ref<InstanceType<(typeof AchievementItem)>[]>()
+const achievementItemListEl = ref<HTMLElement>()
 
 const achievementList: AchievementItemType[] = [
   {
@@ -95,6 +107,32 @@ const achievementList: AchievementItemType[] = [
   },
 ]
 
+const achievementItemElList = computed(() => achievementItemList.value?.map((achievementItem) => achievementItem.$el as HTMLElement))
+
+const initAchievementItemElListScrollTrigger = () => {
+  achievementItemElList.value?.forEach((achievementItemEl) => {
+    gsap.from(achievementItemEl, {
+      scrollTrigger: {
+        trigger: achievementItemEl,
+        scroller: achievementItemListEl.value,
+        start: 'top 100%',
+        toggleActions: 'play none none reverse',
+      },
+      opacity: 0,
+      duration: 0.75,
+      ease: Power1.easeInOut,
+    })
+  })
+}
+
+const initAnimation = () => {
+  initAchievementItemElListScrollTrigger()
+}
+
+onMounted(() => {
+  initAnimation()
+})
+
 </script>
 
 <style lang="scss" scoped>
@@ -131,23 +169,9 @@ const achievementList: AchievementItemType[] = [
 
   .achievement-section {
     display: grid;
-
-    // grid-template-rows: auto minmax(0, 1fr);
     grid-template-rows: auto 1fr;
     gap: 20px;
     overflow-y: hidden;
-
-    &::-webkit-scrollbar {
-      border-radius: 12px;
-      background-color: colors.$black-400; /* or add it to the track */
-      width: 5px;
-      height: 8px;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      border-radius: 12px;
-      background: colors.$black-900;
-    }
 
     .title {
       margin-left: (constants.$border-radius / 2);
