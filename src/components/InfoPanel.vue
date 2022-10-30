@@ -160,9 +160,7 @@ const achievementList: AchievementItemType[] = [
 
       display: grid;
       gap: 15px;
-      padding-top: 5px;
       padding-right: 20px;
-      padding-bottom: 5px;
       padding-left: 5px;
       overflow: auto;
     }
