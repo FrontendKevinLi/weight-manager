@@ -118,6 +118,7 @@ const initAchievementItemElListScrollTrigger = () => {
         start: 'top 100%',
         toggleActions: 'play none none reverse',
       },
+      x: 150,
       opacity: 0,
       duration: 0.75,
       ease: Power1.easeInOut,
@@ -186,7 +187,8 @@ onMounted(() => {
       gap: 15px;
       padding-right: 20px;
       padding-left: 5px;
-      overflow: auto;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
   }
 }
