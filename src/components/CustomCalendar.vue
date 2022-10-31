@@ -48,7 +48,7 @@
 
 <script lang="ts" setup>
 import {
-  nextTick, onMounted, reactive, ref, computed,
+  nextTick, onMounted, reactive, ref, computed, watch,
 } from 'vue'
 import { DateTime } from 'luxon'
 import gsap from 'gsap'
@@ -69,6 +69,7 @@ const headerItemRefList = ref<HTMLElement[]>()
 const calendarInfo = reactive({
   dateTime: DateTime.now().setLocale('en-GB'),
 })
+const canChangeMonth = ref(true)
 
 const calendarYear = computed(() => calendarInfo.dateTime.year)
 const calendarMonth = computed(() => calendarInfo.dateTime.monthLong)
@@ -152,10 +153,6 @@ const generateCalendarList = (dateTimeParam: DateTime): CalendarItem[] => {
 
   return [...calendarForPrepend, ...calendarForTargetMonth, ...calendarForAppend]
 }
-const calendar = computed(() => generateCalendarList(calendarInfo.dateTime))
-const weekdayList: string[] = reactive([])
-
-const timeline = gsap.timeline()
 
 const generateWeekdayList = (): string[] => {
   const dateTime = DateTime.now().setLocale('en-GB')
@@ -166,54 +163,103 @@ const generateWeekdayList = (): string[] => {
   }
   return list
 }
+const calendar = computed(() => generateCalendarList(calendarInfo.dateTime))
+const weekdayList: string[] = generateWeekdayList()
 
-const initHeaderAnimation = () => {
-  if (headerItemRefList.value == null) return
+const timeline = gsap.timeline()
 
-  timeline.from(headerItemRefList.value, {
-    opacity: 0,
+const fadeInHeader = () => {
+  if (headerItemRefList.value == null) {
+    console.error('Header items not found')
+    return
+  }
+
+  gsap.from(headerItemRefList.value, {
+    autoAlpha: 0,
     ease: 'power2.inOut',
     stagger: {
       amount: 0.5,
       from: 'center',
-      grid: 'auto',
     },
-  }, 0)
+  })
 }
 
-const initDayItemListAnimation = () => {
-  if (dayItemRefList.value == null) return
+const fadeInDayItems = () => new Promise((resolve, reject) => {
+  if (dayItemRefList.value == null) {
+    reject(Error('Cannot find elements to animation'))
+    return
+  }
 
-  timeline.from(dayItemRefList.value, {
-    opacity: 0,
+  timeline.set(dayItemRefList.value, {
+    autoAlpha: 0,
+  })
+  timeline.to(dayItemRefList.value, {
+    autoAlpha: 1,
     stagger: {
-      amount: 0.5,
+      amount: 0.125,
       from: 'center',
       grid: 'auto',
       ease: 'power2.inOut',
     },
+    scale: 1,
+    onComplete() {
+      resolve(true)
+    },
+  })
+})
+
+const fadeOutDayItems = () => new Promise((resolve, reject) => {
+  if (dayItemRefList.value == null) {
+    reject(Error('Cannot find elements to animation'))
+    return
+  }
+
+  timeline.to(dayItemRefList.value, {
+    autoAlpha: 0,
+    stagger: {
+      amount: 0.125,
+      from: 'edges',
+      grid: 'auto',
+      ease: 'power2.inOut',
+    },
     scale: 0.5,
-  }, 0)
-}
+    onComplete() {
+      resolve(true)
+    },
+  })
+})
+
+watch(() => calendarInfo.dateTime, async () => {
+  nextTick(async () => {
+    await fadeInDayItems()
+    canChangeMonth.value = true
+  })
+})
 
 const initAnimation = () => {
-  // initHeaderAnimation()
-  initDayItemListAnimation()
+  fadeInHeader()
+  fadeInDayItems()
 }
 
-const handlePreviousMonthButtonClick = () => {
+const handlePreviousMonthButtonClick = async () => {
+  if (!canChangeMonth.value) return
+
+  timeline.clear()
+  canChangeMonth.value = false
+  await fadeOutDayItems()
   calendarInfo.dateTime = calendarInfo.dateTime.minus({ month: 1 })
 }
 
-const handleNextMonthButtonClick = () => {
+const handleNextMonthButtonClick = async () => {
+  if (!canChangeMonth.value) return
+  timeline.clear()
+  canChangeMonth.value = false
+  await fadeOutDayItems()
   calendarInfo.dateTime = calendarInfo.dateTime.plus({ month: 1 })
 }
 
 onMounted(() => {
-  weekdayList.push(...generateWeekdayList())
-  nextTick(() => {
-    initAnimation()
-  })
+  initAnimation()
 })
 
 </script>
@@ -268,9 +314,12 @@ onMounted(() => {
 
   .calendar-main {
     display: grid;
-    grid-template-rows: auto;
+
+    // grid-auto-rows: 1fr;
+    grid-template-rows: auto repeat(6, minmax(auto, 1fr));
+
+    // grid-template-rows: auto;
     grid-template-columns: repeat(7, 1fr);
-    grid-auto-rows: 1fr;
     gap: 20px;
     width: 100%;
 
@@ -278,10 +327,12 @@ onMounted(() => {
       box-sizing: border-box;
       display: grid;
       place-items: center;
+      visibility: hidden;
       border-radius: constants.$border-radius;
       background-color: white;
       padding: 10px;
       color: colors.$darkblue-400;
+      will-change: transform, opacity;
 
       &.header-item {
         display: grid;
