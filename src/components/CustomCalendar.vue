@@ -155,7 +155,7 @@ const generateCalendarList = (dateTimeParam: DateTime): CalendarItem[] => {
 }
 
 const generateWeekdayList = (): string[] => {
-  const dateTime = DateTime.now().setLocale('en-GB')
+  const { dateTime } = calendarInfo
   const list: string[] = [dateTime.set({ weekday: 7 }).weekdayLong.toString()]
   for (let i = 1; i <= 6; i += 1) {
     const weekday = dateTime.set({ weekday: i }).weekdayLong.toString()
