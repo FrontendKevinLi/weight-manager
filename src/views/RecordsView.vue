@@ -1,10 +1,11 @@
 <template>
   <div class="record-view">
-    Record View
+    <CustomCalendar />
   </div>
 </template>
 
 <script lang="ts" setup>
+import CustomCalendar from '@/components/CustomCalendar.vue'
 
 </script>
 
@@ -14,7 +15,6 @@
 
 .record-view {
   display: grid;
-  grid-template-rows: auto 1fr;
   place-items: center;
   height: 100%;
 }
