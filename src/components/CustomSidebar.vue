@@ -97,20 +97,15 @@ export default defineComponent({
     },
     currentRoute() {
       const currentRoute = this.$router.currentRoute.value.fullPath
-      console.log('routechanged')
       if (this.activeItemIndicatorInited) {
         this.rePositionActiveIndicator()
       }
       return currentRoute
     },
   },
-  created() {
-    console.log('created')
-  },
   mounted() {
     // this.initAnimation()
     this.rePositionActiveIndicator(true)
-    console.log('mounted')
   },
   methods: {
     initAnimation() {
