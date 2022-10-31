@@ -13,7 +13,7 @@ import ProfilePng from '@/assets/header-icons/profile.png'
 import BellSvg from '@/assets/header-icons/bell-regular.svg'
 
 export default defineComponent({
-  name: 'DashboardView',
+  name: 'CustomHeader',
   components: {
   },
   data() {
@@ -38,16 +38,12 @@ export default defineComponent({
 .custom-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding-top: 40px;
   padding-right: 40px;
   padding-left: 40px;
 
   .page-name {
-    margin-right: 10px;
-    margin-left: 10px;
-    text-align: center;
-    color: colors.$darkblue-600;
+    color: #2d4e69;
     font-size: 34px;
   }
 }
