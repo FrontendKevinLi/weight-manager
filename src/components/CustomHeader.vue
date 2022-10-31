@@ -1,7 +1,7 @@
 <template>
   <div class="custom-header">
     <span class="page-name">
-      Dashboard
+      {{ routeLabel }}
     </span>
   </div>
 </template>
@@ -21,6 +21,12 @@ export default defineComponent({
       ProfilePng,
       BellSvg,
     }
+  },
+  computed: {
+    routeLabel() {
+      const routeLabel = this.$route.meta.label
+      return routeLabel
+    },
   },
 })
 </script>
