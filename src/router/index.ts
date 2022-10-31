@@ -16,6 +16,9 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'dashboard',
         name: 'dashboard',
+        meta: {
+          label: 'Dashboard',
+        },
         component: () => import('@/views/DashboardView.vue'),
       },
     ],
@@ -27,6 +30,9 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '',
         name: 'records',
+        meta: {
+          label: 'Records',
+        },
         component: () => import('@/views/RecordsView.vue'),
       },
     ],
@@ -38,6 +44,9 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '',
         name: 'analytics',
+        meta: {
+          label: 'Analytics',
+        },
         component: () => import('@/views/AnalyticsView.vue'),
       },
     ],
@@ -49,6 +58,9 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '',
         name: 'settings',
+        meta: {
+          label: 'Settings',
+        },
         component: () => import('@/views/SettingsView.vue'),
       },
     ],
