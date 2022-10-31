@@ -1,46 +1,77 @@
 <template>
   <div class="custom-calendar">
-    <div
-      v-for="(weekday, index) in weekdayList"
-      :key="index"
-      ref="headerItemRefList"
-      :class="[
-        'calendar-item header-item',
-      ]"
-    >
-      <span class="weekday">{{ weekday }}</span>
+    <div class="calendar-header">
+      <div
+        class="previous-month-button header-button"
+        @click="handlePreviousMonthButtonClick"
+        @keydown="handlePreviousMonthButtonClick"
+      >
+        <InlineSvg :src="ArrowLeftSvg" />
+      </div>
+      <div class="calendar-date">
+        <span class="year">{{ calendarYear }}</span>
+        <span class="month">{{ calendarMonth }}</span>
+      </div>
+      <div
+        class="next-month-button header-button"
+        @click="handleNextMonthButtonClick"
+        @keydown="handleNextMonthButtonClick"
+      >
+        <InlineSvg :src="ArrowRightSvg" />
+      </div>
     </div>
-    <div
-      v-for="(calendarItem, index) in calendar"
-      :key="index"
-      ref="dayItemRefList"
-      :class="[
-        'calendar-item day-item',
-        !calendarItem.isTargetMonth && 'not-target'
-      ]"
-    >
-      {{ calendarItem.day }}
+    <div class="calendar-main">
+      <div
+        v-for="(weekday, index) in weekdayList"
+        :key="index"
+        ref="headerItemRefList"
+        :class="[
+          'calendar-item header-item',
+        ]"
+      >
+        <span class="weekday">{{ weekday }}</span>
+      </div>
+      <div
+        v-for="(calendarItem, index) in calendar"
+        :key="index"
+        ref="dayItemRefList"
+        :class="[
+          'calendar-item day-item',
+          !calendarItem.isTargetMonth && 'not-target'
+        ]"
+      >
+        {{ calendarItem.day }}
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import {
-  nextTick, onMounted, reactive, ref,
+  nextTick, onMounted, reactive, ref, computed,
 } from 'vue'
 import { DateTime } from 'luxon'
 import gsap from 'gsap'
+import InlineSvg from 'vue-inline-svg'
+
+import ArrowLeftSvg from '@/assets/calendar/chevron-left-solid.svg'
+import ArrowRightSvg from '@/assets/calendar/chevron-right-solid.svg'
 
 type CalendarItem = {
   weekdayShort: string,
   day: number,
   isTargetMonth: boolean
 }
-const timeline = gsap.timeline()
-const calendar: CalendarItem[] = reactive([])
-const weekdayList: string[] = reactive([])
+
 const dayItemRefList = ref<HTMLElement[]>()
 const headerItemRefList = ref<HTMLElement[]>()
+
+const calendarInfo = reactive({
+  dateTime: DateTime.now().setLocale('en-GB'),
+})
+
+const calendarYear = computed(() => calendarInfo.dateTime.year)
+const calendarMonth = computed(() => calendarInfo.dateTime.monthLong)
 
 const getFirstDayInMonth = (dateTimeParam: DateTime): DateTime => {
   const firstDay = dateTimeParam.set({
@@ -98,7 +129,6 @@ const generateCalendarListForAppend = (dateTimeParam: DateTime) => {
   const lastDay = getLastDayInMonth(dateTimeParam)
   const lastWeekDayNumber = Number(lastDay.weekday)
   const daysToAppend = Math.abs((lastWeekDayNumber % 7) - 6)
-  console.log(daysToAppend)
 
   const calendarListForAppend: CalendarItem[] = []
 
@@ -116,17 +146,16 @@ const generateCalendarListForAppend = (dateTimeParam: DateTime) => {
 }
 
 const generateCalendarList = (dateTimeParam: DateTime): CalendarItem[] => {
-  // generate days for target month
   const calendarForTargetMonth: CalendarItem[] = generateCalendarListForTargetMonth(dateTimeParam)
-
-  // generate days for prepend (previous) month
   const calendarForPrepend: CalendarItem[] = generateCalendarListForPrepend(dateTimeParam)
-
-  // generate days for append (next) month
   const calendarForAppend: CalendarItem[] = generateCalendarListForAppend(dateTimeParam)
 
   return [...calendarForPrepend, ...calendarForTargetMonth, ...calendarForAppend]
 }
+const calendar = computed(() => generateCalendarList(calendarInfo.dateTime))
+const weekdayList: string[] = reactive([])
+
+const timeline = gsap.timeline()
 
 const generateWeekdayList = (): string[] => {
   const dateTime = DateTime.now().setLocale('en-GB')
@@ -172,12 +201,17 @@ const initAnimation = () => {
   initDayItemListAnimation()
 }
 
+const handlePreviousMonthButtonClick = () => {
+  calendarInfo.dateTime = calendarInfo.dateTime.minus({ month: 1 })
+}
+
+const handleNextMonthButtonClick = () => {
+  calendarInfo.dateTime = calendarInfo.dateTime.plus({ month: 1 })
+}
+
 onMounted(() => {
-  const dateTime = DateTime.now().setLocale('en-us')
-  calendar.push(...generateCalendarList(dateTime))
   weekdayList.push(...generateWeekdayList())
   nextTick(() => {
-    console.log(headerItemRefList.value)
     initAnimation()
   })
 })
@@ -185,6 +219,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:color";
 @use "@/style/colors.scss" as colors;
 @use "@/style/constants.scss" as constants;
 @use "@/style/font-sizes.scss" as font-sizes;
@@ -192,41 +227,81 @@ onMounted(() => {
 .custom-calendar {
   box-sizing: border-box;
   display: grid;
-  grid-template-rows: auto;
-  grid-template-columns: repeat(7, 1fr);
-  grid-auto-rows: 1fr;
+  flex-direction: column;
+  grid-template-rows: auto 1fr;
   gap: 20px;
-  padding: 40px;
   width: 100%;
   height: 100%;
 
-  .calendar-item {
-    box-sizing: border-box;
-    display: grid;
-    place-items: center;
-    border-radius: constants.$border-radius;
-    background-color: white;
-    padding: 10px;
-    color: colors.$darkblue-400;
+  .calendar-header {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
 
-    &.header-item {
-      display: grid;
-      place-items: center;
-      align-self: center;
-      background-color: colors.$primary-600;
-      letter-spacing: 0.125rem;
+    .header-button {
+      transition: fill 0.2s ease-out;
+      cursor: pointer;
+      padding-right: 20px;
+      padding-left: 20px;
+      width: 30px;
+      fill: colors.$primary-600;
 
-      .weekday {
-        color: white;
-        font-size: font-sizes.$small;
-        font-weight: bold;
+      &:hover {
+        fill: color.adjust(colors.$primary-500, $lightness: 5%);
       }
     }
 
-    &.day-item {
-      &:is(.not-target) {
-        background-color: colors.$primary-50-variant;
-        color: colors.$darkblue-100;
+    .calendar-date {
+      display: flex;
+      gap: 20px;
+      color: colors.$darkblue-600;
+      font-size: font-sizes.$medium;
+      user-select: none;
+
+      .month {
+        width: 125px;
+        text-align: end;
+      }
+    }
+  }
+
+  .calendar-main {
+    display: grid;
+    grid-template-rows: auto;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: 1fr;
+    gap: 20px;
+    width: 100%;
+
+    .calendar-item {
+      box-sizing: border-box;
+      display: grid;
+      place-items: center;
+      border-radius: constants.$border-radius;
+      background-color: white;
+      padding: 10px;
+      color: colors.$darkblue-400;
+
+      &.header-item {
+        display: grid;
+        place-items: center;
+        align-self: center;
+        background-color: colors.$primary-600;
+        letter-spacing: 0.125rem;
+
+        .weekday {
+          color: white;
+          font-size: font-sizes.$small;
+          font-weight: bold;
+        }
+      }
+
+      &.day-item {
+        &:is(.not-target) {
+          background-color: colors.$primary-50-variant;
+          color: colors.$darkblue-100;
+        }
       }
     }
   }
