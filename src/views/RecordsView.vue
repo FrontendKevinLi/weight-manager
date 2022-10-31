@@ -17,5 +17,9 @@ import CustomCalendar from '@/components/CustomCalendar.vue'
   display: grid;
   place-items: center;
   height: 100%;
+
+  .custom-calendar {
+    padding: 40px;
+  }
 }
 </style>
