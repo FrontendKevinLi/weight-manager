@@ -2,7 +2,7 @@
   <div class="progress-circle-2">
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="75 75 250 250"
+      viewBox="90 90 220 220"
       class="circle-container"
     >
       <defs>
@@ -33,8 +33,9 @@
         d="M 300 200 A 100 100 0 1 1 200 100"
         fill="none"
         :stroke="`url(#${id})`"
-        stroke-width="12"
+        :stroke-width="config.stroke.width"
         class="circle-path"
+        :stroke-linecap="config.stroke.linecap"
       />
     </svg>
   </div>
@@ -42,9 +43,14 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { ProgressCircle2Config } from '@/types/ProgressCircle2'
-import gsap from 'gsap'
 import { v4 as uuid } from 'uuid'
+import gsap from 'gsap'
+
+import { CustomEase } from '@/utils/gsap/CustomEase'
+import { ProgressCircle2Config } from '@/types/ProgressCircle2'
+import Constants from '@/utils/constant'
+
+gsap.registerPlugin(CustomEase)
 
 export default defineComponent({
   name: 'ProgressCircle2',
@@ -111,17 +117,16 @@ export default defineComponent({
       })
 
       timeline.to(this.$refs['progress-path'] as string, {
-        duration: this.config.animationConfig?.enabled ? 0.75 : 0,
-        ease: 'back',
+        duration: this.config.animationConfig?.enabled ? this.config.animationConfig.duration : 0,
+        ease: CustomEase.create('custom', Constants.customElasticPath),
         strokeDasharray: `${this.strokeDasharray * this.config.percentage} ${this.strokeDasharray * (1 - this.config.percentage)}`,
-      })
+      }, this.config.animationConfig.delay)
     },
   },
 })
 </script>
 
 <style lang="scss" scoped>
-@use "sass:map";
 @use "@/style/colors" as colors;
 
 .progress-circle-2 {

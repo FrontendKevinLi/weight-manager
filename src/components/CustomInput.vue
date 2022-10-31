@@ -1,7 +1,10 @@
 <template>
   <div :class="['custom-input-wrapper', (isInputFocused || !isInputTextEmpty) && 'focus']">
+    <label
+      for="input"
+      :class="['placeholder']"
+    >{{ placeholder }}</label>
     <input
-      id="input"
       class="input"
       :value="inputText"
       :type="type"
@@ -11,10 +14,6 @@
       @blur="setInputFocus(false)"
       @keyup.enter="handleKeyUpEnter"
     >
-    <label
-      for="input"
-      :class="['placeholder']"
-    >{{ placeholder }}</label>
   </div>
 </template>
 
@@ -68,23 +67,33 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use "sass:map";
 @use "@/style/colors" as colors;
+@use "@/style/font-sizes.scss" as font-sizes;
 
 .custom-input-wrapper {
   $underline-height: 2px;
+  $input-left-right-indent: 10px;
+  $input-font-size: font-sizes.$medium;
+  $place-holder-font-size: font-sizes.$medium;
+  $place-holder-focus-font-size: font-sizes.$extra-small;
+  $gap: 5px;
 
+  display: grid;
   position: relative;
-  border-bottom: $underline-height solid map.get($map: colors.$black, $key: "500");
+  grid-template-rows: (font-sizes.$extra-small + 2px) 1fr;
+  gap: $gap;
+  align-items: center;
+  border-bottom: $underline-height solid colors.$darkblue-200;
+  padding-bottom: 5px;
   width: 500px;
-  height: 35px;
 
+  // colored underline
   &::after {
     position: absolute;
     bottom: -$underline-height;
     left: 0;
     transition: width 0.15s ease-in-out;
-    background-color: map.get($map: colors.$blue, $key: "700");
+    background-color: colors.$darkblue-700;
     width: 0;
     height: $underline-height;
     content: "";
@@ -92,29 +101,36 @@ export default defineComponent({
 
   .input {
     box-sizing: border-box;
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
     outline: none;
     border: none;
     background: transparent;
-    padding-right: 10px;
-    padding-bottom: 0;
-    padding-left: 10px;
+    padding-right: $input-left-right-indent;
+    padding-left: $input-left-right-indent;
     width: 100%;
     height: 100%;
-    font-size: 24px;
+    color: colors.$darkblue-700;
+    font-size: $input-font-size;
   }
 
   .placeholder {
-    position: absolute;
-    top: 0;
-    left: 10px;
-    transform: translateY(0);
+    $time-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+    display: grid;
+    grid-row: 2 / 3;
+    grid-column: 1 / 2;
+    align-items: center;
     transition:
-      transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
-      font-size 0.15s cubic-bezier(0.4, 0, 0.2, 1),
-      color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+      transform 0.15s $time-function,
+      font-size 0.15s $time-function,
+      color 0.15s $time-function;
+    margin-right: $input-left-right-indent;
+    margin-left: $input-left-right-indent;
     cursor: text;
-    color: map.get($map: colors.$black, $key: "500");
-    font-size: 24px;
+    height: 100%;
+    color: colors.$darkblue-200;
+    font-size: $place-holder-font-size;
     pointer-events: none;
   }
 
@@ -124,9 +140,8 @@ export default defineComponent({
     }
 
     .placeholder {
-      transform: translate(0, -20px);
-      color: map.get($map: colors.$blue, $key: "500");
-      font-size: 16px;
+      transform: translateY(-($input-font-size + $gap));
+      font-size: $place-holder-focus-font-size;
     }
   }
 }

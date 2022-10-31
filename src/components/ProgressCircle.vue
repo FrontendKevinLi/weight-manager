@@ -121,7 +121,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@use "sass:map";
 @use "@/style/colors" as colors;
 
 .progress-circle {
@@ -129,7 +128,7 @@ export default defineComponent({
   height: 325px;
 
   // stroke-dasharray: 302;
-  filter: drop-shadow(0 0 3px map.get(colors.$blue, "900"));
+  filter: drop-shadow(0 0 3px colors.$primary-900);
 
   .circle-container {
     transform: rotate(225deg);

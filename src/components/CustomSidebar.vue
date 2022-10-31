@@ -1,20 +1,42 @@
 <template>
   <div class="custom-sidebar">
-    <div
-      v-for="sidebarItem in sidebarItems"
-      :key="sidebarItem.className"
-      :class="[
-        'custom-sidebar-item',
-        sidebarItem.className,
-        sidebarItem.slideIn && 'slide-in',
-        sidebarItem.background && 'card-view',
-        sidebarItem.clickable && 'clickable',
-        sidebarItem.path === currentRoute && 'active'
-      ]"
-    >
+    <div class="logo">
       <InlineSvg
-        :src="sidebarItem.icon"
+        :src="LogoSvg"
       />
+    </div>
+    <div
+      class="route-list-wrapper"
+    >
+      <div
+        class="active-indicator"
+      >
+        <div class="side-indicator" />
+        <div class="background-indicator" />
+      </div>
+      <div
+        ref="routeList"
+        class="route-list"
+      >
+        <div
+          v-for="routeItem in routeItemList"
+          ref="routeItem"
+          :key="routeItem.className"
+          :class="[
+            'route-item',
+            routeItem.className,
+            routeItem.slideIn && 'slide-in',
+            routeItem.clickable && 'clickable',
+            routeItem.path === currentRoute && 'active'
+          ]"
+          @click.stop="handleRouteItemClick(routeItem)"
+          @keydown="handleRouteItemClick(routeItem)"
+        >
+          <InlineSvg
+            :src="routeItem.icon"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -22,15 +44,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import InlineSvg from 'vue-inline-svg'
-import gsap from 'gsap'
+import gsap, { Expo } from 'gsap'
 
-import CustomSidebarItem from '@/types/CustomSidebarItem'
+import RouteItem from '@/types/RouteItem'
 
-import LogoSvg from '@/assets/logo/svg/logo-no-background.svg'
 import TableSvg from '@/assets/sidebar-icons/table-columns-solid.svg'
 import RecordSvg from '@/assets/sidebar-icons/clipboard-regular.svg'
 import ChartSvg from '@/assets/sidebar-icons/chart-simple-solid.svg'
 import SettingsSvg from '@/assets/sidebar-icons/gear-solid.svg'
+import LogoSvg from '@/assets/logo/svg/lightblue/logo-no-background.svg'
 
 export default defineComponent({
   name: 'CustomSidebar',
@@ -44,70 +66,62 @@ export default defineComponent({
       ChartSvg,
       LogoSvg,
       SettingsSvg,
+      activeItemIndicatorInited: false,
     }
   },
   computed: {
-    sidebarItems() {
-      const sidebarItems: CustomSidebarItem[] = [
-        new CustomSidebarItem({
-          icon: this.LogoSvg,
-          className: 'logo',
-          path: '',
-          slideIn: false,
-          background: false,
-          clickable: false,
-        }),
-        new CustomSidebarItem({
+    routeItemList() {
+      const routeItemList: RouteItem[] = [
+        new RouteItem({
           icon: this.TableSvg,
           className: 'dashboard',
           path: '/dashboard',
         }),
-        new CustomSidebarItem({
+        new RouteItem({
           icon: this.RecordSvg,
           className: 'records',
           path: '/records',
         }),
-        new CustomSidebarItem({
+        new RouteItem({
           icon: this.ChartSvg,
-          className: 'graphs',
-          path: '/graphs',
+          className: 'analytics',
+          path: '/analytics',
         }),
-        new CustomSidebarItem({
+        new RouteItem({
           icon: this.SettingsSvg,
           className: 'settings',
           path: '/settings',
         }),
       ]
-      return sidebarItems
+      return routeItemList
     },
     currentRoute() {
       const currentRoute = this.$router.currentRoute.value.fullPath
+      if (this.activeItemIndicatorInited) {
+        this.rePositionActiveIndicator()
+      }
       return currentRoute
     },
   },
   mounted() {
-    this.initListeners()
-    this.initAnimation()
+    // this.initAnimation()
+    this.rePositionActiveIndicator(true)
   },
   methods: {
     initAnimation() {
       const timeline = gsap.timeline()
-      timeline.from('.custom-sidebar-item', {
+      timeline.from('.route-item', {
         y: -150,
         opacity: 0,
         stagger: 0.10,
         ease: 'back',
-      }, 0)
-      timeline.set('.custom-sidebar-item.active', {
-        scale: 1.2,
-        duration: 0.15,
-        ease: 'power4',
-        fill: '#0050a4',
-        marginBottom: 20,
+        onComplete: () => {
+          // this.rePositionActiveIndicator(true)
+        },
       }, 0)
     },
     initListeners() {
-      const sideBarItems = gsap.utils.toArray('.custom-sidebar-item.slide-in') as HTMLElement[]
+      const sideBarItems = gsap.utils.toArray('.route-item.slide-in') as HTMLElement[]
 
       sideBarItems.forEach((sideBarItem) => {
         gsap.set(sideBarItem, {
@@ -135,50 +149,129 @@ export default defineComponent({
         })
       })
     },
+    async handleRouteItemClick(routeItem: RouteItem) {
+      await this.$router.push(routeItem.path)
+      this.rePositionActiveIndicator()
+    },
+    getActiveRouteItemElement() {
+      return document.querySelector('.route-item.active')
+    },
+    rePositionActiveIndicator(isInit = false) {
+      this.$nextTick(() => {
+        const timeline = gsap.timeline()
+        const routeList = this.$refs.routeList as HTMLElement | undefined
+        const activeRouteItemElementTop = this.getActiveRouteItemElement()?.getBoundingClientRect().top ?? 0
+        const routeListElementTop = routeList?.getBoundingClientRect().top ?? 0
+        const top = activeRouteItemElementTop - routeListElementTop
+
+        if (isInit) {
+          timeline.set('.active-indicator', {
+            y: top,
+          })
+          this.activeItemIndicatorInited = true
+          return
+        }
+
+        timeline.to('.active-indicator', {
+          duration: 0.5,
+          y: top,
+          opacity: 1,
+          ease: Expo.easeInOut,
+        })
+      })
+    },
   },
 })
 </script>
 
 <style lang="scss" scoped>
-@use "sass:map";
+@use "sass:color";
 @use "@/style/constants.scss" as constants;
 @use "@/style/colors" as colors;
 
 .custom-sidebar {
-  display: flex;
-  flex-direction: column;
-  row-gap: 20px;
-  align-items: center;
-  width: 120px;
+  $logo-height: 70px;
+  $sidebar-width: 120px;
+
+  display: grid;
+  position: relative;
+  grid-template-rows: $logo-height 1fr $logo-height;
+  grid-template-columns: $sidebar-width;
+  place-items: center;
+  border-top-right-radius: constants.$border-radius;
+  border-bottom-right-radius: constants.$border-radius;
+  background-color: colors.$primary-900;
+  padding-top: 20px;
+  padding-bottom: 20px;
 
   .logo {
-    width: 70px;
-    height: 70px;
+    height: $logo-height;
+    aspect-ratio: 1000 / 1125;
   }
 
-  .custom-sidebar-item {
-    box-sizing: border-box;
-    padding: 10px;
-    width: 70px;
-    height: 70px;
+  .route-list-wrapper {
+    width: 100%;
+    height: fit-content;
 
-    &.card-view {
-      border-radius: constants.$border-radius;
-      box-shadow: constants.$card-shadow;
-      background-color: white;
-    }
+    .route-list {
+      $route-item-size: 30px;
 
-    &.clickable {
-      cursor: pointer;
-    }
-
-    &.logo {
-      padding: 0;
-    }
-
-    svg {
+      display: grid;
+      position: relative;
+      gap: $route-item-size * 0.5;
+      place-items: center;
       width: 100%;
-      height: 100%;
+
+      .route-item {
+        box-sizing: border-box;
+        display: grid;
+        position: relative;
+        place-items: center;
+        transition: fill 0.2s ease-in-out;
+        width: 100%;
+        aspect-ratio: 5 / 4;
+        fill: colors.$primary-100;
+
+        &:is(.clickable) {
+          cursor: pointer;
+        }
+
+        &:is(.active) {
+          fill: white;
+        }
+
+        svg {
+          width: $route-item-size;
+          height: $route-item-size;
+        }
+      }
+    }
+
+    .active-indicator {
+      display: grid;
+      position: absolute;
+      align-items: center;
+      width: $sidebar-width;
+      aspect-ratio: 5 / 4;
+
+      & > * {
+        grid-area: 1 / 1;
+      }
+
+      .side-indicator {
+        border-top-right-radius: constants.$border-radius;
+        border-bottom-right-radius: constants.$border-radius;
+        background-color: colors.$primary-200;
+        width: 6px;
+        height: 100%;
+      }
+
+      .background-indicator {
+        margin-left: 6px;
+        background-color: white;
+        height: calc(100% - (constants.$border-radius / 2));
+        filter: opacity(0.1);
+      }
     }
   }
 }

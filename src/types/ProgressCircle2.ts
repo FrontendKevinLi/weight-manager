@@ -7,12 +7,18 @@ export type ColorConfig = {
 }
 
 export type AnimationConfig = {
-  enabled: boolean
+  enabled: boolean,
+  duration: number
+  delay: string
 }
 
 export type ProgressCircle2Config = {
   colorConfig?: ColorConfig,
   animationConfig?: AnimationConfig,
   /** @description Number is between 0 to 1; Floating point */
-  percentage: number
+  percentage: number,
+  stroke: {
+    linecap: 'round' | 'square',
+    width: number
+  },
 }

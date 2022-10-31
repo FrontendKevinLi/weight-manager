@@ -7,6 +7,7 @@
       <div
         ref="white-section"
         class="white-section"
+        @keyup.enter="handleLoginButtonClick"
       >
         <InlineSvg
           class="logo"
@@ -25,21 +26,9 @@
         />
         <CustomButton
           :label="'Login'"
-          class="white-section-item"
+          class="white-section-item login-btn"
           @click="handleLoginButtonClick"
         />
-      </div>
-      <div
-        ref="blue-section"
-        class="blue-section"
-      >
-        <img
-          ref="picture"
-          class="picture"
-          :src="BodyWeightingImg"
-          alt=""
-        >
-        <!-- <a href="http://www.freepik.com">Designed by vectorjuice / Freepik</a> -->
       </div>
     </div>
   </div>
@@ -54,7 +43,7 @@ import CustomInput from '@/components/CustomInput.vue'
 import CustomButton from '@/components/CustomButton.vue'
 
 import BodyWeightingImg from '@/assets/login-page-pictures/bodyWeighting.png'
-import LogoFullSvg from '@/assets/logo-full/svg/logo-no-background.svg'
+import LogoFullSvg from '@/assets/logo-full/svg/primaryblue/logo-no-background.svg'
 
 export default defineComponent({
   name: 'LoginView',
@@ -80,7 +69,7 @@ export default defineComponent({
 
       timeLine.from(this.$refs['white-section'] as gsap.TweenTarget, {
         opacity: 0.001,
-        x: 100,
+        y: -100,
         ease: 'power2',
         delay: 0.1,
         duration: 0.75,
@@ -91,12 +80,6 @@ export default defineComponent({
         opacity: 0,
         stagger: 0.1,
       }, '-=0.5')
-      timeLine.from(this.$refs['blue-section'] as gsap.TweenTarget, {
-        opacity: 0.001,
-        x: -100,
-        ease: 'power2',
-        duration: 0.75,
-      }, '-=0.55')
     },
     handleLoginButtonClick() {
       const vm = this
@@ -114,9 +97,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use "sass:map";
 @use "@/style/colors" as colors;
 @use "@/style/constants" as constants;
+@use "@/style/font-sizes.scss" as font-sizes;
 @use "@/style/animations";
 
 @font-face {
@@ -133,14 +116,35 @@ export default defineComponent({
   height: $size;
 }
 
+@keyframes float {
+  from {
+    transform: translate(-2%, -5%);
+  }
+
+  to {
+    transform: translate(3%, 5%);
+  }
+}
+
 .login {
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: center;
-  background-color: #e8ecf3;
-  background-blend-mode: screen;
   height: 100vh;
   overflow: hidden;
+
+  &::before {
+    position: absolute;
+    background-image: url("@/assets/backgrounds/low-poly-grid-haikei2.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 108vw;
+    height: 115vh;
+    animation: float 7s infinite alternate ease-in-out;
+    content: "";
+    filter: brightness(0.8) blur(3px);
+  }
 
   .login-box {
     $login-box-width: 75vw;
@@ -148,10 +152,10 @@ export default defineComponent({
     display: flex;
     position: relative;
     flex-direction: row;
+    align-items: center;
     justify-content: center;
     z-index: 0;
     border-radius: constants.$border-radius;
-    width: $login-box-width;
     height: 70vh;
     max-height: 700px;
 
@@ -160,16 +164,18 @@ export default defineComponent({
       display: flex;
       position: relative;
       flex-direction: column;
-      row-gap: 50px;
+      row-gap: 30px;
       align-items: center;
-      justify-content: center;
       border-radius: 12px;
-      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
+
+      // box-shadow: 0 3px 5px 0 colors.$black-700;
+      // box-shadow: 0 3px 8px -1px colors.$black-900;
       background-color: white;
-      padding: 20px;
+      padding-top: 40px;
+      padding-right: 80px;
+      padding-bottom: 40px;
+      padding-left: 80px;
       width: calc($login-box-width / 2.5);
-      min-width: 320px;
-      height: 100%;
 
       .logo {
         width: 300px;
@@ -177,84 +183,28 @@ export default defineComponent({
       }
 
       .username-input {
-        width: 80%;
+        width: 100%;
         min-width: 260px;
+        letter-spacing: 0.1rem;
       }
 
       .password-input {
-        width: 80%;
+        width: 100%;
         min-width: 260px;
+        letter-spacing: 0.1rem;
       }
 
       .login-btn {
-        border-radius: constants.$border-radius;
-        background: map.get($map: colors.$blue, $key: "500");
-        cursor: pointer;
-        padding-top: 10px;
-        padding-right: 20px;
-        padding-bottom: 10px;
-        padding-left: 20px;
-        width: fit-content;
-        color: map.get($map: colors.$blue, $key: "50");
-        font-size: 20px;
+        box-sizing: border-box;
+        margin-top: 20px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        width: 100%;
+        text-align: center;
+        letter-spacing: 0.15rem;
+        font-size: font-sizes.$small;
+        font-weight: bold;
       }
-    }
-
-    .blue-section {
-      display: none;
-      flex-direction: column;
-      row-gap: 30px;
-      align-items: center;
-      justify-content: center;
-      transform: scale(1.2);
-      z-index: -1;
-      border-radius: 12px;
-      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
-      background-color: map.get($map: colors.$blue, $key: "500");
-      width: calc($login-box-width / 2);
-      will-change: opacity;
-
-      .slogan {
-        color: white;
-        font-size: 26px;
-      }
-
-      .picture {
-        width: 25vw;
-        height: 25vw;
-      }
-
-      @media screen and (max-width: 1024px) {
-        display: none;
-      }
-    }
-
-    .circle {
-      position: absolute;
-      top: calc(50% - 50px);
-      left: 0;
-      z-index: -1;
-      border: 5px dotted map.get($map: colors.$blue, $key: "200");
-      border-radius: 50%;
-      width: 100px;
-      height: 100px;
-      animation: spinning 5s linear infinite;
-    }
-
-    .bottom-left {
-      @include decoration-box(map.get($map: colors.$blue, $key: "700"), 200px, constants.$border-radius);
-
-      bottom: -25px;
-      left: -25px;
-      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
-    }
-
-    .top-right {
-      @include decoration-box(white, 200px, constants.$border-radius);
-
-      top: -25px;
-      right: -25px;
-      box-shadow: 0 0 20px -3px map.get($map: colors.$blue, $key: "200");
     }
   }
 }

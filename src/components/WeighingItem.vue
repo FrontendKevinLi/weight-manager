@@ -12,10 +12,6 @@
       :config="outerProgressCircleConfig"
       class="outer-progress-circle"
     />
-    <ProgressCircle2
-      :config="innerProgressCircleConfig"
-      class="inner-progress-circle"
-    />
     <div class="pointer-container">
       <div class="pointer">
         <div class="triangle-mask" />
@@ -33,9 +29,13 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import gsap, { Back } from 'gsap'
-import { ProgressCircle2Config } from '@/types/ProgressCircle2'
-import ProgressCircle2 from './ProgressCircle2.vue'
+import gsap from 'gsap'
+import { ProgressCircle2Config, AnimationConfig } from '@/types/ProgressCircle2'
+import Constants from '@/utils/constant'
+import { CustomEase } from '@/utils/gsap/CustomEase'
+import ProgressCircle2 from '@/components/ProgressCircle2.vue'
+
+gsap.registerPlugin(CustomEase)
 
 export default defineComponent({
   name: 'WeighingItem',
@@ -45,11 +45,16 @@ export default defineComponent({
   data() {
     return {
       weight: {
-        displayValue: '',
+        displayValue: '0.0',
         tweenValue: 0,
-        value: 54.5,
+        value: 121.5,
         maxValue: 200,
       },
+      animationConfig: {
+        enabled: true,
+        duration: 1,
+        delay: '0.15',
+      } as AnimationConfig,
     }
   },
   computed: {
@@ -62,27 +67,17 @@ export default defineComponent({
         percentage: this.weighingPercentage,
         colorConfig: {
           linearGradient: {
-            from: '#fff',
-            to: '#003584',
+            from: '#314782',
+            to: '#7bb1e0',
           },
         },
-        animationConfig: {
-          enabled: true,
+        animationConfig: this.animationConfig,
+        stroke: {
+          linecap: 'round',
+          width: 6,
         },
       }
       return outerProgressCircleConfig
-    },
-    innerProgressCircleConfig() {
-      const innerProgressCircleConfig: ProgressCircle2Config = {
-        percentage: 1,
-        colorConfig: {
-          color: '#99b0d3',
-        },
-        animationConfig: {
-          enabled: false,
-        },
-      }
-      return innerProgressCircleConfig
     },
   },
   mounted() {
@@ -100,17 +95,17 @@ export default defineComponent({
       })
       timeline.to('.pointer-container', {
         rotate: initRotateDeg + (maxRotateDeg / maxKG) * currentKG,
-        ease: Back.easeOut,
-        duration: 0.75,
-      }, 0)
+        ease: CustomEase.create('custom', Constants.customElasticPath),
+        duration: this.animationConfig.duration,
+      }, this.animationConfig.delay)
       timeline.to(this.weight, {
-        duration: 0.75,
+        duration: this.animationConfig.duration,
         tweenValue: this.weight.value,
-        ease: Back.easeOut,
+        ease: CustomEase.create('custom', Constants.customElasticPath),
         onUpdate: () => {
           this.weight.displayValue = this.weight.tweenValue.toFixed(1)
         },
-      }, 0)
+      }, this.animationConfig.delay)
     },
   },
 })
@@ -118,18 +113,16 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use "sass:map";
 @use "@/style/constants.scss" as constants;
 @use "@/style/colors" as colors;
 
 .weighing-item {
   $inner-circle-size: 325px;
-  $outer-circle-size: 375px;
+  $outer-circle-size: 440px;
 
   display: grid;
   position: relative;
   place-items: center;
-  margin: 30px;
   padding: 20px;
   width: fit-content;
   height: fit-content;
@@ -144,8 +137,8 @@ export default defineComponent({
     justify-content: center;
     z-index: 1;
     border-radius: 50%;
-    box-shadow: 0 15px 35px -20px map.get($map: colors.$blue, $key: "300");
-    background-color: map.get($map: colors.$blue, $key: "50");
+    box-shadow: 0 15px 95px -35px colors.$primary-800;
+    background-color: white;
     width: $inner-circle-size;
     height: $inner-circle-size;
 
@@ -153,59 +146,23 @@ export default defineComponent({
       display: flex;
       gap: 10px;
       align-items: baseline;
+      color: colors.$darkblue-600;
+
+      // color: white;
 
       .number {
-        color: map.get($map: colors.$blue, $key: "900");
-        font-family: sans-serif;
         font-size: 72px;
       }
 
       .unit {
-        color: map.get(colors.$blue, "900");
-        font-family: sans-serif;
         font-size: 36px;
       }
     }
   }
 
-  .circle-outside {
-    position: relative;
-    opacity: 0;
-    z-index: 0;
-    border-radius: 50%;
-
-    // box-shadow: 0 20px 40px -10px map.get($map: colors.$blue, $key: "50");
-    background-color: map.get($map: colors.$blue, $key: "100");
-    width: $outer-circle-size;
-    height: $outer-circle-size;
-
-    &::before {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      box-shadow: 0 20px 115px -10px map.get($map: colors.$blue, $key: "300");
-      width: $inner-circle-size;
-      height: $inner-circle-size;
-      content: "";
-    }
-
-    // overflow: hidden;
-    .triangle-mask {
-      $triangle-mask-size: $outer-circle-size / 2;
-
-      z-index: 0;
-      border-top: $triangle-mask-size solid transparent;
-      border-right: $triangle-mask-size solid transparent;
-      border-bottom: $triangle-mask-size solid map.get($map: colors.$blue, $key: "50");
-      border-left: $triangle-mask-size solid transparent;
-    }
-  }
-
   .pointer-container {
-    // $pointer-wrapper-size: $inner-circle-size + ($outer-circle-size - $inner-circle-size) / 2;
-    $pointer-wrapper-size: $outer-circle-size + 10px;
+    $offset: -40px;
+    $pointer-wrapper-size: $outer-circle-size + $offset;
 
     position: relative;
     z-index: 2;
@@ -224,7 +181,7 @@ export default defineComponent({
       background-color: white;
       width: $circle-size;
       height: $circle-size;
-      filter: drop-shadow(0 0 5px map.get($map: colors.$blue, $key: "200"));
+      filter: drop-shadow(0 0 4px colors.$primary-800);
 
       &::before {
         position: absolute;
@@ -233,9 +190,9 @@ export default defineComponent({
         transform: translate(-50%, -50%);
         z-index: 1;
         border-radius: 50%;
-        background-color: map.get($map: colors.$blue, $key: "500");
-        width: 20%;
-        height: 20%;
+        background-color: colors.$primary-600;
+        width: 12px;
+        height: 12px;
         content: "";
       }
 
@@ -252,7 +209,9 @@ export default defineComponent({
   }
 
   .indicators {
-    $indicator-wrapper-size: $outer-circle-size + 105px;
+    $offset: 10px;
+    $padding: 50px;
+    $indicator-wrapper-size: $outer-circle-size + $offset + $padding;
 
     position: relative;
     z-index: 1;
@@ -276,9 +235,9 @@ export default defineComponent({
               top: 50%;
               left: 0;
               transform: translateY(-50%);
-              background: map.get(colors.$blue, "200");
+              background: colors.$darkblue-200;
               width: 12px;
-              height: 1px;
+              height: 2px;
               content: "";
             }
           }
@@ -286,45 +245,21 @@ export default defineComponent({
       }
 
       &:is(:first-child, :last-child, :nth-child(3n + 4))::before {
-        background: map.get(colors.$blue, "900");
+        background: colors.$darkblue-600;
         width: 20px;
       }
     }
   }
 
   .outer-progress-circle {
-    $size: $outer-circle-size + 105px;
+    $offset: 5px;
+    $size: $outer-circle-size - $offset;
 
     position: absolute;
     transform: translate(-10px, -10px);
     width: $size;
     height: $size;
-    filter: drop-shadow(0 0 3px map.get(colors.$blue, "900"));
-
-    ::v-deep svg {
-      transform: rotate(135deg);
-    }
-  }
-
-  .inner-progress-circle {
-    $size: $outer-circle-size + 50px;
-
-    position: absolute;
-    transform: translate(-10px, -10px);
-    width: $size;
-    height: $size;
-
-    &::before {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      box-shadow: 0 20px 115px -10px map.get($map: colors.$blue, $key: "300");
-      width: $inner-circle-size;
-      height: $inner-circle-size;
-      content: "";
-    }
+    filter: drop-shadow(0 0 4px colors.$primary-800) brightness(1.15);
 
     ::v-deep svg {
       transform: rotate(135deg);
