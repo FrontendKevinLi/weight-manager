@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts" setup>
-import CustomCalendar from '@/components/CustomCalendar.vue'
+import CustomCalendar from '@/components/CustomCalendar/CustomCalendar.vue'
 
 </script>
 

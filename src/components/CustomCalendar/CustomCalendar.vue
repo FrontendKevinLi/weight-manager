@@ -1,25 +1,10 @@
 <template>
   <div class="custom-calendar">
-    <div class="calendar-header">
-      <div
-        class="previous-month-button header-button"
-        @click="handlePreviousMonthButtonClick"
-        @keydown="handlePreviousMonthButtonClick"
-      >
-        <InlineSvg :src="ArrowLeftSvg" />
-      </div>
-      <div class="calendar-date">
-        <span class="year">{{ calendarYear }}</span>
-        <span class="month">{{ calendarMonth }}</span>
-      </div>
-      <div
-        class="next-month-button header-button"
-        @click="handleNextMonthButtonClick"
-        @keydown="handleNextMonthButtonClick"
-      >
-        <InlineSvg :src="ArrowRightSvg" />
-      </div>
-    </div>
+    <CalendarHeader
+      :date-time="calendarInfo.dateTime"
+      @previous-month="handlePreviousMonthButtonClick"
+      @next-month="handleNextMonthButtonClick"
+    />
     <div class="calendar-main">
       <div
         v-for="(weekday, index) in weekdayList"
@@ -39,10 +24,19 @@
           'calendar-item day-item',
           !calendarItem.isTargetMonth && 'not-target'
         ]"
+        @click="handleCalendarDayItemClick"
+        @keydown="handleCalendarDayItemClick"
       >
         {{ calendarItem.day }}
       </div>
     </div>
+    <CustomDialog
+      ref="customDialogRef"
+    >
+      <div>
+        <span>TEST</span>
+      </div>
+    </CustomDialog>
   </div>
 </template>
 
@@ -52,27 +46,18 @@ import {
 } from 'vue'
 import { DateTime } from 'luxon'
 import gsap from 'gsap'
-import InlineSvg from 'vue-inline-svg'
-
-import ArrowLeftSvg from '@/assets/calendar/chevron-left-solid.svg'
-import ArrowRightSvg from '@/assets/calendar/chevron-right-solid.svg'
-
-type CalendarItem = {
-  weekdayShort: string,
-  day: number,
-  isTargetMonth: boolean
-}
+import CustomDialog from '@/components/CustomDialog/CustomDialog.vue'
+import { CalendarItem } from './types'
+import CalendarHeader from './CalendarHeader.vue'
 
 const dayItemRefList = ref<HTMLElement[]>()
 const headerItemRefList = ref<HTMLElement[]>()
+const customDialogRef = ref<InstanceType<typeof CustomDialog>>()
 
 const calendarInfo = reactive({
   dateTime: DateTime.now().setLocale('en-GB'),
 })
 const canChangeMonth = ref(true)
-
-const calendarYear = computed(() => calendarInfo.dateTime.year)
-const calendarMonth = computed(() => calendarInfo.dateTime.monthLong)
 
 const getFirstDayInMonth = (dateTimeParam: DateTime): DateTime => {
   const firstDay = dateTimeParam.set({
@@ -256,6 +241,10 @@ const handleNextMonthButtonClick = async () => {
   canChangeMonth.value = false
   await fadeOutDayItems()
   calendarInfo.dateTime = calendarInfo.dateTime.plus({ month: 1 })
+}
+
+const handleCalendarDayItemClick = () => {
+  customDialogRef.value?.show()
 }
 
 onMounted(() => {
