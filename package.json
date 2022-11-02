@@ -11,6 +11,7 @@
     "stylefix": "stylelint \"**/*.{scss,sass,vue}\" --fix"
   },
   "dependencies": {
+    "@open-draft/until": "^2.0.0",
     "echarts": "^5.4.0",
     "gsap": "^3.11.1",
     "luxon": "^3.0.4",
