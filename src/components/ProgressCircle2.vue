@@ -45,8 +45,8 @@
 import { defineComponent, PropType } from 'vue'
 import { v4 as uuid } from 'uuid'
 import gsap from 'gsap'
+import CustomEase from 'gsap/CustomEase'
 
-import { CustomEase } from '@/utils/gsap/CustomEase'
 import { ProgressCircle2Config } from '@/types/ProgressCircle2'
 import Constants from '@/utils/constant'
 

@@ -30,9 +30,10 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import gsap from 'gsap'
+import CustomEase from 'gsap/CustomEase'
+
 import { ProgressCircle2Config, AnimationConfig } from '@/types/ProgressCircle2'
 import Constants from '@/utils/constant'
-import { CustomEase } from '@/utils/gsap/CustomEase'
 import ProgressCircle2 from '@/components/ProgressCircle2.vue'
 
 gsap.registerPlugin(CustomEase)
