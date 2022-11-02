@@ -30,13 +30,9 @@
         {{ calendarItem.day }}
       </div>
     </div>
-    <CustomDialog
-      ref="customDialogRef"
-    >
-      <div>
-        <span>TEST</span>
-      </div>
-    </CustomDialog>
+    <DayItemInfoDialog
+      v-model:value="dayItemInfoDialogProps.value"
+    />
   </div>
 </template>
 
@@ -46,18 +42,24 @@ import {
 } from 'vue'
 import { DateTime } from 'luxon'
 import gsap from 'gsap'
-import CustomDialog from '@/components/CustomDialog/CustomDialog.vue'
+import { CustomDialogProps } from '@/components/CustomDialog/types'
 import { CalendarItem } from './types'
 import CalendarHeader from './CalendarHeader.vue'
+import DayItemInfoDialog from './DayItemInfoDialog.vue'
 
 const dayItemRefList = ref<HTMLElement[]>()
 const headerItemRefList = ref<HTMLElement[]>()
-const customDialogRef = ref<InstanceType<typeof CustomDialog>>()
-
 const calendarInfo = reactive({
   dateTime: DateTime.now().setLocale('en-GB'),
 })
 const canChangeMonth = ref(true)
+const dayItemInfoDialogProps = reactive<{
+  value: CustomDialogProps
+}>({
+  value: {
+    show: false,
+  },
+})
 
 const getFirstDayInMonth = (dateTimeParam: DateTime): DateTime => {
   const firstDay = dateTimeParam.set({
@@ -244,7 +246,7 @@ const handleNextMonthButtonClick = async () => {
 }
 
 const handleCalendarDayItemClick = () => {
-  customDialogRef.value?.show()
+  dayItemInfoDialogProps.value.show = true
 }
 
 onMounted(() => {
