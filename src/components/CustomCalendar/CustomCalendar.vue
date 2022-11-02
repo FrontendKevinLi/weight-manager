@@ -1,25 +1,10 @@
 <template>
   <div class="custom-calendar">
-    <div class="calendar-header">
-      <div
-        class="previous-month-button header-button"
-        @click="handlePreviousMonthButtonClick"
-        @keydown="handlePreviousMonthButtonClick"
-      >
-        <InlineSvg :src="ArrowLeftSvg" />
-      </div>
-      <div class="calendar-date">
-        <span class="year">{{ calendarYear }}</span>
-        <span class="month">{{ calendarMonth }}</span>
-      </div>
-      <div
-        class="next-month-button header-button"
-        @click="handleNextMonthButtonClick"
-        @keydown="handleNextMonthButtonClick"
-      >
-        <InlineSvg :src="ArrowRightSvg" />
-      </div>
-    </div>
+    <CalendarHeader
+      :date-time="calendarInfo.dateTime"
+      @previous-month="handlePreviousMonthButtonClick"
+      @next-month="handleNextMonthButtonClick"
+    />
     <div class="calendar-main">
       <div
         v-for="(weekday, index) in weekdayList"
@@ -39,10 +24,15 @@
           'calendar-item day-item',
           !calendarItem.isTargetMonth && 'not-target'
         ]"
+        @click="handleCalendarDayItemClick"
+        @keydown="handleCalendarDayItemClick"
       >
         {{ calendarItem.day }}
       </div>
     </div>
+    <DayItemInfoDialog
+      v-model:value="dayItemInfoDialogProps.value"
+    />
   </div>
 </template>
 
@@ -52,27 +42,24 @@ import {
 } from 'vue'
 import { DateTime } from 'luxon'
 import gsap from 'gsap'
-import InlineSvg from 'vue-inline-svg'
-
-import ArrowLeftSvg from '@/assets/calendar/chevron-left-solid.svg'
-import ArrowRightSvg from '@/assets/calendar/chevron-right-solid.svg'
-
-type CalendarItem = {
-  weekdayShort: string,
-  day: number,
-  isTargetMonth: boolean
-}
+import { CustomDialogProps } from '@/components/CustomDialog/types'
+import { CalendarItem } from './types'
+import CalendarHeader from './CalendarHeader.vue'
+import DayItemInfoDialog from './DayItemInfoDialog.vue'
 
 const dayItemRefList = ref<HTMLElement[]>()
 const headerItemRefList = ref<HTMLElement[]>()
-
 const calendarInfo = reactive({
   dateTime: DateTime.now().setLocale('en-GB'),
 })
 const canChangeMonth = ref(true)
-
-const calendarYear = computed(() => calendarInfo.dateTime.year)
-const calendarMonth = computed(() => calendarInfo.dateTime.monthLong)
+const dayItemInfoDialogProps = reactive<{
+  value: CustomDialogProps
+}>({
+  value: {
+    show: false,
+  },
+})
 
 const getFirstDayInMonth = (dateTimeParam: DateTime): DateTime => {
   const firstDay = dateTimeParam.set({
@@ -258,6 +245,10 @@ const handleNextMonthButtonClick = async () => {
   calendarInfo.dateTime = calendarInfo.dateTime.plus({ month: 1 })
 }
 
+const handleCalendarDayItemClick = () => {
+  dayItemInfoDialogProps.value.show = true
+}
+
 onMounted(() => {
   initAnimation()
 })
@@ -278,39 +269,6 @@ onMounted(() => {
   gap: 20px;
   width: 100%;
   height: 100%;
-
-  .calendar-header {
-    display: flex;
-    gap: 30px;
-    align-items: center;
-    justify-content: center;
-
-    .header-button {
-      transition: fill 0.2s ease-out;
-      cursor: pointer;
-      padding-right: 20px;
-      padding-left: 20px;
-      width: 30px;
-      fill: colors.$primary-600;
-
-      &:hover {
-        fill: color.adjust(colors.$primary-500, $lightness: 5%);
-      }
-    }
-
-    .calendar-date {
-      display: flex;
-      gap: 20px;
-      color: colors.$darkblue-600;
-      font-size: font-sizes.$medium;
-      user-select: none;
-
-      .month {
-        width: 125px;
-        text-align: end;
-      }
-    }
-  }
 
   .calendar-main {
     display: grid;
@@ -349,8 +307,11 @@ onMounted(() => {
       }
 
       &.day-item {
+        cursor: pointer;
+
         &:is(.not-target) {
           background-color: colors.$primary-50-variant;
+          cursor: not-allowed;
           color: colors.$darkblue-100;
         }
       }

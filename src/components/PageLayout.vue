@@ -2,7 +2,7 @@
   <div class="page-layout">
     <CustomHeader />
     <CustomSidebar />
-    <div class="body">
+    <div class="page-main">
       <router-view />
     </div>
     <InfoPanel />
