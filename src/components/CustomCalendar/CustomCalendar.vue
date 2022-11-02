@@ -268,39 +268,6 @@ onMounted(() => {
   width: 100%;
   height: 100%;
 
-  .calendar-header {
-    display: flex;
-    gap: 30px;
-    align-items: center;
-    justify-content: center;
-
-    .header-button {
-      transition: fill 0.2s ease-out;
-      cursor: pointer;
-      padding-right: 20px;
-      padding-left: 20px;
-      width: 30px;
-      fill: colors.$primary-600;
-
-      &:hover {
-        fill: color.adjust(colors.$primary-500, $lightness: 5%);
-      }
-    }
-
-    .calendar-date {
-      display: flex;
-      gap: 20px;
-      color: colors.$darkblue-600;
-      font-size: font-sizes.$medium;
-      user-select: none;
-
-      .month {
-        width: 125px;
-        text-align: end;
-      }
-    }
-  }
-
   .calendar-main {
     display: grid;
 
