@@ -19,11 +19,24 @@
 </template>
 
 <script lang="ts" setup>
-import { defineExpose, ref } from 'vue'
+import {
+  defineProps, defineExpose, defineEmits, ref, watch,
+} from 'vue'
 import gsap from 'gsap'
 import { until } from '@open-draft/until'
 
 import { Nullable } from '@/types/utils'
+import { CustomDialogProps } from './types'
+
+type CustomDialogEmits = {
+  (e: 'update:value', payload: CustomDialogProps): void
+}
+
+const props = defineProps<{
+  value: CustomDialogProps
+}>()
+
+const emit = defineEmits<CustomDialogEmits>()
 
 const dialogWrapperRef = ref<HTMLElement>()
 const backgroundMaskRef = ref<HTMLElement>()
@@ -122,19 +135,29 @@ const show = async () => {
 }
 
 const close = async () => {
+  if (!canCloseDialog) return
+
+  canCloseDialog = false
   const result = await until(() => fadeOut())
+  canCloseDialog = true
+
   if (result.error != null) throw result.error
 }
 
 const handleBackgroundMaskClick = async () => {
-  if (!canCloseDialog) return
+  emit('update:value', { show: false })
+}
 
-  canCloseDialog = false
+watch(props, async () => {
+  if (props.value.show) {
+    const result = await until(() => show())
+    if (result.error) console.error(result.error)
+    return
+  }
+
   const result = await until(() => close())
   if (result.error) console.error(result.error)
-
-  canCloseDialog = true
-}
+})
 
 defineExpose({
   show,
