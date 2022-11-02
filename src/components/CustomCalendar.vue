@@ -349,8 +349,11 @@ onMounted(() => {
       }
 
       &.day-item {
+        cursor: pointer;
+
         &:is(.not-target) {
           background-color: colors.$primary-50-variant;
+          cursor: not-allowed;
           color: colors.$darkblue-100;
         }
       }
