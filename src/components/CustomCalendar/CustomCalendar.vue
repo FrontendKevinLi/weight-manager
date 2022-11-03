@@ -24,13 +24,13 @@
           'calendar-item day-item',
           !calendarItem.isTargetMonth && 'not-target'
         ]"
-        @click="handleCalendarDayItemClick"
-        @keydown="handleCalendarDayItemClick"
+        @click="handleCalendarDayItemClick(calendarItem)"
+        @keydown="handleCalendarDayItemClick(calendarItem)"
       >
         {{ calendarItem.day }}
       </div>
     </div>
-    <DayItemInfoDialog
+    <CalendarItemDialog
       v-model:value="dayItemInfoDialogProps.value"
     />
   </div>
@@ -42,10 +42,9 @@ import {
 } from 'vue'
 import { DateTime } from 'luxon'
 import gsap from 'gsap'
-import { CustomDialogProps } from '@/components/CustomDialog/types'
-import { CalendarItem } from './types'
+import { CalendarItem, CalendarItemDialogProps } from './types'
 import CalendarHeader from './CalendarHeader.vue'
-import DayItemInfoDialog from './DayItemInfoDialog.vue'
+import CalendarItemDialog from './CalendarItemDialog.vue'
 
 const dayItemRefList = ref<HTMLElement[]>()
 const headerItemRefList = ref<HTMLElement[]>()
@@ -54,10 +53,16 @@ const calendarInfo = reactive({
 })
 const canChangeMonth = ref(true)
 const dayItemInfoDialogProps = reactive<{
-  value: CustomDialogProps
+  value: CalendarItemDialogProps
 }>({
   value: {
     show: false,
+    calendarItem: {
+      dateTime: DateTime.now(),
+      day: DateTime.now().day,
+      isTargetMonth: false,
+      weekdayShort: DateTime.now().weekdayShort,
+    },
   },
 })
 
@@ -85,6 +90,7 @@ const generateCalendarListForTargetMonth = (dateTimeParam: DateTime) => {
     const calendarItem: CalendarItem = {
       weekdayShort: dayInCalendar.weekdayShort,
       day: dayInCalendar.day,
+      dateTime: dayInCalendar,
       isTargetMonth: true,
     }
     generatedCalendar.push(calendarItem)
@@ -105,6 +111,7 @@ const generateCalendarListForPrepend = (dateTimeParam: DateTime) => {
     const calendarItem: CalendarItem = {
       weekdayShort: dayToPrepend.weekdayShort,
       day: dayToPrepend.day,
+      dateTime: dayToPrepend,
       isTargetMonth: false,
     }
     calendarListForPrepend.unshift(calendarItem)
@@ -125,6 +132,7 @@ const generateCalendarListForAppend = (dateTimeParam: DateTime) => {
     const calendarItem: CalendarItem = {
       weekdayShort: dayToAppend.weekdayShort,
       day: dayToAppend.day,
+      dateTime: dayToAppend,
       isTargetMonth: false,
     }
     calendarListForAppend.push(calendarItem)
@@ -245,8 +253,9 @@ const handleNextMonthButtonClick = async () => {
   calendarInfo.dateTime = calendarInfo.dateTime.plus({ month: 1 })
 }
 
-const handleCalendarDayItemClick = () => {
+const handleCalendarDayItemClick = (calendarItem: CalendarItem) => {
   dayItemInfoDialogProps.value.show = true
+  dayItemInfoDialogProps.value.calendarItem = calendarItem
 }
 
 onMounted(() => {
