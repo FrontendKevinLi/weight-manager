@@ -6,7 +6,7 @@
       ref="backgroundMaskRef"
       class="background-mask"
       @click.self="handleBackgroundMaskClick"
-      @keydown="handleBackgroundMaskClick"
+      @keydown.escape.self="handleBackgroundMaskClick"
     >
       <div
         ref="dialogWrapperRef"
