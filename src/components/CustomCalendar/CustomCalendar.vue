@@ -17,7 +17,7 @@
         <span class="weekday">{{ weekday }}</span>
       </div>
       <div
-        v-for="(calendarItem, index) in calendar"
+        v-for="(calendarItem, index) in calendarList"
         :key="index"
         ref="dayItemRefList"
         :class="[
@@ -160,7 +160,7 @@ const generateWeekdayList = (): string[] => {
   }
   return list
 }
-const calendar = computed(() => generateCalendarList(calendarInfo.dateTime))
+const calendarList = computed(() => generateCalendarList(calendarInfo.dateTime))
 const weekdayList: string[] = generateWeekdayList()
 
 const timeline = gsap.timeline()
