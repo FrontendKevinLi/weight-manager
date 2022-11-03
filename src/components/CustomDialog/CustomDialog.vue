@@ -185,10 +185,11 @@ defineExpose({
 
     .dialog-wrapper {
       visibility: hidden;
-      border-radius: constants.$border-radius;
-      background-color: white;
-      width: 800px;
-      height: 700px;
+
+      // border-radius: constants.$border-radius;
+      // background-color: white;
+      width: fit-content;
+      height: fit-content;
     }
   }
 }
