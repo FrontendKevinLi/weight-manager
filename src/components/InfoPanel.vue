@@ -36,13 +36,20 @@ import ScrollTrigger from 'gsap/ScrollTrigger'
 
 import ProfilePng from '@/assets/header-icons/profile.png'
 import { AchievementItemType } from '@/types/AchievementItem'
+import { useUserStore } from '@/stores'
+import { storeToRefs } from 'pinia'
 import AchievementItem from './AchievementItem.vue'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const username = 'Test user'
+// const username = 'Test user'
 const achievementItemList = ref<InstanceType<(typeof AchievementItem)>[]>()
 const achievementItemListEl = ref<HTMLElement>()
+
+const userStore = useUserStore()
+const username = computed(() => userStore.username)
+userStore.setUserName('abc')
+// const { username } = storeToRefs(userStore)
 
 const achievementList: AchievementItemType[] = [
   {
