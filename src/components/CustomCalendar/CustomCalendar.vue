@@ -49,7 +49,9 @@ import CalendarItemDialog from './CalendarItemDialog.vue'
 const dayItemRefList = ref<HTMLElement[]>()
 const headerItemRefList = ref<HTMLElement[]>()
 const calendarInfo = reactive({
-  dateTime: DateTime.now().setLocale('en-GB'),
+  dateTime: DateTime.now().setLocale('en-GB').set({
+    hour: 0, minute: 0, second: 0, millisecond: 0,
+  }),
 })
 const canChangeMonth = ref(true)
 const dayItemInfoDialogProps = reactive<{
