@@ -38,6 +38,16 @@
         </div>
       </div>
     </div>
+    <div
+      class="logout-button"
+      @click="handleLogoutButtonClick"
+      @keydown="handleLogoutButtonClick"
+    >
+      <InlineSvg
+        class="logout-icon"
+        :src="LogoutSvg"
+      />
+    </div>
   </div>
 </template>
 
@@ -53,6 +63,9 @@ import RecordSvg from '@/assets/sidebar-icons/clipboard-regular.svg'
 import ChartSvg from '@/assets/sidebar-icons/chart-simple-solid.svg'
 import SettingsSvg from '@/assets/sidebar-icons/gear-solid.svg'
 import LogoSvg from '@/assets/logo/svg/lightblue/logo-no-background.svg'
+import LogoutSvg from '@/assets/info-panel-icons/right-from-bracket-solid.svg'
+import { until } from '@open-draft/until'
+import { logout } from '@/firebase/auth'
 
 export default defineComponent({
   name: 'CustomSidebar',
@@ -66,6 +79,7 @@ export default defineComponent({
       ChartSvg,
       LogoSvg,
       SettingsSvg,
+      LogoutSvg,
       activeItemIndicatorInited: false,
     }
   },
@@ -180,6 +194,15 @@ export default defineComponent({
         })
       })
     },
+    async handleLogoutButtonClick() {
+      const logoutResult = await until(() => logout())
+      if (logoutResult.error) {
+        console.error(logoutResult.error)
+        return
+      }
+
+      this.$router.push('/login')
+    },
   },
 })
 </script>
@@ -272,6 +295,21 @@ export default defineComponent({
         height: calc(100% - (constants.$border-radius / 2));
         filter: opacity(0.1);
       }
+    }
+  }
+
+  .logout-button {
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 15px;
+    width: 30px;
+    height: 30px;
+    aspect-ratio: 1/ 1;
+
+    .logout-icon {
+      $size: 30px;
+
+      fill: colors.$primary-100;
     }
   }
 }
