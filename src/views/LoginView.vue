@@ -44,6 +44,8 @@ import CustomButton from '@/components/CustomButton.vue'
 
 import BodyWeightingImg from '@/assets/login-page-pictures/bodyWeighting.png'
 import LogoFullSvg from '@/assets/logo-full/svg/primaryblue/logo-no-background.svg'
+import { login } from '@/firebase/auth'
+import { until } from '@open-draft/until'
 
 export default defineComponent({
   name: 'LoginView',
@@ -81,7 +83,19 @@ export default defineComponent({
         stagger: 0.1,
       }, '-=0.5')
     },
-    handleLoginButtonClick() {
+    validateForm() {
+      return true
+    },
+    async handleLoginButtonClick() {
+      const valid = this.validateForm()
+      if (!valid) return
+
+      const loginResult = await until(() => login(this.username, this.password))
+      if (loginResult.error) {
+        console.error(loginResult.error)
+        return
+      }
+      console.log(loginResult.data.user)
       const vm = this
       gsap.to('.login-box', {
         opacity: 0,
