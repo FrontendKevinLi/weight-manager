@@ -80,7 +80,9 @@ export default defineComponent({
         y: '-250px',
         ease: 'back',
         opacity: 0,
-        stagger: 0.1,
+        stagger: {
+          amount: 0.25,
+        },
       }, '-=0.5')
     },
     validateForm() {
