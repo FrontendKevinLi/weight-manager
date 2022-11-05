@@ -1,7 +1,6 @@
 <template>
   <div class="login">
     <div
-      ref="login-box"
       class="login-box"
     >
       <div
@@ -50,6 +49,7 @@
 import { defineComponent } from 'vue'
 import gsap from 'gsap'
 import InlineSvg from 'vue-inline-svg'
+import { useToast } from 'vue-toastification'
 
 import CustomInput from '@/components/CustomInput.vue'
 import CustomButton from '@/components/CustomButton.vue'
@@ -104,16 +104,19 @@ export default defineComponent({
     },
     async handleLoginButtonClick() {
       const valid = this.validateForm()
-      if (!valid) return
+      if (!valid) {
+        return
+      }
 
       const loginResult = await until(() => login(this.username, this.password))
       if (loginResult.error) {
-        console.error(loginResult.error)
+        const toast = useToast()
+        toast.error(loginResult.error.message)
         return
       }
-      console.log(loginResult.data.user)
+
       const vm = this
-      gsap.to('.login-box', {
+      gsap.to(this.$refs['white-section'] as gsap.TweenTarget, {
         opacity: 0,
         duration: 0.25,
         ease: 'power2',
@@ -134,30 +137,6 @@ export default defineComponent({
 @use "@/style/constants" as constants;
 @use "@/style/font-sizes.scss" as font-sizes;
 @use "@/style/animations";
-
-@font-face {
-  font-family: Tomatoes;
-  src: url("@/fonts/Tomatoes-O8L8.ttf") format("truetype");
-}
-
-@mixin decoration-box($color: white, $size: 200px, $border-radius: 10px) {
-  position: absolute;
-  z-index: -1;
-  border-radius: constants.$border-radius;
-  background-color: $color;
-  width: $size;
-  height: $size;
-}
-
-@keyframes float {
-  from {
-    transform: translate(-2%, -5%);
-  }
-
-  to {
-    transform: translate(3%, 5%);
-  }
-}
 
 .login {
   display: flex;
