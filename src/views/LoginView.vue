@@ -234,6 +234,22 @@ export default defineComponent({
         font-size: font-sizes.$small;
         font-weight: bold;
       }
+
+      .create-account {
+        display: grid;
+        gap: 10px;
+        margin-top: 20px;
+        text-align: center;
+
+        .question {
+          color: colors.$darkblue-600;
+        }
+
+        .text-button-label {
+          cursor: pointer;
+          color: colors.$primary-600;
+        }
+      }
     }
   }
 }
