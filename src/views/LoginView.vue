@@ -22,7 +22,7 @@
           v-model:inputText="password"
           :placeholder="'Password'"
           :type="'password'"
-          class="white-section-item password-input"
+          class="white-section-item input"
         />
         <CustomButton
           :label="'Login'"
@@ -211,17 +211,13 @@ export default defineComponent({
       width: calc($login-box-width / 2.5);
 
       .logo {
-        width: 300px;
-        height: 300px;
+        $size: 200px;
+
+        width: $size;
+        height: $size;
       }
 
-      .username-input {
-        width: 100%;
-        min-width: 260px;
-        letter-spacing: 0.1rem;
-      }
-
-      .password-input {
+      .input {
         width: 100%;
         min-width: 260px;
         letter-spacing: 0.1rem;
