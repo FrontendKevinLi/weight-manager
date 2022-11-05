@@ -15,8 +15,8 @@
         />
         <CustomInput
           v-model:inputText="username"
-          :placeholder="'Username'"
-          class="white-section-item username-input"
+          :placeholder="'Email'"
+          class="white-section-item input"
         />
         <CustomInput
           v-model:inputText="password"
