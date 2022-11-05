@@ -29,6 +29,18 @@
           class="white-section-item login-btn"
           @click="handleLoginButtonClick"
         />
+        <div class="create-account">
+          <span
+            class="white-section-item question"
+            v-text="createAccountQuestion"
+          />
+          <span
+            class="white-section-item text-button-label"
+            @click="handleLinkToCreateAccountButtonClick"
+            @keydown="handleLinkToCreateAccountButtonClick"
+            v-text="createAccountTextButtonLabel"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -60,6 +72,8 @@ export default defineComponent({
       password: '',
       BodyWeightingImg,
       LogoFullSvg,
+      createAccountQuestion: 'Don\'t have an account?',
+      createAccountTextButtonLabel: 'Create account',
     }
   },
   mounted() {
@@ -107,6 +121,9 @@ export default defineComponent({
           vm.$router.push('/dashboard')
         },
       })
+    },
+    handleLinkToCreateAccountButtonClick() {
+      this.$router.push('/register')
     },
   },
 })
