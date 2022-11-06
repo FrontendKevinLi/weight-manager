@@ -10,8 +10,8 @@
       :type="type"
       @input="handleInputChange"
       @mousedown="setInputFocus(true)"
-      @focus="setInputFocus(true)"
-      @blur="setInputFocus(false)"
+      @focus="handleFocus"
+      @blur="handleBlur"
       @keyup.enter="handleKeyUpEnter"
     >
   </div>
@@ -36,7 +36,7 @@ export default defineComponent({
       default: 'text',
     },
   },
-  emits: ['update:inputText', 'keyupEnter'],
+  emits: ['update:inputText', 'keyupEnter', 'focus', 'blur'],
   data() {
     return {
       isInputFocused: false,
@@ -61,6 +61,14 @@ export default defineComponent({
     },
     handleKeyUpEnter() {
       this.$emit('keyupEnter')
+    },
+    handleFocus() {
+      this.setInputFocus(true)
+      this.$emit('focus')
+    },
+    handleBlur() {
+      this.setInputFocus(false)
+      this.$emit('blur')
     },
   },
 })
