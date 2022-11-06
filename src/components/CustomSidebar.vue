@@ -48,6 +48,11 @@
         :src="LogoutSvg"
       />
     </div>
+    <ConfirmDialog
+      v-model:value="logoutConfirmDialog"
+      @cancel="handleLogoutDialogCancel"
+      @confirm="handleLogoutDialogConfirm"
+    />
   </div>
 </template>
 
@@ -55,22 +60,24 @@
 import { defineComponent } from 'vue'
 import InlineSvg from 'vue-inline-svg'
 import gsap, { Expo } from 'gsap'
+import { until } from '@open-draft/until'
 
 import RouteItem from '@/types/RouteItem'
-
 import TableSvg from '@/assets/sidebar-icons/table-columns-solid.svg'
 import RecordSvg from '@/assets/sidebar-icons/clipboard-regular.svg'
 import ChartSvg from '@/assets/sidebar-icons/chart-simple-solid.svg'
 import SettingsSvg from '@/assets/sidebar-icons/gear-solid.svg'
 import LogoSvg from '@/assets/logo/svg/lightblue/logo-no-background.svg'
 import LogoutSvg from '@/assets/info-panel-icons/right-from-bracket-solid.svg'
-import { until } from '@open-draft/until'
 import { logout } from '@/firebase/auth'
+import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue'
+import { ConfirmDialogProps } from '@/components/ConfirmDialog/types'
 
 export default defineComponent({
   name: 'CustomSidebar',
   components: {
     InlineSvg,
+    ConfirmDialog,
   },
   data() {
     return {
@@ -81,10 +88,15 @@ export default defineComponent({
       SettingsSvg,
       LogoutSvg,
       activeItemIndicatorInited: false,
+      logoutConfirmDialog: {
+        title: 'Log out',
+        content: 'Are you sure you want to log out?',
+        show: false,
+      } as ConfirmDialogProps,
     }
   },
   computed: {
-    routeItemList() {
+    routeItemList(): RouteItem[] {
       const routeItemList: RouteItem[] = [
         new RouteItem({
           icon: this.TableSvg,
@@ -109,7 +121,7 @@ export default defineComponent({
       ]
       return routeItemList
     },
-    currentRoute() {
+    currentRoute(): string {
       const currentRoute = this.$router.currentRoute.value.fullPath
       if (this.activeItemIndicatorInited) {
         this.rePositionActiveIndicator()
@@ -194,7 +206,10 @@ export default defineComponent({
         })
       })
     },
-    async handleLogoutButtonClick() {
+    handleLogoutDialogCancel() {
+      this.logoutConfirmDialog.show = false
+    },
+    async handleLogoutDialogConfirm() {
       const logoutResult = await until(() => logout())
       if (logoutResult.error) {
         console.error(logoutResult.error)
@@ -202,6 +217,9 @@ export default defineComponent({
       }
 
       this.$router.push('/login')
+    },
+    async handleLogoutButtonClick() {
+      this.logoutConfirmDialog.show = true
     },
   },
 })
