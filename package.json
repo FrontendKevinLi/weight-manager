@@ -105,7 +105,8 @@
             "vm"
           ]
         }
-      ]
+      ],
+      "no-shadow": "off"
     }
   },
   "browserslist": [
