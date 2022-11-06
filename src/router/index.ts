@@ -82,7 +82,6 @@ const router = createRouter({
 
 router.beforeEach(async (to) => {
   const isAuthenticatedResult = await until(() => getIsAuthenticated())
-  console.log(isAuthenticatedResult)
 
   // special case
   if (to.name === 'register') {
