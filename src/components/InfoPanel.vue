@@ -3,17 +3,25 @@
     <div class="user-info">
       <img
         :src="ProfilePng"
-        class="icon"
+        class="user-icon"
         alt="icon"
       >
-      <span
-        class="username"
-        :contenteditable="true"
-        @focus="handleUsernameFocus"
-        @blur="handleUsernameBlur"
-        @input="handleUsernameInput"
-        v-text="username"
-      />
+      <div class="username-wrapper">
+        <span
+          ref="usernameRef"
+          class="username"
+          :contenteditable="true"
+          @focus="handleUsernameFocus"
+          @blur="handleUsernameBlur"
+          @input="handleUsernameInput"
+          v-text="username"
+        />
+        <InlineSvg
+          class="edit-icon"
+          :src="EditSvg"
+          @click="handleEditIconClick"
+        />
+      </div>
     </div>
     <div class="achievement-section">
       <span class="title">Achievements</span>
@@ -40,8 +48,10 @@ import { v4 as uuid } from 'uuid'
 import gsap, { Power1 } from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useToast } from 'vue-toastification'
+import InlineSvg from 'vue-inline-svg'
 
 import ProfilePng from '@/assets/header-icons/profile.png'
+import EditSvg from '@/assets/info-panel-icons/pen-to-square-solid.svg'
 import { AchievementItemType } from '@/types/AchievementItem'
 import { useUserStore } from '@/stores'
 import { setUsername } from '@/firebase/auth'
@@ -53,6 +63,7 @@ gsap.registerPlugin(ScrollTrigger)
 
 const achievementItemList = ref<InstanceType<(typeof AchievementItem)>[]>()
 const achievementItemListEl = ref<HTMLElement>()
+const usernameRef = ref<HTMLElement>()
 
 const userStore = useUserStore()
 const toast = useToast()
@@ -166,6 +177,10 @@ const handleUsernameInput = (e: Event) => {
   username.value = newUsername
 }
 
+const handleEditIconClick = () => {
+  usernameRef.value?.focus()
+}
+
 watch(currentUser, () => {
   username.value = currentUser.value?.displayName ?? ''
 })
@@ -195,19 +210,43 @@ onMounted(() => {
     gap: 20px;
     place-items: center;
 
-    .icon {
+    .user-icon {
       border-radius: 50%;
       height: 150px;
     }
 
-    .username {
-      outline: none;
-      width: 100%;
-      overflow: hidden;
-      text-align: center;
-      color: colors.$darkblue-600;
-      font-size: 20px;
-      font-weight: bold;
+    .username-wrapper {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 15px;
+
+      .username {
+        grid-column: 2;
+        outline: none;
+        width: 100%;
+        overflow: hidden;
+        text-align: center;
+        color: colors.$darkblue-600;
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .edit-icon {
+        $size: 20px;
+        $gap: 20px;
+
+        grid-column: 3;
+        transition: opacity 0.1s ease-in-out;
+        visibility: visible;
+        cursor: pointer;
+        width: $size;
+        height: $size;
+        fill: colors.$primary-600;
+      }
+
+      .username:focus + .edit-icon {
+        opacity: 0;
+      }
     }
   }
 
