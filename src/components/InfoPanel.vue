@@ -8,6 +8,10 @@
       >
       <span
         class="username"
+        :contenteditable="true"
+        @focus="handleUsernameFocus"
+        @blur="handleUsernameBlur"
+        @input="handleUsernameInput"
         v-text="username"
       />
     </div>
@@ -29,27 +33,32 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import {
+  onMounted, ref, computed, watch,
+} from 'vue'
 import { v4 as uuid } from 'uuid'
 import gsap, { Power1 } from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
+import { useToast } from 'vue-toastification'
 
 import ProfilePng from '@/assets/header-icons/profile.png'
 import { AchievementItemType } from '@/types/AchievementItem'
 import { useUserStore } from '@/stores'
-import { storeToRefs } from 'pinia'
+import { setUsername } from '@/firebase/auth'
+import { until } from '@open-draft/until'
+import { Nullable } from '@/types/utils'
 import AchievementItem from './AchievementItem.vue'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// const username = 'Test user'
 const achievementItemList = ref<InstanceType<(typeof AchievementItem)>[]>()
 const achievementItemListEl = ref<HTMLElement>()
 
 const userStore = useUserStore()
-const username = computed(() => userStore.username)
-userStore.setUserName('abc')
-// const { username } = storeToRefs(userStore)
+const toast = useToast()
+const currentUser = computed(() => userStore.currentUser)
+const username = ref(currentUser.value?.displayName ?? '')
+const usernameBefore = ref<Nullable<string>>('')
 
 const achievementList: AchievementItemType[] = [
   {
@@ -137,6 +146,30 @@ const initAnimation = () => {
   initAchievementItemElListScrollTrigger()
 }
 
+const handleUsernameFocus = () => {
+  usernameBefore.value = userStore.currentUser?.displayName
+}
+
+const handleUsernameBlur = async () => {
+  // updated username is the same as before
+  if (usernameBefore.value === username.value) return
+
+  const result = await until(() => setUsername(username.value))
+  if (result.error) {
+    toast.error(result.error.message)
+  }
+}
+
+const handleUsernameInput = (e: Event) => {
+  const target = e.target as HTMLElement
+  const newUsername = target.innerText
+  username.value = newUsername
+}
+
+watch(currentUser, () => {
+  username.value = currentUser.value?.displayName ?? ''
+})
+
 onMounted(() => {
   initAnimation()
 })
@@ -160,7 +193,7 @@ onMounted(() => {
   .user-info {
     display: grid;
     gap: 20px;
-    place-content: center;
+    place-items: center;
 
     .icon {
       border-radius: 50%;
@@ -168,6 +201,9 @@ onMounted(() => {
     }
 
     .username {
+      outline: none;
+      width: 100%;
+      overflow: hidden;
       text-align: center;
       color: colors.$darkblue-600;
       font-size: 20px;

@@ -51,7 +51,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import gsap from 'gsap'
 import InlineSvg from 'vue-inline-svg'
-import { POSITION, useToast } from 'vue-toastification'
+import { useToast } from 'vue-toastification'
 import CustomButton from '@/components/CustomButton.vue'
 import CustomInput from '@/components/CustomInput.vue'
 

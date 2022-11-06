@@ -1,3 +1,4 @@
+import { until } from '@open-draft/until'
 import {
   // connectAuthEmulator,
   getAuth,
@@ -5,6 +6,7 @@ import {
   signOut,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
+  updateProfile,
 } from 'firebase/auth'
 import firebase from './index'
 
@@ -29,8 +31,26 @@ const login = (email: string, password: string) => signInWithEmailAndPassword(au
 
 const logout = () => signOut(auth)
 
-const signUp = (email: string, password: string) => createUserWithEmailAndPassword(auth, email, password)
+const signUp = async (email: string, password: string) => {
+  const createUserResult = await until(() => createUserWithEmailAndPassword(auth, email, password))
+  if (createUserResult.error) throw createUserResult.error
+
+  const userCredential = createUserResult.data
+  const updateProfileResult = await until(() => updateProfile(userCredential.user, {
+    displayName: userCredential.user.email,
+  }))
+  if (updateProfileResult.error) throw updateProfileResult.error
+}
+
+const setUsername = async (username: string) => {
+  if (auth.currentUser == null) {
+    throw new Error('user not logged in or not exist')
+  }
+  await updateProfile(auth.currentUser, {
+    displayName: username,
+  })
+}
 
 export {
-  auth, login, logout, signUp, getIsAuthenticated,
+  auth, login, logout, signUp, getIsAuthenticated, setUsername,
 }
