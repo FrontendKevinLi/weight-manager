@@ -317,16 +317,17 @@ export default defineComponent({
   }
 
   .logout-button {
-    border-radius: 50%;
+    display: grid;
+    place-items: center;
     cursor: pointer;
-    padding: 15px;
-    width: 30px;
-    height: 30px;
-    aspect-ratio: 1/ 1;
+    width: 100%;
+    aspect-ratio: 5/4;
 
     .logout-icon {
       $size: 30px;
 
+      width: $size;
+      height: $size;
       fill: colors.$primary-100;
     }
   }
