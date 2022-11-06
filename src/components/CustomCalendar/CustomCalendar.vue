@@ -42,9 +42,10 @@ import {
 } from 'vue'
 import { DateTime } from 'luxon'
 import gsap from 'gsap'
-import { getMonthlyRecords, updateDailyRecord } from '@/firebase/firestore'
+import { getMonthlyRecords } from '@/firebase/firestore'
 import { until } from '@open-draft/until'
 import { useToast } from 'vue-toastification'
+import ApiError from '@/utils/Errors'
 import { CalendarItem, CalendarItemDialogProps } from './types'
 import CalendarHeader from './CalendarHeader.vue'
 import CalendarItemDialog from './CalendarItemDialog.vue'
@@ -265,12 +266,20 @@ const handleNextMonthButtonClick = async () => {
 const handleCalendarDayItemClick = async (calendarItem: CalendarItem) => {
   const result = await until(() => getMonthlyRecords(calendarInfo.dateTime))
   if (result.error) {
+    if (result.error?.message === ApiError.DataNotExist) {
+      dayItemInfoDialogProps.value.calendarItem = {
+        ...calendarItem,
+        weight: '',
+      }
+      dayItemInfoDialogProps.value.show = true
+      return
+    }
     const toast = useToast()
     toast.error(result.error.message)
     return
   }
-  const monthlyRecord = result.data
 
+  const monthlyRecord = result.data
   dayItemInfoDialogProps.value.calendarItem = {
     ...calendarItem,
     weight: monthlyRecord[calendarItem.day]?.weight.toString(),
