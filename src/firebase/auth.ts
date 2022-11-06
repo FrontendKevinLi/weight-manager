@@ -11,6 +11,7 @@ import {
 import firebase from './index'
 
 const auth = getAuth(firebase)
+
 // connectAuthEmulator(auth, 'http://localhost:9099')
 
 async function getIsAuthenticated(): Promise<boolean> {

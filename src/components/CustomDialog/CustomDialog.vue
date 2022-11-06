@@ -20,7 +20,7 @@
 
 <script lang="ts" setup>
 import {
-  defineProps, defineExpose, defineEmits, ref, watch,
+  defineProps, defineExpose, defineEmits, ref, watch, computed,
 } from 'vue'
 import gsap from 'gsap'
 import { until } from '@open-draft/until'
@@ -40,6 +40,7 @@ const emit = defineEmits<CustomDialogEmits>()
 
 const dialogWrapperRef = ref<HTMLElement>()
 const backgroundMaskRef = ref<HTMLElement>()
+const showDialog = computed(() => props.value.show)
 const fadeAnimationDuration = 0.25
 let canCloseDialog = true
 
@@ -148,8 +149,8 @@ const handleBackgroundMaskClick = async () => {
   emit('update:value', { show: false })
 }
 
-watch(props, async () => {
-  if (props.value.show) {
+watch(showDialog, async () => {
+  if (showDialog.value) {
     const result = await until(() => show())
     if (result.error) console.error(result.error)
     return

@@ -42,6 +42,9 @@ import {
 } from 'vue'
 import { DateTime } from 'luxon'
 import gsap from 'gsap'
+import { getMonthlyRecords, updateDailyRecord } from '@/firebase/firestore'
+import { until } from '@open-draft/until'
+import { useToast } from 'vue-toastification'
 import { CalendarItem, CalendarItemDialogProps } from './types'
 import CalendarHeader from './CalendarHeader.vue'
 import CalendarItemDialog from './CalendarItemDialog.vue'
@@ -64,6 +67,7 @@ const dayItemInfoDialogProps = reactive<{
       day: DateTime.now().day,
       isTargetMonth: false,
       weekdayShort: DateTime.now().weekdayShort,
+      weight: '0.0',
     },
   },
 })
@@ -94,6 +98,7 @@ const generateCalendarListForTargetMonth = (dateTimeParam: DateTime) => {
       day: dayInCalendar.day,
       dateTime: dayInCalendar,
       isTargetMonth: true,
+      weight: '',
     }
     generatedCalendar.push(calendarItem)
   }
@@ -115,6 +120,7 @@ const generateCalendarListForPrepend = (dateTimeParam: DateTime) => {
       day: dayToPrepend.day,
       dateTime: dayToPrepend,
       isTargetMonth: false,
+      weight: '',
     }
     calendarListForPrepend.unshift(calendarItem)
   }
@@ -136,6 +142,7 @@ const generateCalendarListForAppend = (dateTimeParam: DateTime) => {
       day: dayToAppend.day,
       dateTime: dayToAppend,
       isTargetMonth: false,
+      weight: '',
     }
     calendarListForAppend.push(calendarItem)
   }
@@ -255,9 +262,20 @@ const handleNextMonthButtonClick = async () => {
   calendarInfo.dateTime = calendarInfo.dateTime.plus({ month: 1 })
 }
 
-const handleCalendarDayItemClick = (calendarItem: CalendarItem) => {
+const handleCalendarDayItemClick = async (calendarItem: CalendarItem) => {
+  const result = await until(() => getMonthlyRecords(calendarInfo.dateTime))
+  if (result.error) {
+    const toast = useToast()
+    toast.error(result.error.message)
+    return
+  }
+  const monthlyRecord = result.data
+
+  dayItemInfoDialogProps.value.calendarItem = {
+    ...calendarItem,
+    weight: monthlyRecord[calendarItem.day]?.weight.toString(),
+  }
   dayItemInfoDialogProps.value.show = true
-  dayItemInfoDialogProps.value.calendarItem = calendarItem
 }
 
 onMounted(() => {

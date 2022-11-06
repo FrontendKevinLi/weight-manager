@@ -5,6 +5,7 @@ export type CalendarItem = {
   weekdayShort: string,
   day: number,
   dateTime: DateTime,
+  weight: string
   isTargetMonth: boolean
 }
 
