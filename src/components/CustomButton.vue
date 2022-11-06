@@ -1,7 +1,7 @@
 <template>
   <div
     ref="custom-btn"
-    class="custom-btn"
+    :class="['custom-btn', outlined && 'outlined']"
   >
     {{ label }}
   </div>
@@ -17,6 +17,10 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    outlined: {
+      type: Boolean,
+      default: false,
+    },
   },
 })
 </script>
@@ -31,8 +35,14 @@ export default defineComponent({
 .custom-btn {
   $background-color: colors.$primary-600;
 
+  display: grid;
+  place-items: center;
   user-select: none;
-  transition: box-shadow 0.1s ease-in-out, background-color 0.1s ease-in-out;
+  transition:
+    box-shadow 0.1s ease-in-out,
+    background-color 0.1s ease-in-out,
+    color 0.1s ease-in-out,
+    border 0.1s ease-in-out;
   border-radius: constants.$border-radius - 2px;
   background-color: $background-color;
   cursor: pointer;
@@ -50,6 +60,21 @@ export default defineComponent({
 
   &:active {
     background-color: color.adjust($background-color, $lightness: -5%);
+  }
+
+  &.outlined {
+    box-sizing: border-box;
+    border: 1px solid colors.$primary-600;
+    background-color: white;
+    color: colors.$primary-600;
+
+    &:hover {
+      background-color: colors.$primary-100;
+    }
+
+    &:active {
+      background-color: color.adjust(colors.$primary-100, $lightness: -5%);
+    }
   }
 }
 </style>
