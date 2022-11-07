@@ -9,6 +9,7 @@
       </span>
     </div>
     <ProgressCircle2
+      ref="outer-progress-circle"
       :config="outerProgressCircleConfig"
       class="outer-progress-circle"
     />
@@ -35,6 +36,11 @@ import CustomEase from 'gsap/CustomEase'
 import { ProgressCircle2Config, AnimationConfig } from '@/types/ProgressCircle2'
 import Constants from '@/utils/constant'
 import ProgressCircle2 from '@/components/ProgressCircle2.vue'
+import { MonthlyRecord } from '@/types/records'
+import { until } from '@open-draft/until'
+import { getMonthlyRecord } from '@/firebase/firestore'
+import { DateTime } from 'luxon'
+import { useToast } from 'vue-toastification'
 
 gsap.registerPlugin(CustomEase)
 
@@ -48,7 +54,7 @@ export default defineComponent({
       weight: {
         displayValue: '0.0',
         tweenValue: 0,
-        value: 121.5,
+        value: 0.0,
         maxValue: 200,
       },
       animationConfig: {
@@ -56,14 +62,16 @@ export default defineComponent({
         duration: 1,
         delay: '0.15',
       } as AnimationConfig,
+      monthlyRecord: {} as MonthlyRecord,
+      initPointerRotateDeg: 315,
     }
   },
   computed: {
-    weighingPercentage() {
+    weighingPercentage(): number {
       const weighingPercentage = Math.min(1, this.weight.value / this.weight.maxValue)
       return weighingPercentage
     },
-    outerProgressCircleConfig() {
+    outerProgressCircleConfig(): ProgressCircle2Config {
       const outerProgressCircleConfig: ProgressCircle2Config = {
         percentage: this.weighingPercentage,
         colorConfig: {
@@ -81,24 +89,56 @@ export default defineComponent({
       return outerProgressCircleConfig
     },
   },
-  mounted() {
-    this.initAnimation()
+  async mounted() {
+    this.initPointerAnimation()
+    await this.fetchMonthlyRecord()
+    const circle = this.$refs['outer-progress-circle'] as InstanceType<typeof ProgressCircle2>
+    this.setWeight()
+    this.$nextTick(() => {
+      circle.fillProgress()
+      this.rotatePointer()
+      this.animateWeightText()
+    })
   },
   methods: {
-    initAnimation() {
+    async fetchMonthlyRecord() {
+      const today = DateTime.now()
+      const result = await until(() => getMonthlyRecord(today))
+      if (result.error) {
+        const toast = useToast()
+        toast.error(result.error.message)
+        return
+      }
+
+      this.monthlyRecord = result.data
+    },
+    setWeight() {
+      const today = DateTime.now()
+      const weightForToday = this.monthlyRecord[today.day]?.weight ?? 0.0
+
+      this.weight.value = weightForToday
+    },
+    initPointerAnimation() {
       const timeline = gsap.timeline()
-      const initRotateDeg = 315
+
+      timeline.set('.pointer-container', {
+        rotate: this.initPointerRotateDeg,
+      })
+    },
+    rotatePointer() {
+      const timeline = gsap.timeline()
       const maxRotateDeg = 360 - 90
       const maxKG = this.weight.maxValue
       const currentKG = Math.min(this.weight.value, this.weight.maxValue)
-      timeline.set('.pointer-container', {
-        rotate: initRotateDeg,
-      })
+
       timeline.to('.pointer-container', {
-        rotate: initRotateDeg + (maxRotateDeg / maxKG) * currentKG,
+        rotate: this.initPointerRotateDeg + (maxRotateDeg / maxKG) * currentKG,
         ease: CustomEase.create('custom', Constants.customElasticPath),
         duration: this.animationConfig.duration,
       }, this.animationConfig.delay)
+    },
+    animateWeightText() {
+      const timeline = gsap.timeline()
       timeline.to(this.weight, {
         duration: this.animationConfig.duration,
         tweenValue: this.weight.value,
