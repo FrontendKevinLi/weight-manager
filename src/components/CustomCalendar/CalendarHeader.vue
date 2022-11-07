@@ -1,5 +1,8 @@
 <template>
-  <div class="calendar-header">
+  <div
+    ref="calendaerHeaderRef"
+    class="calendar-header"
+  >
     <div class="calendar-controls">
       <InlineSvg
         class="arrow-icon"
@@ -30,10 +33,10 @@
 
 <script lang="ts" setup>
 import {
-  computed, defineProps, defineEmits,
+  computed, defineProps, defineEmits, ref, onMounted,
 } from 'vue'
 import { DateTime } from 'luxon'
-// import gsap from 'gsap'
+import gsap from 'gsap'
 import InlineSvg from 'vue-inline-svg'
 
 import ArrowLeftSvg from '@/assets/calendar/chevron-left-solid.svg'
@@ -44,6 +47,7 @@ const props = defineProps<{
   dateTime: DateTime,
 }>()
 
+const calendaerHeaderRef = ref<HTMLElement>()
 const emit = defineEmits(['previous-month', 'next-month', 'add'])
 // const emit = defineEmits<{(e: 'previous-month'): void
 // (e: 'next-month'): void
@@ -51,6 +55,22 @@ const emit = defineEmits(['previous-month', 'next-month', 'add'])
 
 const calendarYear = computed(() => props.dateTime.year)
 const calendarMonth = computed(() => props.dateTime.monthLong)
+
+const fadeIn = () => {
+  if (calendaerHeaderRef.value == null) return
+
+  const timeline = gsap.timeline()
+  timeline.set(calendaerHeaderRef.value, {
+    autoAlpha: 0,
+    width: 0,
+  })
+  timeline.to(calendaerHeaderRef.value, {
+    autoAlpha: 1,
+    width: 'auto',
+    duration: 0.75,
+    ease: 'expo',
+  })
+}
 
 const handlePreviousMonthButtonClick = async () => {
   emit('previous-month')
@@ -63,6 +83,10 @@ const handleNextMonthButtonClick = async () => {
 const handleAddButtonClick = () => {
   emit('add')
 }
+
+onMounted(() => {
+  fadeIn()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -94,6 +118,7 @@ const handleAddButtonClick = () => {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 30px;
+  visibility: hidden;
   border-radius: 25px;
   background-color: white;
   padding-top: 20px;

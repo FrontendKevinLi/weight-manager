@@ -202,8 +202,6 @@ const generateWeekdayList = (): string[] => {
 const calendarList = computed(() => generateCalendarList(calendarInfo.dateTime))
 const weekdayList: string[] = generateWeekdayList()
 
-const timeline = gsap.timeline()
-
 const fadeInHeader = () => {
   if (headerItemRefList.value == null) {
     console.error('Header items not found')
@@ -212,10 +210,10 @@ const fadeInHeader = () => {
 
   gsap.from(headerItemRefList.value, {
     autoAlpha: 0,
-    ease: 'power2.inOut',
+    ease: 'expo',
     stagger: {
-      amount: 0.5,
-      from: 'center',
+      amount: 0.25,
+      from: 'start',
     },
   })
 }
@@ -225,9 +223,10 @@ const fadeInDayItems = () => new Promise((resolve, reject) => {
     reject(Error('Cannot find elements to animation'))
     return
   }
-
+  const timeline = gsap.timeline()
   timeline.set(dayItemRefList.value, {
     autoAlpha: 0,
+    scale: 0.75,
   })
   timeline.to(dayItemRefList.value, {
     autoAlpha: 1,
@@ -235,7 +234,7 @@ const fadeInDayItems = () => new Promise((resolve, reject) => {
       amount: 0.125,
       from: 'center',
       grid: 'auto',
-      ease: 'power2.inOut',
+      ease: 'expo.easeIn',
     },
     scale: 1,
     onComplete() {
@@ -250,15 +249,20 @@ const fadeOutDayItems = () => new Promise((resolve, reject) => {
     return
   }
 
+  const timeline = gsap.timeline()
+  timeline.set(dayItemRefList.value, {
+    autoAlpha: 1,
+    scale: 1,
+  })
   timeline.to(dayItemRefList.value, {
     autoAlpha: 0,
     stagger: {
       amount: 0.125,
       from: 'edges',
       grid: 'auto',
-      ease: 'power2.inOut',
+      ease: 'expo.easeOut',
     },
-    scale: 0.5,
+    scale: 0.75,
     onComplete() {
       resolve(true)
     },
@@ -273,15 +277,9 @@ watch(() => calendarInfo.dateTime, async () => {
   })
 })
 
-const initAnimation = () => {
-  fadeInHeader()
-  fadeInDayItems()
-}
-
 const handlePreviousMonthButtonClick = async () => {
   if (!canChangeMonth.value) return
 
-  timeline.clear()
   canChangeMonth.value = false
   await fadeOutDayItems()
   calendarInfo.dateTime = calendarInfo.dateTime.minus({ month: 1 })
@@ -289,7 +287,7 @@ const handlePreviousMonthButtonClick = async () => {
 
 const handleNextMonthButtonClick = async () => {
   if (!canChangeMonth.value) return
-  timeline.clear()
+
   canChangeMonth.value = false
   await fadeOutDayItems()
   calendarInfo.dateTime = calendarInfo.dateTime.plus({ month: 1 })
@@ -321,7 +319,7 @@ const handleAddButtonClick = async () => {
     isTargetMonth: today.hasSame(calendarInfo.dateTime, 'month'),
     isToday: true,
     weekdayShort: today.weekdayShort,
-    weight: '0.0',
+    weight: '',
   }
   await handleCalendarDayItemClick(calendarItem)
 }
@@ -335,8 +333,9 @@ const handleRecordUpdated = async (payload: {
 }
 
 onMounted(async () => {
+  fadeInHeader()
   await fetchCalendarMonthlyRecord()
-  initAnimation()
+  await fadeInDayItems()
 })
 
 </script>
