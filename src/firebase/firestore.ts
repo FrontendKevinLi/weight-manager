@@ -45,11 +45,7 @@ const updateDailyRecord = async (dateTime: DateTime, dailyRecord: DailyRecord) =
   if (result.error) throw result.error
 }
 
-const getDailyRecords = (dateTime: DateTime) => {
-  console.log('')
-}
 export {
   getMonthlyRecords,
-  getDailyRecords,
   updateDailyRecord,
 }

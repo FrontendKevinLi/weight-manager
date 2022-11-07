@@ -4,6 +4,7 @@
       :date-time="calendarInfo.dateTime"
       @previous-month="handlePreviousMonthButtonClick"
       @next-month="handleNextMonthButtonClick"
+      @add="handleAddButtonClick"
     />
     <div class="calendar-main">
       <div
@@ -22,7 +23,8 @@
         ref="dayItemRefList"
         :class="[
           'calendar-item day-item',
-          !calendarItem.isTargetMonth && 'not-target'
+          !calendarItem.isTargetMonth && 'not-target',
+          calendarItem.isToday && 'today'
         ]"
         @click="handleCalendarDayItemClick(calendarItem)"
         @keydown="handleCalendarDayItemClick(calendarItem)"
@@ -69,6 +71,7 @@ const dayItemInfoDialogProps = reactive<{
       isTargetMonth: false,
       weekdayShort: DateTime.now().weekdayShort,
       weight: '0.0',
+      isToday: true,
     },
   },
 })
@@ -92,14 +95,17 @@ const getLastDayInMonth = (dateTimeParam: DateTime): DateTime => {
 const generateCalendarListForTargetMonth = (dateTimeParam: DateTime) => {
   const firstDay = getFirstDayInMonth(dateTimeParam)
   const generatedCalendar: CalendarItem[] = []
+  const today = DateTime.now()
   for (let i = 0; i < Number(dateTimeParam.daysInMonth); i += 1) {
     const dayInCalendar = firstDay.plus({ day: i })
+    const isToday = dayInCalendar.hasSame(today, 'day')
     const calendarItem: CalendarItem = {
       weekdayShort: dayInCalendar.weekdayShort,
       day: dayInCalendar.day,
       dateTime: dayInCalendar,
       isTargetMonth: true,
       weight: '',
+      isToday,
     }
     generatedCalendar.push(calendarItem)
   }
@@ -122,6 +128,7 @@ const generateCalendarListForPrepend = (dateTimeParam: DateTime) => {
       dateTime: dayToPrepend,
       isTargetMonth: false,
       weight: '',
+      isToday: false,
     }
     calendarListForPrepend.unshift(calendarItem)
   }
@@ -144,6 +151,7 @@ const generateCalendarListForAppend = (dateTimeParam: DateTime) => {
       dateTime: dayToAppend,
       isTargetMonth: false,
       weight: '',
+      isToday: false,
     }
     calendarListForAppend.push(calendarItem)
   }
@@ -266,7 +274,7 @@ const handleNextMonthButtonClick = async () => {
 const handleCalendarDayItemClick = async (calendarItem: CalendarItem) => {
   if (!calendarItem.isTargetMonth) return
 
-  const result = await until(() => getMonthlyRecords(calendarInfo.dateTime))
+  const result = await until(() => getMonthlyRecords(calendarItem.dateTime))
   if (result.error) {
     if (result.error?.message === ApiError.DataNotExist) {
       dayItemInfoDialogProps.value.calendarItem = {
@@ -287,6 +295,19 @@ const handleCalendarDayItemClick = async (calendarItem: CalendarItem) => {
     weight: monthlyRecord[calendarItem.day]?.weight.toString(),
   }
   dayItemInfoDialogProps.value.show = true
+}
+
+const handleAddButtonClick = async () => {
+  const today = DateTime.now()
+  const calendarItem: CalendarItem = {
+    dateTime: today,
+    day: today.day,
+    isTargetMonth: true,
+    isToday: true,
+    weekdayShort: today.weekdayShort,
+    weight: '0.0',
+  }
+  await handleCalendarDayItemClick(calendarItem)
 }
 
 onMounted(() => {
@@ -336,11 +357,13 @@ onMounted(() => {
         display: grid;
         place-items: center;
         align-self: center;
-        background-color: colors.$primary-600;
+        background-color: transparent;
+
+        // background-color: colors.$primary-600;
         letter-spacing: 0.125rem;
 
         .weekday {
-          color: white;
+          color: colors.$primary-600;
           font-size: font-sizes.$small;
           font-weight: bold;
         }
@@ -350,10 +373,21 @@ onMounted(() => {
         cursor: pointer;
 
         &:is(.not-target) {
-          background-color: colors.$primary-50-variant;
+          background-color: colors.$black-100;
           cursor: not-allowed;
           color: colors.$darkblue-100;
         }
+
+        &:is(.today) {
+          background-color: colors.$primary-600;
+          color: white;
+
+          // border: 5px solid colors.$primary-200;
+        }
+
+        // &:is(:not(.not-target)):hover {
+        //   background-color: colors.$primary-50-variant;
+        // }
       }
     }
   }
