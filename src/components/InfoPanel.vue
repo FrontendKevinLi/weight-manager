@@ -224,6 +224,7 @@ onMounted(() => {
         grid-column: 2;
         outline: none;
         width: 100%;
+        min-width: 10px;
         overflow: hidden;
         text-align: center;
         color: colors.$darkblue-600;
