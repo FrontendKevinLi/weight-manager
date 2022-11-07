@@ -41,12 +41,12 @@ export default defineComponent({
 
 .dashboard-view {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: 432px 1fr;
   place-items: center;
   height: 100%;
 
   .weighing-item {
-    transform: scale(0.9);
+    transform: scale(0.8);
   }
 
   .last-days-weight-bar-chart-wrapper {
