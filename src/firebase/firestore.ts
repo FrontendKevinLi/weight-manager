@@ -4,18 +4,12 @@ import {
   getFirestore, doc, setDoc, getDoc,
 } from 'firebase/firestore'
 import { DateTime } from 'luxon'
+import { DailyRecord, MonthlyRecord } from '@/types/records'
 import { getIsAuthenticated, auth } from './auth'
 
 const db = getFirestore()
 
-type DailyRecord = {
-  date: string
-  weight: number
-}
-
-type MonthlyRecord = Record<number, DailyRecord>
-
-const getMonthlyRecords = async (dateTime: DateTime): Promise<MonthlyRecord> => {
+const getMonthlyRecord = async (dateTime: DateTime): Promise<MonthlyRecord> => {
   const isAuthenticatedResult = await until(() => getIsAuthenticated())
   if (isAuthenticatedResult.error) throw isAuthenticatedResult.error
   if (auth.currentUser == null) throw new Error('User not logged in or not exist')
@@ -46,6 +40,6 @@ const updateDailyRecord = async (dateTime: DateTime, dailyRecord: DailyRecord) =
 }
 
 export {
-  getMonthlyRecords,
+  getMonthlyRecord,
   updateDailyRecord,
 }

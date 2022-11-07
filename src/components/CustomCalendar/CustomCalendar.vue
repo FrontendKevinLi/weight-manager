@@ -44,7 +44,7 @@ import {
 } from 'vue'
 import { DateTime } from 'luxon'
 import gsap from 'gsap'
-import { getMonthlyRecords } from '@/firebase/firestore'
+import { getMonthlyRecord } from '@/firebase/firestore'
 import { until } from '@open-draft/until'
 import { useToast } from 'vue-toastification'
 import ApiError from '@/utils/Errors'
@@ -274,7 +274,7 @@ const handleNextMonthButtonClick = async () => {
 const handleCalendarDayItemClick = async (calendarItem: CalendarItem) => {
   if (!calendarItem.isTargetMonth) return
 
-  const result = await until(() => getMonthlyRecords(calendarItem.dateTime))
+  const result = await until(() => getMonthlyRecord(calendarItem.dateTime))
   if (result.error) {
     if (result.error?.message === ApiError.DataNotExist) {
       dayItemInfoDialogProps.value.calendarItem = {
