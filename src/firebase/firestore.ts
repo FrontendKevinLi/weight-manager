@@ -20,7 +20,7 @@ const getMonthlyRecord = async (dateTime: DateTime): Promise<MonthlyRecord> => {
   const docRef = doc(db, 'users', auth.currentUser.uid, year, month)
   const docSnap = await getDoc(docRef)
 
-  if (!docSnap.exists()) throw new Error(ApiError.DataNotExist)
+  if (!docSnap.exists()) return {}
 
   return docSnap.data()
 }

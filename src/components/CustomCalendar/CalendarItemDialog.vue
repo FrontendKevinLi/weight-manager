@@ -36,6 +36,7 @@ import { CalendarItemDialogProps } from './types'
 
 type CalendarItemDialogEmits = {
   (e: 'update:value', payload: CalendarItemDialogProps): void
+  (e: 'record-updated', payload: {isTargetMonth: boolean}): void
 }
 const props = defineProps<{
   value: CalendarItemDialogProps
@@ -76,7 +77,10 @@ const handleInputBlur = async () => {
   if (result.error) {
     const toast = useToast()
     toast.error(result.error.message)
+    return
   }
+
+  emit('record-updated', { isTargetMonth: props.value.calendarItem.isTargetMonth })
 }
 </script>
 

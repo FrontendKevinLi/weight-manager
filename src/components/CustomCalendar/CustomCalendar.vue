@@ -29,11 +29,19 @@
         @click="handleCalendarDayItemClick(calendarItem)"
         @keydown="handleCalendarDayItemClick(calendarItem)"
       >
-        {{ calendarItem.day }}
+        <span class="day">{{ calendarItem.day }}</span>
+        <div
+          v-show="calendarItem.weight != ''"
+          class="weight-wrapper"
+        >
+          <span class="weight">{{ calendarItem.weight }}</span>
+          <span class="unit">KG</span>
+        </div>
       </div>
     </div>
     <CalendarItemDialog
       v-model:value="dayItemInfoDialogProps.value"
+      @record-updated="handleRecordUpdated"
     />
   </div>
 </template>
@@ -47,7 +55,7 @@ import gsap from 'gsap'
 import { getMonthlyRecord } from '@/firebase/firestore'
 import { until } from '@open-draft/until'
 import { useToast } from 'vue-toastification'
-import ApiError from '@/utils/Errors'
+import { MonthlyRecord } from '@/types/records'
 import { CalendarItem, CalendarItemDialogProps } from './types'
 import CalendarHeader from './CalendarHeader.vue'
 import CalendarItemDialog from './CalendarItemDialog.vue'
@@ -70,11 +78,26 @@ const dayItemInfoDialogProps = reactive<{
       day: DateTime.now().day,
       isTargetMonth: false,
       weekdayShort: DateTime.now().weekdayShort,
-      weight: '0.0',
+      weight: '',
       isToday: true,
     },
   },
 })
+const calendarMonthlyRecord = ref<MonthlyRecord>({})
+
+const fetchCalendarMonthlyRecord = async () => {
+  const result = await until(() => getMonthlyRecord(calendarInfo.dateTime))
+  if (result.error) {
+    const toast = useToast()
+    toast.error(result.error.message)
+    return
+  }
+
+  const monthlyRecord = result.data
+  calendarMonthlyRecord.value = monthlyRecord
+}
+
+const getWeightFromCalendarMonthlyRecord = (day: number) => calendarMonthlyRecord.value[day]?.weight.toString() ?? ''
 
 const getFirstDayInMonth = (dateTimeParam: DateTime): DateTime => {
   const firstDay = dateTimeParam.set({
@@ -104,7 +127,7 @@ const generateCalendarListForTargetMonth = (dateTimeParam: DateTime) => {
       day: dayInCalendar.day,
       dateTime: dayInCalendar,
       isTargetMonth: true,
-      weight: '',
+      weight: getWeightFromCalendarMonthlyRecord(dayInCalendar.day),
       isToday,
     }
     generatedCalendar.push(calendarItem)
@@ -244,6 +267,7 @@ const fadeOutDayItems = () => new Promise((resolve, reject) => {
 
 watch(() => calendarInfo.dateTime, async () => {
   nextTick(async () => {
+    await fetchCalendarMonthlyRecord()
     await fadeInDayItems()
     canChangeMonth.value = true
   })
@@ -276,14 +300,6 @@ const handleCalendarDayItemClick = async (calendarItem: CalendarItem) => {
 
   const result = await until(() => getMonthlyRecord(calendarItem.dateTime))
   if (result.error) {
-    if (result.error?.message === ApiError.DataNotExist) {
-      dayItemInfoDialogProps.value.calendarItem = {
-        ...calendarItem,
-        weight: '',
-      }
-      dayItemInfoDialogProps.value.show = true
-      return
-    }
     const toast = useToast()
     toast.error(result.error.message)
     return
@@ -292,7 +308,7 @@ const handleCalendarDayItemClick = async (calendarItem: CalendarItem) => {
   const monthlyRecord = result.data
   dayItemInfoDialogProps.value.calendarItem = {
     ...calendarItem,
-    weight: monthlyRecord[calendarItem.day]?.weight.toString(),
+    weight: monthlyRecord[calendarItem.day]?.weight.toString() ?? '',
   }
   dayItemInfoDialogProps.value.show = true
 }
@@ -302,7 +318,7 @@ const handleAddButtonClick = async () => {
   const calendarItem: CalendarItem = {
     dateTime: today,
     day: today.day,
-    isTargetMonth: true,
+    isTargetMonth: today.hasSame(calendarInfo.dateTime, 'month'),
     isToday: true,
     weekdayShort: today.weekdayShort,
     weight: '0.0',
@@ -310,7 +326,16 @@ const handleAddButtonClick = async () => {
   await handleCalendarDayItemClick(calendarItem)
 }
 
-onMounted(() => {
+const handleRecordUpdated = async (payload: {
+    isTargetMonth: boolean;
+}) => {
+  if (!payload.isTargetMonth) return
+
+  await fetchCalendarMonthlyRecord()
+}
+
+onMounted(async () => {
+  await fetchCalendarMonthlyRecord()
   initAnimation()
 })
 
@@ -370,6 +395,8 @@ onMounted(() => {
       }
 
       &.day-item {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
         cursor: pointer;
 
         &:is(.not-target) {
