@@ -1,5 +1,8 @@
 <template>
-  <div class="info-panel">
+  <div
+    ref="infoPanelRef"
+    class="info-panel"
+  >
     <div class="user-info">
       <img
         :src="ProfilePng"
@@ -45,7 +48,7 @@ import {
   onMounted, ref, computed, watch,
 } from 'vue'
 import { v4 as uuid } from 'uuid'
-import gsap, { Power1 } from 'gsap'
+import gsap, { Expo } from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useToast } from 'vue-toastification'
 import InlineSvg from 'vue-inline-svg'
@@ -64,6 +67,7 @@ gsap.registerPlugin(ScrollTrigger)
 const achievementItemList = ref<InstanceType<(typeof AchievementItem)>[]>()
 const achievementItemListEl = ref<HTMLElement>()
 const usernameRef = ref<HTMLElement>()
+const infoPanelRef = ref<HTMLElement>()
 
 const userStore = useUserStore()
 const toast = useToast()
@@ -138,22 +142,44 @@ const achievementItemElList = computed(() => achievementItemList.value?.map((ach
 
 const initAchievementItemElListScrollTrigger = () => {
   achievementItemElList.value?.forEach((achievementItemEl) => {
-    gsap.from(achievementItemEl, {
+    gsap.set(achievementItemEl, {
+      x: 150,
+      autoAlpha: 0,
+    })
+
+    gsap.to(achievementItemEl, {
       scrollTrigger: {
         trigger: achievementItemEl,
         scroller: achievementItemListEl.value,
         start: 'top 100%',
         toggleActions: 'play none none reverse',
       },
-      x: 150,
-      opacity: 0,
-      duration: 0.75,
-      ease: Power1.easeInOut,
+      x: 0,
+      autoAlpha: 1,
+      duration: 1,
+      ease: 'expo',
     })
   })
 }
 
+const fadeInInfoPanel = () => {
+  if (infoPanelRef.value == null) return
+
+  const timeline = gsap.timeline()
+  timeline.set(infoPanelRef.value, {
+    autoAlpha: 0,
+    x: '100%',
+  })
+  timeline.to(infoPanelRef.value, {
+    autoAlpha: 1,
+    x: 0,
+    duration: 0.75,
+    ease: 'expo',
+  })
+}
+
 const initAnimation = () => {
+  fadeInInfoPanel()
   initAchievementItemElListScrollTrigger()
 }
 
@@ -272,6 +298,10 @@ onMounted(() => {
       padding-left: 5px;
       overflow-x: hidden;
       overflow-y: auto;
+
+      .achievement-item {
+        visibility: hidden;
+      }
     }
   }
 }

@@ -41,7 +41,7 @@ const emit = defineEmits<CustomDialogEmits>()
 const dialogWrapperRef = ref<HTMLElement>()
 const backgroundMaskRef = ref<HTMLElement>()
 const showDialog = computed(() => props.value.show)
-const fadeAnimationDuration = 0.25
+const fadeAnimationDuration = 0.5
 let canCloseDialog = true
 
 const fadeIn = (): Promise<void> => new Promise((resolve) => {
@@ -70,7 +70,7 @@ const fadeIn = (): Promise<void> => new Promise((resolve) => {
     autoAlpha: 1,
     scale: 1,
     duration: fadeAnimationDuration,
-    ease: 'power4.easeOut',
+    ease: 'expo',
     onComplete() {
       resolve()
     },
@@ -79,7 +79,7 @@ const fadeIn = (): Promise<void> => new Promise((resolve) => {
   timeline.to(backgroundMaskRef.value, {
     autoAlpha: 1,
     duration: fadeAnimationDuration,
-    ease: 'power4.easeOut',
+    ease: 'expo',
     onComplete() {
       resolve()
     },
@@ -114,7 +114,7 @@ const fadeOut = (): Promise<void> => new Promise((resolve, reject) => {
     autoAlpha: 0,
     scale: 0.5,
     duration: fadeAnimationDuration,
-    ease: 'power4.easeOut',
+    ease: 'expo',
     onComplete() {
       resolve()
     },
@@ -123,7 +123,7 @@ const fadeOut = (): Promise<void> => new Promise((resolve, reject) => {
   timeline.to(backgroundMaskRef.value, {
     autoAlpha: 0,
     duration: fadeAnimationDuration,
-    ease: 'power4.easeOut',
+    ease: 'expo',
     onComplete() {
       resolve()
     },

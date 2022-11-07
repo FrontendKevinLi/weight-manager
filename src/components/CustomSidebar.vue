@@ -199,10 +199,9 @@ export default defineComponent({
         }
 
         timeline.to('.active-indicator', {
-          duration: 0.5,
+          duration: 0.75,
           y: top,
-          opacity: 1,
-          ease: Expo.easeInOut,
+          ease: Expo.easeOut,
         })
       })
     },
