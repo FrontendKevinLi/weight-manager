@@ -408,13 +408,12 @@ onMounted(async () => {
         &:is(.today) {
           background-color: colors.$primary-600;
           color: white;
-
-          // border: 5px solid colors.$primary-200;
         }
 
-        // &:is(:not(.not-target)):hover {
-        //   background-color: colors.$primary-50-variant;
-        // }
+        .weight-wrapper {
+          display: flex;
+          gap: 5px;
+        }
       }
     }
   }
