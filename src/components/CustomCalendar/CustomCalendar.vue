@@ -264,6 +264,8 @@ const handleNextMonthButtonClick = async () => {
 }
 
 const handleCalendarDayItemClick = async (calendarItem: CalendarItem) => {
+  if (!calendarItem.isTargetMonth) return
+
   const result = await until(() => getMonthlyRecords(calendarInfo.dateTime))
   if (result.error) {
     if (result.error?.message === ApiError.DataNotExist) {
