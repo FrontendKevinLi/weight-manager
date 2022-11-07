@@ -11,16 +11,12 @@
         <span class="year">{{ calendarYear }}</span>
         <span class="month">{{ calendarMonth }}</span>
       </div>
-      <div
-        class="calendar-control-button"
+      <InlineSvg
+        class="arrow-icon"
+        :src="ArrowRightSvg"
         @click="handleNextMonthButtonClick"
         @keydown="handleNextMonthButtonClick"
-      >
-        <InlineSvg
-          class="arrow-icon"
-          :src="ArrowRightSvg"
-        />
-      </div>
+      />
     </div>
     <div class="records-controls">
       <InlineSvg
