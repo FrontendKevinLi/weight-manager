@@ -188,7 +188,7 @@ const handleUsernameFocus = () => {
 }
 
 const handleUsernameBlur = async () => {
-  // updated username is the same as before
+  // prevent api request if updated username is the same as before
   if (usernameBefore.value === username.value) return
 
   const result = await until(() => setUsername(username.value))
