@@ -1,6 +1,8 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import PageLayout from '@/components/PageLayout.vue'
 import LoginView from '@/views/LoginView.vue'
+import { getIsAuthenticated } from '@/firebase/auth'
+import { until } from '@open-draft/until'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -65,19 +67,37 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
-  // },
+  {
+    path: '/register',
+    name: 'register',
+    component: () => import('@/views/RegisterView.vue'),
+
+  },
 ]
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+})
+
+router.beforeEach(async (to) => {
+  const isAuthenticatedResult = await until(() => getIsAuthenticated())
+
+  // special case
+  if (to.name === 'register') {
+    return true
+  }
+
+  // not authenticated
+  if (!isAuthenticatedResult.data) {
+    if (to.name !== 'login') return { name: 'login' }
+  }
+
+  // authenticated
+  if (isAuthenticatedResult.data) {
+    if (to.name === 'login') return { name: 'dashboard' }
+  }
+  return true
 })
 
 export default router

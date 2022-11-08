@@ -6,7 +6,7 @@
       ref="backgroundMaskRef"
       class="background-mask"
       @click.self="handleBackgroundMaskClick"
-      @keydown="handleBackgroundMaskClick"
+      @keydown.escape.self="handleBackgroundMaskClick"
     >
       <div
         ref="dialogWrapperRef"
@@ -20,9 +20,9 @@
 
 <script lang="ts" setup>
 import {
-  defineProps, defineExpose, defineEmits, ref, watch,
+  defineProps, defineExpose, defineEmits, ref, watch, computed,
 } from 'vue'
-import gsap from 'gsap'
+import gsap, { Expo } from 'gsap'
 import { until } from '@open-draft/until'
 
 import { Nullable } from '@/types/utils'
@@ -40,7 +40,8 @@ const emit = defineEmits<CustomDialogEmits>()
 
 const dialogWrapperRef = ref<HTMLElement>()
 const backgroundMaskRef = ref<HTMLElement>()
-const fadeAnimationDuration = 0.25
+const showDialog = computed(() => props.value.show)
+const fadeAnimationDuration = 0.5
 let canCloseDialog = true
 
 const fadeIn = (): Promise<void> => new Promise((resolve) => {
@@ -69,7 +70,7 @@ const fadeIn = (): Promise<void> => new Promise((resolve) => {
     autoAlpha: 1,
     scale: 1,
     duration: fadeAnimationDuration,
-    ease: 'power4.easeOut',
+    ease: Expo.easeOut,
     onComplete() {
       resolve()
     },
@@ -78,7 +79,7 @@ const fadeIn = (): Promise<void> => new Promise((resolve) => {
   timeline.to(backgroundMaskRef.value, {
     autoAlpha: 1,
     duration: fadeAnimationDuration,
-    ease: 'power4.easeOut',
+    ease: Expo.easeOut,
     onComplete() {
       resolve()
     },
@@ -113,7 +114,7 @@ const fadeOut = (): Promise<void> => new Promise((resolve, reject) => {
     autoAlpha: 0,
     scale: 0.5,
     duration: fadeAnimationDuration,
-    ease: 'power4.easeOut',
+    ease: 'expo',
     onComplete() {
       resolve()
     },
@@ -122,7 +123,7 @@ const fadeOut = (): Promise<void> => new Promise((resolve, reject) => {
   timeline.to(backgroundMaskRef.value, {
     autoAlpha: 0,
     duration: fadeAnimationDuration,
-    ease: 'power4.easeOut',
+    ease: 'expo',
     onComplete() {
       resolve()
     },
@@ -148,8 +149,8 @@ const handleBackgroundMaskClick = async () => {
   emit('update:value', { show: false })
 }
 
-watch(props, async () => {
-  if (props.value.show) {
+watch(showDialog, async () => {
+  if (showDialog.value) {
     const result = await until(() => show())
     if (result.error) console.error(result.error)
     return
@@ -185,10 +186,11 @@ defineExpose({
 
     .dialog-wrapper {
       visibility: hidden;
-      border-radius: constants.$border-radius;
-      background-color: white;
-      width: 800px;
-      height: 700px;
+
+      // border-radius: constants.$border-radius;
+      // background-color: white;
+      width: fit-content;
+      height: fit-content;
     }
   }
 }

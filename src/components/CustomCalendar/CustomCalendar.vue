@@ -4,6 +4,7 @@
       :date-time="calendarInfo.dateTime"
       @previous-month="handlePreviousMonthButtonClick"
       @next-month="handleNextMonthButtonClick"
+      @add="handleAddButtonClick"
     />
     <div class="calendar-main">
       <div
@@ -17,21 +18,30 @@
         <span class="weekday">{{ weekday }}</span>
       </div>
       <div
-        v-for="(calendarItem, index) in calendar"
+        v-for="(calendarItem, index) in calendarList"
         :key="index"
         ref="dayItemRefList"
         :class="[
           'calendar-item day-item',
-          !calendarItem.isTargetMonth && 'not-target'
+          !calendarItem.isTargetMonth && 'not-target',
+          calendarItem.isToday && 'today'
         ]"
-        @click="handleCalendarDayItemClick"
-        @keydown="handleCalendarDayItemClick"
+        @click="handleCalendarDayItemClick(calendarItem)"
+        @keydown="handleCalendarDayItemClick(calendarItem)"
       >
-        {{ calendarItem.day }}
+        <span class="day">{{ calendarItem.day }}</span>
+        <div
+          v-show="calendarItem.weight != ''"
+          class="weight-wrapper"
+        >
+          <span class="weight">{{ calendarItem.weight }}</span>
+          <span class="unit">KG</span>
+        </div>
       </div>
     </div>
-    <DayItemInfoDialog
+    <CalendarItemDialog
       v-model:value="dayItemInfoDialogProps.value"
+      @record-updated="handleRecordUpdated"
     />
   </div>
 </template>
@@ -41,25 +51,71 @@ import {
   nextTick, onMounted, reactive, ref, computed, watch,
 } from 'vue'
 import { DateTime } from 'luxon'
-import gsap from 'gsap'
-import { CustomDialogProps } from '@/components/CustomDialog/types'
-import { CalendarItem } from './types'
+import gsap, { Expo, Linear, Power2 } from 'gsap'
+import { getMonthlyRecord } from '@/firebase/firestore'
+import { until } from '@open-draft/until'
+import { useToast } from 'vue-toastification'
+import { MonthlyRecord } from '@/types/records'
+import { CalendarItem, CalendarItemDialogProps } from './types'
 import CalendarHeader from './CalendarHeader.vue'
-import DayItemInfoDialog from './DayItemInfoDialog.vue'
+import CalendarItemDialog from './CalendarItemDialog.vue'
+
+const dayItemsFadeInOutDuration = 0.5
 
 const dayItemRefList = ref<HTMLElement[]>()
 const headerItemRefList = ref<HTMLElement[]>()
 const calendarInfo = reactive({
-  dateTime: DateTime.now().setLocale('en-GB'),
+  dateTime: DateTime.now().setLocale('en-GB').set({
+    hour: 0, minute: 0, second: 0, millisecond: 0,
+  }),
 })
 const canChangeMonth = ref(true)
 const dayItemInfoDialogProps = reactive<{
-  value: CustomDialogProps
+  value: CalendarItemDialogProps
 }>({
   value: {
     show: false,
+    calendarItem: {
+      dateTime: DateTime.now(),
+      day: DateTime.now().day,
+      isTargetMonth: false,
+      weekdayShort: DateTime.now().weekdayShort,
+      weight: '',
+      isToday: true,
+    },
   },
 })
+const calendarMonthlyRecord = ref<MonthlyRecord>({})
+
+const fetchCalendarMonthlyRecord = async () => {
+  const result = await until(() => getMonthlyRecord(calendarInfo.dateTime))
+  if (result.error) {
+    const toast = useToast()
+    toast.error(result.error.message)
+    return
+  }
+
+  const monthlyRecord = result.data
+  calendarMonthlyRecord.value = monthlyRecord
+}
+
+const fetchMonthlyRecordAndShowDialog = async (calendarItem: CalendarItem) => {
+  const result = await until(() => getMonthlyRecord(calendarItem.dateTime))
+  if (result.error) {
+    const toast = useToast()
+    toast.error(result.error.message)
+    return
+  }
+
+  const monthlyRecord = result.data
+  dayItemInfoDialogProps.value.calendarItem = {
+    ...calendarItem,
+    weight: monthlyRecord[calendarItem.day]?.weight.toString() ?? '',
+  }
+  dayItemInfoDialogProps.value.show = true
+}
+
+const getWeightFromCalendarMonthlyRecord = (day: number) => calendarMonthlyRecord.value[day]?.weight.toString() ?? ''
 
 const getFirstDayInMonth = (dateTimeParam: DateTime): DateTime => {
   const firstDay = dateTimeParam.set({
@@ -80,12 +136,17 @@ const getLastDayInMonth = (dateTimeParam: DateTime): DateTime => {
 const generateCalendarListForTargetMonth = (dateTimeParam: DateTime) => {
   const firstDay = getFirstDayInMonth(dateTimeParam)
   const generatedCalendar: CalendarItem[] = []
+  const today = DateTime.now()
   for (let i = 0; i < Number(dateTimeParam.daysInMonth); i += 1) {
     const dayInCalendar = firstDay.plus({ day: i })
+    const isToday = dayInCalendar.hasSame(today, 'day')
     const calendarItem: CalendarItem = {
       weekdayShort: dayInCalendar.weekdayShort,
       day: dayInCalendar.day,
+      dateTime: dayInCalendar,
       isTargetMonth: true,
+      weight: getWeightFromCalendarMonthlyRecord(dayInCalendar.day),
+      isToday,
     }
     generatedCalendar.push(calendarItem)
   }
@@ -105,7 +166,10 @@ const generateCalendarListForPrepend = (dateTimeParam: DateTime) => {
     const calendarItem: CalendarItem = {
       weekdayShort: dayToPrepend.weekdayShort,
       day: dayToPrepend.day,
+      dateTime: dayToPrepend,
       isTargetMonth: false,
+      weight: '',
+      isToday: false,
     }
     calendarListForPrepend.unshift(calendarItem)
   }
@@ -125,7 +189,10 @@ const generateCalendarListForAppend = (dateTimeParam: DateTime) => {
     const calendarItem: CalendarItem = {
       weekdayShort: dayToAppend.weekdayShort,
       day: dayToAppend.day,
+      dateTime: dayToAppend,
       isTargetMonth: false,
+      weight: '',
+      isToday: false,
     }
     calendarListForAppend.push(calendarItem)
   }
@@ -150,10 +217,8 @@ const generateWeekdayList = (): string[] => {
   }
   return list
 }
-const calendar = computed(() => generateCalendarList(calendarInfo.dateTime))
+const calendarList = computed(() => generateCalendarList(calendarInfo.dateTime))
 const weekdayList: string[] = generateWeekdayList()
-
-const timeline = gsap.timeline()
 
 const fadeInHeader = () => {
   if (headerItemRefList.value == null) {
@@ -161,14 +226,15 @@ const fadeInHeader = () => {
     return
   }
 
-  gsap.from(headerItemRefList.value, {
+  const timeline = gsap.timeline()
+  timeline.from(headerItemRefList.value, {
     autoAlpha: 0,
-    ease: 'power2.inOut',
+    ease: Expo.easeInOut,
     stagger: {
-      amount: 0.5,
-      from: 'center',
+      amount: 1,
+      from: 'start',
     },
-  })
+  }, 0).duration(1)
 }
 
 const fadeInDayItems = () => new Promise((resolve, reject) => {
@@ -176,23 +242,24 @@ const fadeInDayItems = () => new Promise((resolve, reject) => {
     reject(Error('Cannot find elements to animation'))
     return
   }
-
+  const timeline = gsap.timeline()
   timeline.set(dayItemRefList.value, {
     autoAlpha: 0,
+    scale: 0.75,
   })
   timeline.to(dayItemRefList.value, {
     autoAlpha: 1,
     stagger: {
-      amount: 0.125,
-      from: 'center',
+      amount: dayItemsFadeInOutDuration,
+      from: 'start',
       grid: 'auto',
-      ease: 'power2.inOut',
+      ease: Linear.easeInOut,
     },
     scale: 1,
     onComplete() {
       resolve(true)
     },
-  })
+  }).duration(dayItemsFadeInOutDuration)
 })
 
 const fadeOutDayItems = () => new Promise((resolve, reject) => {
@@ -201,37 +268,37 @@ const fadeOutDayItems = () => new Promise((resolve, reject) => {
     return
   }
 
+  const timeline = gsap.timeline()
+  timeline.set(dayItemRefList.value, {
+    autoAlpha: 1,
+    scale: 1,
+  })
   timeline.to(dayItemRefList.value, {
     autoAlpha: 0,
     stagger: {
-      amount: 0.125,
-      from: 'edges',
+      amount: dayItemsFadeInOutDuration,
+      from: 'end',
       grid: 'auto',
-      ease: 'power2.inOut',
+      ease: Linear.easeInOut,
     },
-    scale: 0.5,
+    scale: 0.75,
     onComplete() {
       resolve(true)
     },
-  })
+  }).duration(dayItemsFadeInOutDuration)
 })
 
 watch(() => calendarInfo.dateTime, async () => {
   nextTick(async () => {
+    await fetchCalendarMonthlyRecord()
     await fadeInDayItems()
     canChangeMonth.value = true
   })
 })
 
-const initAnimation = () => {
-  fadeInHeader()
-  fadeInDayItems()
-}
-
 const handlePreviousMonthButtonClick = async () => {
   if (!canChangeMonth.value) return
 
-  timeline.clear()
   canChangeMonth.value = false
   await fadeOutDayItems()
   calendarInfo.dateTime = calendarInfo.dateTime.minus({ month: 1 })
@@ -239,18 +306,43 @@ const handlePreviousMonthButtonClick = async () => {
 
 const handleNextMonthButtonClick = async () => {
   if (!canChangeMonth.value) return
-  timeline.clear()
+
   canChangeMonth.value = false
   await fadeOutDayItems()
   calendarInfo.dateTime = calendarInfo.dateTime.plus({ month: 1 })
 }
 
-const handleCalendarDayItemClick = () => {
-  dayItemInfoDialogProps.value.show = true
+const handleCalendarDayItemClick = async (calendarItem: CalendarItem) => {
+  if (!calendarItem.isTargetMonth) return
+
+  await fetchMonthlyRecordAndShowDialog(calendarItem)
 }
 
-onMounted(() => {
-  initAnimation()
+const handleAddButtonClick = async () => {
+  const today = DateTime.now()
+  const calendarItem: CalendarItem = {
+    dateTime: today,
+    day: today.day,
+    isTargetMonth: today.hasSame(calendarInfo.dateTime, 'month'),
+    isToday: true,
+    weekdayShort: today.weekdayShort,
+    weight: '',
+  }
+  await fetchMonthlyRecordAndShowDialog(calendarItem)
+}
+
+const handleRecordUpdated = async (payload: {
+    isTargetMonth: boolean;
+}) => {
+  if (!payload.isTargetMonth) return
+
+  await fetchCalendarMonthlyRecord()
+}
+
+onMounted(async () => {
+  fadeInHeader()
+  await fetchCalendarMonthlyRecord()
+  await fadeInDayItems()
 })
 
 </script>
@@ -296,23 +388,37 @@ onMounted(() => {
         display: grid;
         place-items: center;
         align-self: center;
-        background-color: colors.$primary-600;
+        background-color: transparent;
+
+        // background-color: colors.$primary-600;
         letter-spacing: 0.125rem;
 
         .weekday {
-          color: white;
+          color: colors.$primary-600;
           font-size: font-sizes.$small;
           font-weight: bold;
         }
       }
 
       &.day-item {
+        display: grid;
+        grid-template-rows: 1fr 1fr;
         cursor: pointer;
 
         &:is(.not-target) {
-          background-color: colors.$primary-50-variant;
+          background-color: colors.$black-100;
           cursor: not-allowed;
           color: colors.$darkblue-100;
+        }
+
+        &:is(.today) {
+          background-color: colors.$primary-600;
+          color: white;
+        }
+
+        .weight-wrapper {
+          display: flex;
+          gap: 5px;
         }
       }
     }

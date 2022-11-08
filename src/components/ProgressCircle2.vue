@@ -99,12 +99,11 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.initAnimation()
+    this.initProgress()
   },
   methods: {
-    initAnimation() {
+    initProgress() {
       const timeline = gsap.timeline()
-
       if (!this.config.animationConfig?.enabled) {
         timeline.set(this.$refs['progress-path'] as string, {
           strokeDasharray: `${this.strokeDasharray * this.config.percentage} ${this.strokeDasharray * (1 - this.config.percentage)}`,
@@ -115,12 +114,15 @@ export default defineComponent({
       timeline.set(this.$refs['progress-path'] as string, {
         strokeDasharray: `0 ${this.strokeDasharray}`,
       })
+    },
+    fillProgress() {
+      const timeline = gsap.timeline()
 
       timeline.to(this.$refs['progress-path'] as string, {
         duration: this.config.animationConfig?.enabled ? this.config.animationConfig.duration : 0,
         ease: CustomEase.create('custom', Constants.customElasticPath),
         strokeDasharray: `${this.strokeDasharray * this.config.percentage} ${this.strokeDasharray * (1 - this.config.percentage)}`,
-      }, this.config.animationConfig.delay)
+      }, this.config.animationConfig?.delay ?? 0)
     },
   },
 })

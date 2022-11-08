@@ -11,11 +11,14 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import gsap from 'gsap'
 
 import CustomSidebar from '@/components/CustomSidebar.vue'
 import CustomHeader from '@/components/CustomHeader.vue'
 import InfoPanel from '@/components/InfoPanel.vue'
+import { auth, getIsAuthenticated } from '@/firebase/auth'
+import { until } from '@open-draft/until'
+import { useToast } from 'vue-toastification'
+import { useUserStore } from '@/stores'
 
 export default defineComponent({
   name: 'DashboardView',
@@ -28,22 +31,20 @@ export default defineComponent({
     return {
     }
   },
-  mounted() {
-    // this.initAnimations()
+  async mounted() {
+    this.setCurrentUser()
   },
   methods: {
-    initAnimations() {
-      const timeline = gsap.timeline()
-      timeline.set('.page-layout', {
-        backgroundColor: '#e8ecf3',
-        opacity: 0,
-      })
 
-      timeline.to('.page-layout', {
-        backgroundColor: '#e8ecf3',
-        duration: 0.5,
-        opacity: 1,
-      })
+    async setCurrentUser() {
+      const isAuthenticatedResult = await until(() => getIsAuthenticated())
+      if (isAuthenticatedResult.error) {
+        const toast = useToast()
+        toast.error(isAuthenticatedResult.error.message)
+      }
+
+      const userStore = useUserStore()
+      userStore.setCurrentUser(auth.currentUser)
     },
   },
 })

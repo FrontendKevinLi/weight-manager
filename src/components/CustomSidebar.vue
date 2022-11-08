@@ -38,6 +38,21 @@
         </div>
       </div>
     </div>
+    <div
+      class="logout-button"
+      @click="handleLogoutButtonClick"
+      @keydown="handleLogoutButtonClick"
+    >
+      <InlineSvg
+        class="logout-icon"
+        :src="LogoutSvg"
+      />
+    </div>
+    <ConfirmDialog
+      v-model:value="logoutConfirmDialog"
+      @cancel="handleLogoutDialogCancel"
+      @confirm="handleLogoutDialogConfirm"
+    />
   </div>
 </template>
 
@@ -45,19 +60,24 @@
 import { defineComponent } from 'vue'
 import InlineSvg from 'vue-inline-svg'
 import gsap, { Expo } from 'gsap'
+import { until } from '@open-draft/until'
 
 import RouteItem from '@/types/RouteItem'
-
 import TableSvg from '@/assets/sidebar-icons/table-columns-solid.svg'
 import RecordSvg from '@/assets/sidebar-icons/clipboard-regular.svg'
 import ChartSvg from '@/assets/sidebar-icons/chart-simple-solid.svg'
 import SettingsSvg from '@/assets/sidebar-icons/gear-solid.svg'
 import LogoSvg from '@/assets/logo/svg/lightblue/logo-no-background.svg'
+import LogoutSvg from '@/assets/info-panel-icons/right-from-bracket-solid.svg'
+import { logout } from '@/firebase/auth'
+import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue'
+import { ConfirmDialogProps } from '@/components/ConfirmDialog/types'
 
 export default defineComponent({
   name: 'CustomSidebar',
   components: {
     InlineSvg,
+    ConfirmDialog,
   },
   data() {
     return {
@@ -66,11 +86,17 @@ export default defineComponent({
       ChartSvg,
       LogoSvg,
       SettingsSvg,
+      LogoutSvg,
       activeItemIndicatorInited: false,
+      logoutConfirmDialog: {
+        title: 'Log out',
+        content: 'Are you sure you want to log out?',
+        show: false,
+      } as ConfirmDialogProps,
     }
   },
   computed: {
-    routeItemList() {
+    routeItemList(): RouteItem[] {
       const routeItemList: RouteItem[] = [
         new RouteItem({
           icon: this.TableSvg,
@@ -95,7 +121,7 @@ export default defineComponent({
       ]
       return routeItemList
     },
-    currentRoute() {
+    currentRoute(): string {
       const currentRoute = this.$router.currentRoute.value.fullPath
       if (this.activeItemIndicatorInited) {
         this.rePositionActiveIndicator()
@@ -173,12 +199,26 @@ export default defineComponent({
         }
 
         timeline.to('.active-indicator', {
-          duration: 0.5,
+          duration: 0.75,
           y: top,
-          opacity: 1,
-          ease: Expo.easeInOut,
+          ease: Expo.easeOut,
         })
       })
+    },
+    handleLogoutDialogCancel() {
+      this.logoutConfirmDialog.show = false
+    },
+    async handleLogoutDialogConfirm() {
+      const logoutResult = await until(() => logout())
+      if (logoutResult.error) {
+        console.error(logoutResult.error)
+        return
+      }
+
+      this.$router.push('/login')
+    },
+    async handleLogoutButtonClick() {
+      this.logoutConfirmDialog.show = true
     },
   },
 })
@@ -272,6 +312,22 @@ export default defineComponent({
         height: calc(100% - (constants.$border-radius / 2));
         filter: opacity(0.1);
       }
+    }
+  }
+
+  .logout-button {
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    width: 100%;
+    aspect-ratio: 5/4;
+
+    .logout-icon {
+      $size: 30px;
+
+      width: $size;
+      height: $size;
+      fill: colors.$primary-100;
     }
   }
 }

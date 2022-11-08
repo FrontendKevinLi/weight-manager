@@ -1,43 +1,44 @@
 <template>
-  <div class="login">
+  <div class="register">
     <div
-      class="login-box"
+      class="box"
     >
       <div
-        ref="white-section"
+        ref="whiteSectionRef"
         class="white-section"
-        @keyup.enter="handleLoginButtonClick"
+        @keyup.enter="handleRegisterButtonClick"
       >
         <InlineSvg
           class="logo"
           :src="LogoFullSvg"
         />
         <CustomInput
-          v-model:inputText="username"
+          v-model:inputText="emailInput"
           :placeholder="'Email'"
+          :type="'text'"
           class="white-section-item input"
         />
         <CustomInput
-          v-model:inputText="password"
+          v-model:inputText="passwordInput"
           :placeholder="'Password'"
           :type="'password'"
           class="white-section-item input"
         />
         <CustomButton
-          :label="'Login'"
-          class="white-section-item login-btn"
-          @click="handleLoginButtonClick"
+          :label="'Sign up'"
+          class="white-section-item register-btn"
+          @click="handleRegisterButtonClick"
         />
-        <div class="create-account">
+        <div class="already-have-an-account">
           <span
             class="white-section-item question"
-            v-text="createAccountQuestion"
+            v-text="alreadyHaveAnAccountQuestion"
           />
           <span
             class="white-section-item text-button-label"
-            @click="handleLinkToCreateAccountButtonClick"
-            @keydown="handleLinkToCreateAccountButtonClick"
-            v-text="createAccountTextButtonLabel"
+            @click="handleLinkToLoginButtonClick"
+            @keydown="handleLinkToLoginButtonClick"
+            v-text="loginTextButtonLabel"
           />
         </div>
       </div>
@@ -45,99 +46,87 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue'
-import gsap, { Expo } from 'gsap'
+<script lang="ts" setup>
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import gsap from 'gsap'
 import InlineSvg from 'vue-inline-svg'
 import { useToast } from 'vue-toastification'
-
-import CustomInput from '@/components/CustomInput.vue'
 import CustomButton from '@/components/CustomButton.vue'
+import CustomInput from '@/components/CustomInput.vue'
 
-import BodyWeightingImg from '@/assets/login-page-pictures/bodyWeighting.png'
 import LogoFullSvg from '@/assets/logo-full/svg/primaryblue/logo-no-background.svg'
-import { login } from '@/firebase/auth'
+import { signUp } from '@/firebase/auth'
 import { until } from '@open-draft/until'
 
-export default defineComponent({
-  name: 'LoginView',
-  components: {
-    CustomInput,
-    CustomButton,
-    InlineSvg,
-  },
-  data() {
-    return {
-      username: '',
-      password: '',
-      BodyWeightingImg,
-      LogoFullSvg,
-      createAccountQuestion: 'Don\'t have an account?',
-      createAccountTextButtonLabel: 'Create account',
-    }
-  },
-  mounted() {
-    this.initAnimations()
-  },
-  methods: {
-    initAnimations() {
-      const timeLine = gsap.timeline()
+const whiteSectionRef = ref<HTMLElement>()
 
-      timeLine.from(this.$refs['white-section'] as gsap.TweenTarget, {
-        autoAlpha: 0,
-        y: -100,
-        ease: Expo.easeInOut,
-        duration: 0.75,
-      })
-      timeLine.from('.white-section-item', {
-        y: '-250px',
-        ease: 'back',
-        opacity: 0,
-        stagger: {
-          amount: 0.25,
-        },
-      }, '-=0.5')
-    },
-    validateForm() {
-      return true
-    },
-    async handleLoginButtonClick() {
-      const valid = this.validateForm()
-      if (!valid) {
-        return
-      }
+const emailInput = ref('')
+const passwordInput = ref('')
+const router = useRouter()
+const toast = useToast()
 
-      const loginResult = await until(() => login(this.username, this.password))
-      if (loginResult.error) {
-        const toast = useToast()
-        toast.error(loginResult.error.message)
-        return
-      }
+const alreadyHaveAnAccountQuestion = 'Already have an account?'
+const loginTextButtonLabel = 'Login'
 
-      const vm = this
-      gsap.to(this.$refs['white-section'] as gsap.TweenTarget, {
-        opacity: 0,
-        duration: 0.25,
-        ease: 'power2',
-        onComplete() {
-          vm.$router.push('/dashboard')
-        },
-      })
+const fadeInFormItems = () => {
+  const timeLine = gsap.timeline()
+
+  if (whiteSectionRef.value != null) {
+    timeLine.from(whiteSectionRef.value, {
+      opacity: 0.001,
+      y: -100,
+      ease: 'power2',
+      delay: 0.1,
+      duration: 0.75,
+    })
+  }
+
+  timeLine.from('.white-section-item', {
+    y: '-250px',
+    ease: 'back',
+    opacity: 0,
+    stagger: {
+      amount: 0.25,
     },
-    handleLinkToCreateAccountButtonClick() {
-      this.$router.push('/register')
-    },
-  },
+  }, '-=0.5')
+}
+
+const validateForm = () => true
+
+const handleRegisterButtonClick = async () => {
+  const valid = validateForm()
+  if (!valid) {
+    toast.error('error')
+    return
+  }
+
+  const signUpResult = await until(() => signUp(emailInput.value, passwordInput.value))
+  if (signUpResult.error) {
+    toast.error(signUpResult.error.message)
+    return
+  }
+
+  router.push('/')
+}
+
+const handleLinkToLoginButtonClick = () => {
+  router.push('/login')
+}
+
+onMounted(() => {
+  fadeInFormItems()
 })
+
 </script>
 
 <style lang="scss" scoped>
-@use "@/style/colors" as colors;
-@use "@/style/constants" as constants;
+@use "@/style/constants.scss" as constants;
+@use "@/style/colors.scss" as colors;
 @use "@/style/font-sizes.scss" as font-sizes;
-@use "@/style/animations";
+@use "@/style/animations.scss";
 
-.login {
+.register {
   display: flex;
   position: relative;
   align-items: center;
@@ -157,8 +146,8 @@ export default defineComponent({
     filter: brightness(0.8) blur(3px);
   }
 
-  .login-box {
-    $login-box-width: 75vw;
+  .box {
+    $box-width: 75vw;
 
     display: flex;
     position: relative;
@@ -177,17 +166,13 @@ export default defineComponent({
       flex-direction: column;
       row-gap: 30px;
       align-items: center;
-      visibility: hidden;
       border-radius: 12px;
-
-      // box-shadow: 0 3px 5px 0 colors.$black-700;
-      // box-shadow: 0 3px 8px -1px colors.$black-900;
       background-color: white;
       padding-top: 40px;
       padding-right: 80px;
       padding-bottom: 40px;
       padding-left: 80px;
-      width: calc($login-box-width / 2.5);
+      width: calc($box-width / 2.5);
 
       .logo {
         $size: 200px;
@@ -202,7 +187,7 @@ export default defineComponent({
         letter-spacing: 0.1rem;
       }
 
-      .login-btn {
+      .register-btn {
         box-sizing: border-box;
         margin-top: 20px;
         padding-top: 20px;
@@ -214,7 +199,7 @@ export default defineComponent({
         font-weight: bold;
       }
 
-      .create-account {
+      .already-have-an-account {
         display: grid;
         gap: 10px;
         margin-top: 20px;

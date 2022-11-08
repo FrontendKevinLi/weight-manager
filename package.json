@@ -13,16 +13,20 @@
   "dependencies": {
     "@open-draft/until": "^2.0.0",
     "echarts": "^5.4.0",
+    "firebase": "^9.13.0",
     "gsap": "^3.11.1",
     "luxon": "^3.0.4",
+    "pinia": "^2.0.23",
     "uuid": "^9.0.0",
     "vue": "^3.2.13",
     "vue-inline-svg": "^3.1.0",
     "vue-router": "^4.0.13",
+    "vue-toastification": "^2.0.0-rc.5",
     "vuex": "^4.0.0"
   },
   "devDependencies": {
     "@types/luxon": "^3.0.2",
+    "@types/toastify-js": "^1.11.1",
     "@types/uuid": "^8.3.4",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
@@ -101,7 +105,8 @@
             "vm"
           ]
         }
-      ]
+      ],
+      "no-shadow": "off"
     }
   },
   "browserslist": [
