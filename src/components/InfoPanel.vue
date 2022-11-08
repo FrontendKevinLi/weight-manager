@@ -151,8 +151,8 @@ const initAchievementItemElListScrollTrigger = () => {
       scrollTrigger: {
         trigger: achievementItemEl,
         scroller: achievementItemListEl.value,
-        start: 'top 100%',
-        toggleActions: 'play none none reverse',
+        start: 'top 95%',
+        toggleActions: 'play none none reset',
       },
       x: 0,
       autoAlpha: 1,
