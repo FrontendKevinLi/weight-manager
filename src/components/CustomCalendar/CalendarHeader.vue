@@ -69,7 +69,7 @@ const fadeIn = () => {
     width: 'auto',
     duration: 1,
     ease: Expo.easeInOut,
-  }).then(() => console.log('calendar header'))
+  })
 }
 
 const handlePreviousMonthButtonClick = async () => {
