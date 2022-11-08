@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import gsap from 'gsap'
+import gsap, { Expo } from 'gsap'
 import InlineSvg from 'vue-inline-svg'
 import { useToast } from 'vue-toastification'
 
@@ -84,10 +84,9 @@ export default defineComponent({
       const timeLine = gsap.timeline()
 
       timeLine.from(this.$refs['white-section'] as gsap.TweenTarget, {
-        opacity: 0.001,
+        autoAlpha: 0,
         y: -100,
-        ease: 'power2',
-        delay: 0.1,
+        ease: Expo.easeInOut,
         duration: 0.75,
       })
       timeLine.from('.white-section-item', {
@@ -178,6 +177,7 @@ export default defineComponent({
       flex-direction: column;
       row-gap: 30px;
       align-items: center;
+      visibility: hidden;
       border-radius: 12px;
 
       // box-shadow: 0 3px 5px 0 colors.$black-700;
