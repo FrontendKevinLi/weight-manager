@@ -5,10 +5,17 @@
       class="bar-chart"
     />
     <div
-      v-if="!shouldShowChart && afterFetchRecord"
+      ref="hintWrapperRef"
       class="hint-wrapper"
     >
       <span class="hint">{{ hint }}</span>
+      <div
+        class="link-button"
+        @click="handleLinkButtonClick"
+        @keydown="handleLinkButtonClick"
+      >
+        {{ linkText }}
+      </div>
     </div>
   </div>
 </template>
@@ -23,6 +30,8 @@ import { getMonthlyRecord } from '@/firebase/firestore'
 import { until } from '@open-draft/until'
 import { useToast } from 'vue-toastification'
 import { MonthlyRecord } from '@/types/records'
+import gsap from 'gsap'
+import router from '@/router'
 
 type WeightItem = {
   date: string,
@@ -36,7 +45,11 @@ type ChartData = {
 
 const shouldFetchLastMonthRecord = DateTime.now().day <= 7
 const hint = 'Complete weekly records to show charts!'
+const linkText = 'Record now'
+
 const weightList = ref<WeightItem[]>([])
+const hintWrapperRef = ref<HTMLElement>()
+const barChartRef = ref<HTMLElement>()
 
 const monthlyRecord = reactive({
   currentMonthRecord: {} as MonthlyRecord,
@@ -202,12 +215,40 @@ function initChart(barChartRefParam: Ref<HTMLElement | undefined>, weightList: W
   })
 }
 
-const barChartRef = ref<HTMLElement>()
+const fadeInHint = () => {
+  if (hintWrapperRef.value == null) return
+
+  const timeline = gsap.timeline()
+  timeline.fromTo(hintWrapperRef.value, {
+    autoAlpha: 0,
+  }, {
+    autoAlpha: 1,
+    ease: 'expo.easeInOut',
+  })
+}
+
+const handleLinkButtonClick = () => {
+  router.push({ name: 'records' })
+}
+
+// watch(shouldShowChart, (value) => {
+//   console.log(false)
+//   if (value === false) {
+//     if (hintWrapperRef.value == null) return
+
+//     gsap.to(hintWrapperRef.value, {
+//       autoAlpha: 1,
+//     })
+//   }
+// })
 
 onMounted(async () => {
   await fetchRecords()
   weightList.value = generateWeightList()
-  if (!shouldShowChart.value) return
+  if (!shouldShowChart.value) {
+    fadeInHint()
+    return
+  }
 
   initChart(barChartRef, weightList.value)
 })
@@ -216,6 +257,7 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 @use "@/style/colors.scss" as colors;
+@use "@/style/constants.scss" as constants;
 @use "@/style/font-sizes.scss" as font-sizes;
 
 .last-days-weight-bar-chart-wrapper {
@@ -235,11 +277,31 @@ onMounted(async () => {
   }
 
   .hint-wrapper {
+    display: grid;
     grid-area: 1 / 1;
+    grid-template-rows: 1fr 1fr;
+    gap: 20px;
+    place-items: center;
+    visibility: hidden;
+    border-radius: constants.$border-radius;
+    background-color: white;
+    padding-top: 20px;
+    padding-right: 40px;
+    padding-bottom: 20px;
+    padding-left: 40px;
 
     .hint {
       color: colors.$darkblue-600;
       font-size: font-sizes.$medium;
+    }
+
+    .link-button {
+      border-radius: constants.$border-radius;
+      background-color: colors.$primary-50-variant;
+      cursor: pointer;
+      padding: 20px;
+      color: colors.$primary-600;
+      font-size: font-sizes.$small;
     }
   }
 }
