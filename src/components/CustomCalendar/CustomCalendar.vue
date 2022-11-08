@@ -51,7 +51,7 @@ import {
   nextTick, onMounted, reactive, ref, computed, watch,
 } from 'vue'
 import { DateTime } from 'luxon'
-import gsap from 'gsap'
+import gsap, { Expo } from 'gsap'
 import { getMonthlyRecord } from '@/firebase/firestore'
 import { until } from '@open-draft/until'
 import { useToast } from 'vue-toastification'
@@ -232,9 +232,9 @@ const fadeInDayItems = () => new Promise((resolve, reject) => {
     autoAlpha: 1,
     stagger: {
       amount: 0.125,
-      from: 'center',
+      from: 'start',
       grid: 'auto',
-      ease: 'expo.easeIn',
+      ease: Expo.easeInOut,
     },
     scale: 1,
     onComplete() {
@@ -258,9 +258,9 @@ const fadeOutDayItems = () => new Promise((resolve, reject) => {
     autoAlpha: 0,
     stagger: {
       amount: 0.125,
-      from: 'edges',
+      from: 'start',
       grid: 'auto',
-      ease: 'expo.easeOut',
+      ease: Expo.easeInOut,
     },
     scale: 0.75,
     onComplete() {

@@ -7,7 +7,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import gsap from 'gsap'
 import WeighingItem from '@/components/WeighingItem.vue'
 import LastDaysWeightBarChart from '@/components/LastDaysWeightBarChart.vue'
 
@@ -16,21 +15,6 @@ export default defineComponent({
   components: {
     WeighingItem,
     LastDaysWeightBarChart,
-  },
-  data() {
-    return {}
-  },
-  mounted() {
-    this.initAnimations()
-  },
-  methods: {
-    initAnimations() {
-      const timeline = gsap.timeline()
-      timeline.from('.weighing-item', {
-        opacity: 0,
-        ease: 'power1',
-      }, 0)
-    },
   },
 })
 </script>
