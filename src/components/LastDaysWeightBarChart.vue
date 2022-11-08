@@ -214,6 +214,7 @@ function initChart(barChartRefParam: Ref<HTMLElement | undefined>, weightList: W
       left: '0',
       right: '0',
     },
+    animationEasing: 'exponentialInOut',
   })
 
   window.addEventListener('resize', () => {

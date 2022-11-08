@@ -22,7 +22,7 @@
 import {
   defineProps, defineExpose, defineEmits, ref, watch, computed,
 } from 'vue'
-import gsap from 'gsap'
+import gsap, { Expo } from 'gsap'
 import { until } from '@open-draft/until'
 
 import { Nullable } from '@/types/utils'
@@ -70,7 +70,7 @@ const fadeIn = (): Promise<void> => new Promise((resolve) => {
     autoAlpha: 1,
     scale: 1,
     duration: fadeAnimationDuration,
-    ease: 'expo',
+    ease: Expo.easeOut,
     onComplete() {
       resolve()
     },
@@ -79,7 +79,7 @@ const fadeIn = (): Promise<void> => new Promise((resolve) => {
   timeline.to(backgroundMaskRef.value, {
     autoAlpha: 1,
     duration: fadeAnimationDuration,
-    ease: 'expo',
+    ease: Expo.easeOut,
     onComplete() {
       resolve()
     },

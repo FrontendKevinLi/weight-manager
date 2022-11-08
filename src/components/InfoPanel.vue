@@ -156,8 +156,8 @@ const initAchievementItemElListScrollTrigger = () => {
       },
       x: 0,
       autoAlpha: 1,
-      duration: 1,
-      ease: 'expo',
+      duration: 0.75,
+      ease: Expo.easeOut,
     })
   })
 }
@@ -173,8 +173,8 @@ const fadeInInfoPanel = () => {
   timeline.to(infoPanelRef.value, {
     autoAlpha: 1,
     x: 0,
-    duration: 0.75,
-    ease: 'expo',
+    duration: 1,
+    ease: Expo.easeInOut,
   })
 }
 
