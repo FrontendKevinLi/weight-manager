@@ -231,17 +231,6 @@ const handleLinkButtonClick = () => {
   router.push({ name: 'records' })
 }
 
-// watch(shouldShowChart, (value) => {
-//   console.log(false)
-//   if (value === false) {
-//     if (hintWrapperRef.value == null) return
-
-//     gsap.to(hintWrapperRef.value, {
-//       autoAlpha: 1,
-//     })
-//   }
-// })
-
 onMounted(async () => {
   await fetchRecords()
   weightList.value = generateWeightList()
