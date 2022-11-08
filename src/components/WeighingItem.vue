@@ -110,10 +110,10 @@ export default defineComponent({
     },
   },
   async mounted() {
-    this.fadeInWeighingItem()
     this.initPointerAnimation()
+    await this.fadeInWeighingItem()
     await this.fetchMonthlyRecord()
-    const circle = this.$refs['outer-progress-circle'] as InstanceType<typeof ProgressCircle2>
+    const circle = this.$refs.outerProgressCircleRef as InstanceType<typeof ProgressCircle2>
     this.setWeight()
     this.$nextTick(() => {
       circle.fillProgress()
@@ -158,69 +158,74 @@ export default defineComponent({
         duration: this.animationConfig.duration,
       }, this.animationConfig.delay)
     },
-    fadeInWeighingItem() {
-      const timeline = gsap.timeline()
-      const circleInsideRef = this.$refs.circleInsideRef as HTMLElement | null
-      const outerProgressCircleRef = this.$refs.outerProgressCircleRef as HTMLElement | null
-      const pointerContainerRef = this.$refs.pointerContainerRef as HTMLElement | null
-      const indicatorsRef = this.$refs.indicatorsRef as HTMLElement | null
-      const outerAnimationCircleRef = this.$refs.outerAnimationCircleRef as HTMLElement | null
-      if (
-        circleInsideRef == null
+    fadeInWeighingItem(): Promise<void> {
+      return new Promise((resolve) => {
+        const timeline = gsap.timeline()
+        const circleInsideRef = this.$refs.circleInsideRef as HTMLElement | null
+        const outerProgressCircleRef = this.$refs.outerProgressCircleRef as (InstanceType<typeof ProgressCircle2>)
+        const pointerContainerRef = this.$refs.pointerContainerRef as HTMLElement | null
+        const indicatorsRef = this.$refs.indicatorsRef as HTMLElement | null
+        const outerAnimationCircleRef = this.$refs.outerAnimationCircleRef as HTMLElement | null
+        if (
+          circleInsideRef == null
       || outerProgressCircleRef == null
       || pointerContainerRef == null
       || indicatorsRef == null
       || outerAnimationCircleRef == null
-      ) return
+        ) return
 
-      timeline.fromTo(outerAnimationCircleRef, {
-        autoAlpha: 1,
-        scale: 0,
-      }, {
-        autoAlpha: 0,
-        scale: 1.75,
-        ease: Expo.easeInOut,
-        rotate: 360,
-        duration: 1.1,
+        timeline.fromTo(outerAnimationCircleRef, {
+          autoAlpha: 1,
+          scale: 0,
+        }, {
+          autoAlpha: 0,
+          scale: 1.75,
+          ease: Expo.easeInOut,
+          rotate: 360,
+          duration: 1.1,
+        })
+
+        timeline.fromTo(indicatorsRef, {
+          autoAlpha: 0,
+          scale: 0,
+        }, {
+          autoAlpha: 1,
+          scale: 1,
+          ease: Expo.easeInOut,
+          duration: 1.1,
+        }, 0.1)
+        timeline.fromTo(pointerContainerRef, {
+          autoAlpha: 0,
+          scale: 0,
+        }, {
+          autoAlpha: 1,
+          scale: 1,
+          ease: Expo.easeInOut,
+          duration: 1.1,
+        }, 0.1)
+        timeline.fromTo(outerProgressCircleRef.$el, {
+          autoAlpha: 0,
+          scale: 0,
+        }, {
+          autoAlpha: 1,
+          scale: 1,
+          duration: 1.1,
+          ease: Expo.easeInOut,
+          onComplete() {
+            resolve()
+          },
+        }, 0.1)
+
+        timeline.fromTo(circleInsideRef, {
+          autoAlpha: 0,
+          scale: 0,
+        }, {
+          autoAlpha: 1,
+          scale: 1,
+          duration: 1.1,
+          ease: Expo.easeOut,
+        }, '-=0.6')
       })
-
-      timeline.fromTo(indicatorsRef, {
-        autoAlpha: 0,
-        scale: 0,
-      }, {
-        autoAlpha: 1,
-        scale: 1,
-        ease: Expo.easeInOut,
-        duration: 0.5,
-      }, '-=0.75')
-      timeline.fromTo(pointerContainerRef, {
-        autoAlpha: 0,
-        scale: 0,
-      }, {
-        autoAlpha: 1,
-        scale: 1,
-        ease: Expo.easeInOut,
-        duration: 0.5,
-      }, '-=0.75')
-
-      timeline.fromTo(circleInsideRef, {
-        autoAlpha: 0,
-        scale: 0,
-      }, {
-        autoAlpha: 1,
-        scale: 1,
-        duration: 0.5,
-        ease: Expo.easeInOut,
-      }, '-=0.7')
-      timeline.fromTo(outerProgressCircleRef, {
-        autoAlpha: 0,
-        scale: 0,
-      }, {
-        autoAlpha: 1,
-        scale: 1,
-        duration: 0.5,
-        ease: Expo.easeInOut,
-      }, '-=0.7')
     },
     animateWeightText() {
       const timeline = gsap.timeline()
@@ -395,8 +400,6 @@ export default defineComponent({
       $offset: 5px;
       $size: $outer-circle-size - $offset;
 
-      position: absolute;
-      transform: translate(-10px, -10px);
       visibility: hidden;
       width: $size;
       height: $size;
