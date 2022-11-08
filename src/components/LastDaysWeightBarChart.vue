@@ -256,6 +256,7 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+@use "sass:color";
 @use "@/style/colors.scss" as colors;
 @use "@/style/constants.scss" as constants;
 @use "@/style/font-sizes.scss" as font-sizes;
@@ -296,12 +297,21 @@ onMounted(async () => {
     }
 
     .link-button {
+      transition: color 0.2s ease-out;
       border-radius: constants.$border-radius;
       background-color: colors.$primary-50-variant;
       cursor: pointer;
       padding: 20px;
       color: colors.$primary-600;
       font-size: font-sizes.$small;
+
+      &:hover {
+        color: color.adjust(colors.$primary-500, $lightness: 5%);
+      }
+
+      &:active {
+        color: color.adjust(colors.$primary-500, $lightness: -5%);
+      }
     }
   }
 }
