@@ -99,6 +99,22 @@ const fetchCalendarMonthlyRecord = async () => {
   calendarMonthlyRecord.value = monthlyRecord
 }
 
+const fetchMonthlyRecordAndShowDialog = async (calendarItem: CalendarItem) => {
+  const result = await until(() => getMonthlyRecord(calendarItem.dateTime))
+  if (result.error) {
+    const toast = useToast()
+    toast.error(result.error.message)
+    return
+  }
+
+  const monthlyRecord = result.data
+  dayItemInfoDialogProps.value.calendarItem = {
+    ...calendarItem,
+    weight: monthlyRecord[calendarItem.day]?.weight.toString() ?? '',
+  }
+  dayItemInfoDialogProps.value.show = true
+}
+
 const getWeightFromCalendarMonthlyRecord = (day: number) => calendarMonthlyRecord.value[day]?.weight.toString() ?? ''
 
 const getFirstDayInMonth = (dateTimeParam: DateTime): DateTime => {
@@ -299,19 +315,7 @@ const handleNextMonthButtonClick = async () => {
 const handleCalendarDayItemClick = async (calendarItem: CalendarItem) => {
   if (!calendarItem.isTargetMonth) return
 
-  const result = await until(() => getMonthlyRecord(calendarItem.dateTime))
-  if (result.error) {
-    const toast = useToast()
-    toast.error(result.error.message)
-    return
-  }
-
-  const monthlyRecord = result.data
-  dayItemInfoDialogProps.value.calendarItem = {
-    ...calendarItem,
-    weight: monthlyRecord[calendarItem.day]?.weight.toString() ?? '',
-  }
-  dayItemInfoDialogProps.value.show = true
+  await fetchMonthlyRecordAndShowDialog(calendarItem)
 }
 
 const handleAddButtonClick = async () => {
@@ -324,7 +328,7 @@ const handleAddButtonClick = async () => {
     weekdayShort: today.weekdayShort,
     weight: '',
   }
-  await handleCalendarDayItemClick(calendarItem)
+  await fetchMonthlyRecordAndShowDialog(calendarItem)
 }
 
 const handleRecordUpdated = async (payload: {
