@@ -14,7 +14,11 @@
         @click="handleLinkButtonClick"
         @keydown="handleLinkButtonClick"
       >
-        {{ linkText }}
+        <span class="label">{{ linkText }}</span>
+        <InlineSvg
+          class="arrow-icon"
+          :src="ArrowRightSvg"
+        />
       </div>
     </div>
   </div>
@@ -32,6 +36,8 @@ import { useToast } from 'vue-toastification'
 import { MonthlyRecord } from '@/types/records'
 import gsap from 'gsap'
 import router from '@/router'
+import ArrowRightSvg from '@/assets/dashboard/arrow-right-solid.svg'
+import InlineSvg from 'vue-inline-svg'
 
 type WeightItem = {
   date: string,
@@ -289,20 +295,31 @@ onMounted(async () => {
     }
 
     .link-button {
-      transition: color 0.2s ease-out;
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      transition: color 0.2s ease-out, fill 0.2s ease-out;
       border-radius: constants.$border-radius;
       background-color: colors.$primary-50-variant;
       cursor: pointer;
       padding: 20px;
       color: colors.$primary-600;
       font-size: font-sizes.$small;
+      fill: colors.$primary-600;
 
       &:hover {
         color: color.adjust(colors.$primary-500, $lightness: 5%);
+        fill: color.adjust(colors.$primary-500, $lightness: 5%);
       }
 
       &:active {
         color: color.adjust(colors.$primary-500, $lightness: -5%);
+        fill: color.adjust(colors.$primary-500, $lightness: -5%);
+      }
+
+      .arrow-icon {
+        width: 20px;
+        aspect-ratio: 1 / 1;
       }
     }
   }
