@@ -221,9 +221,12 @@ const fadeInHint = () => {
   const timeline = gsap.timeline()
   timeline.fromTo(hintWrapperRef.value, {
     autoAlpha: 0,
+    scale: 0.75,
   }, {
     autoAlpha: 1,
+    scale: 1,
     ease: 'expo.easeInOut',
+    duration: 0.5,
   })
 }
 
