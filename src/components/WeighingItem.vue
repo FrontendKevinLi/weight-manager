@@ -209,6 +209,7 @@ export default defineComponent({
       }, {
         autoAlpha: 1,
         scale: 1,
+        duration: 0.5,
         ease: Expo.easeInOut,
       }, '-=0.7')
       timeline.fromTo(outerProgressCircleRef, {
@@ -217,6 +218,7 @@ export default defineComponent({
       }, {
         autoAlpha: 1,
         scale: 1,
+        duration: 0.5,
         ease: Expo.easeInOut,
       }, '-=0.7')
     },
