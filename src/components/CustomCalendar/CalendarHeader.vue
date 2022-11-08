@@ -1,6 +1,6 @@
 <template>
   <div
-    ref="calendaerHeaderRef"
+    ref="calendarHeaderRef"
     class="calendar-header"
   >
     <div class="calendar-controls">
@@ -47,7 +47,7 @@ const props = defineProps<{
   dateTime: DateTime,
 }>()
 
-const calendaerHeaderRef = ref<HTMLElement>()
+const calendarHeaderRef = ref<HTMLElement>()
 const emit = defineEmits(['previous-month', 'next-month', 'add'])
 // const emit = defineEmits<{(e: 'previous-month'): void
 // (e: 'next-month'): void
@@ -57,14 +57,14 @@ const calendarYear = computed(() => props.dateTime.year)
 const calendarMonth = computed(() => props.dateTime.monthLong)
 
 const fadeIn = () => {
-  if (calendaerHeaderRef.value == null) return
+  if (calendarHeaderRef.value == null) return
 
   const timeline = gsap.timeline()
-  timeline.set(calendaerHeaderRef.value, {
+  timeline.set(calendarHeaderRef.value, {
     autoAlpha: 0,
     width: 0,
   })
-  timeline.to(calendaerHeaderRef.value, {
+  timeline.to(calendarHeaderRef.value, {
     autoAlpha: 1,
     width: 'auto',
     duration: 0.75,
