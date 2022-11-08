@@ -211,7 +211,6 @@ const fadeInHeader = () => {
   }
 
   const timeline = gsap.timeline()
-  console.time()
   timeline.from(headerItemRefList.value, {
     autoAlpha: 0,
     ease: Expo.easeInOut,
