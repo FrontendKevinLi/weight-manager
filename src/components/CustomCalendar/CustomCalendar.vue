@@ -51,7 +51,7 @@ import {
   nextTick, onMounted, reactive, ref, computed, watch,
 } from 'vue'
 import { DateTime } from 'luxon'
-import gsap, { Expo } from 'gsap'
+import gsap, { Expo, Linear, Power2 } from 'gsap'
 import { getMonthlyRecord } from '@/firebase/firestore'
 import { until } from '@open-draft/until'
 import { useToast } from 'vue-toastification'
@@ -59,6 +59,8 @@ import { MonthlyRecord } from '@/types/records'
 import { CalendarItem, CalendarItemDialogProps } from './types'
 import CalendarHeader from './CalendarHeader.vue'
 import CalendarItemDialog from './CalendarItemDialog.vue'
+
+const dayItemsFadeInOutDuration = 0.5
 
 const dayItemRefList = ref<HTMLElement[]>()
 const headerItemRefList = ref<HTMLElement[]>()
@@ -208,14 +210,16 @@ const fadeInHeader = () => {
     return
   }
 
-  gsap.from(headerItemRefList.value, {
+  const timeline = gsap.timeline()
+  console.time()
+  timeline.from(headerItemRefList.value, {
     autoAlpha: 0,
-    ease: 'expo',
+    ease: Expo.easeInOut,
     stagger: {
-      amount: 0.25,
+      amount: 1,
       from: 'start',
     },
-  })
+  }, 0).duration(1)
 }
 
 const fadeInDayItems = () => new Promise((resolve, reject) => {
@@ -231,16 +235,16 @@ const fadeInDayItems = () => new Promise((resolve, reject) => {
   timeline.to(dayItemRefList.value, {
     autoAlpha: 1,
     stagger: {
-      amount: 0.125,
+      amount: dayItemsFadeInOutDuration,
       from: 'start',
       grid: 'auto',
-      ease: Expo.easeInOut,
+      ease: Linear.easeInOut,
     },
     scale: 1,
     onComplete() {
       resolve(true)
     },
-  })
+  }).duration(dayItemsFadeInOutDuration)
 })
 
 const fadeOutDayItems = () => new Promise((resolve, reject) => {
@@ -257,16 +261,16 @@ const fadeOutDayItems = () => new Promise((resolve, reject) => {
   timeline.to(dayItemRefList.value, {
     autoAlpha: 0,
     stagger: {
-      amount: 0.125,
-      from: 'start',
+      amount: dayItemsFadeInOutDuration,
+      from: 'end',
       grid: 'auto',
-      ease: Expo.easeInOut,
+      ease: Linear.easeInOut,
     },
     scale: 0.75,
     onComplete() {
       resolve(true)
     },
-  })
+  }).duration(dayItemsFadeInOutDuration)
 })
 
 watch(() => calendarInfo.dateTime, async () => {

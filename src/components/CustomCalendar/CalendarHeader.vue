@@ -36,7 +36,7 @@ import {
   computed, defineProps, defineEmits, ref, onMounted,
 } from 'vue'
 import { DateTime } from 'luxon'
-import gsap from 'gsap'
+import gsap, { Expo } from 'gsap'
 import InlineSvg from 'vue-inline-svg'
 
 import ArrowLeftSvg from '@/assets/calendar/chevron-left-solid.svg'
@@ -60,16 +60,16 @@ const fadeIn = () => {
   if (calendarHeaderRef.value == null) return
 
   const timeline = gsap.timeline()
-  timeline.set(calendarHeaderRef.value, {
+
+  timeline.fromTo(calendarHeaderRef.value, {
     autoAlpha: 0,
     width: 0,
-  })
-  timeline.to(calendarHeaderRef.value, {
+  }, {
     autoAlpha: 1,
     width: 'auto',
-    duration: 0.75,
-    ease: 'expo',
-  })
+    duration: 1,
+    ease: Expo.easeInOut,
+  }).then(() => console.log('calendar header'))
 }
 
 const handlePreviousMonthButtonClick = async () => {
