@@ -26,7 +26,7 @@
     <span
       v-show="!isValid"
       class="error-message"
-    >{{ validateConfig?.errorMessage }}</span>
+    >{{ errorMessage }}</span>
   </div>
 </template>
 
@@ -59,6 +59,7 @@ export default defineComponent({
     return {
       isInputFocused: false,
       isValid: true,
+      errorMessage: '',
     }
   },
   computed: {
@@ -96,9 +97,13 @@ export default defineComponent({
       if (this.validateConfig == null) return
 
       const inputRef = this.$refs.inputRef as HTMLElement
-      inputRef.addEventListener(this.validateConfig.event, () => {
-        this.isValid = this.validateConfig.validateFunction(this.inputText)
-      })
+      inputRef.addEventListener(this.validateConfig.event, this.validateInput)
+    },
+    validateInput() {
+      const { isValid, errorMessage } = this.validateConfig.validateFunction(this.inputText)
+      this.isValid = isValid
+      this.errorMessage = errorMessage
+      return isValid
     },
   },
 })

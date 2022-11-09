@@ -13,13 +13,16 @@
           :src="LogoFullSvg"
         />
         <CustomInput
+          ref="emailInputRef"
           v-model:inputText="email"
           :validate-config="emailValidateConfig"
           :placeholder="'Email'"
           class="white-section-item input"
         />
         <CustomInput
+          ref="passwordInputRef"
           v-model:inputText="password"
+          :validate-config="passwordValidateConfig"
           :placeholder="'Password'"
           :type="'password'"
           class="white-section-item input"
@@ -76,12 +79,51 @@ export default defineComponent({
       LogoFullSvg,
       createAccountQuestion: 'Don\'t have an account?',
       createAccountTextButtonLabel: 'Create account',
-      emailValidateConfig: {
-        errorMessage: 'Invalid email format',
-        event: 'blur',
-        validateFunction: (email: string) => /^\S+@\S+$/.test(email),
-      } as ValidateConfig,
     }
+  },
+  computed: {
+    emailValidateConfig(): ValidateConfig {
+      const config: ValidateConfig = {
+        event: 'blur',
+        validateFunction: (email: string) => {
+          const isEmpty = email.length === 0
+          if (isEmpty) {
+            return {
+              isValid: false,
+              errorMessage: 'Email cannot be empty',
+            }
+          }
+
+          const isInValidFormat = !/^\S+@\S+$/.test(email)
+          if (isInValidFormat) {
+            return {
+              isValid: false,
+              errorMessage: 'Invalid email format',
+            }
+          }
+
+          return { isValid: true, errorMessage: '' }
+        },
+      }
+      return config
+    },
+    passwordValidateConfig(): ValidateConfig {
+      const config: ValidateConfig = {
+        event: 'blur',
+        validateFunction: (email: string) => {
+          const isEmpty = email.length === 0
+          if (isEmpty) {
+            return {
+              isValid: false,
+              errorMessage: 'Password cannot be empty',
+            }
+          }
+
+          return { isValid: true, errorMessage: '' }
+        },
+      }
+      return config
+    },
   },
   mounted() {
     this.initAnimations()
@@ -106,13 +148,19 @@ export default defineComponent({
       }, '-=0.5')
     },
     validateForm() {
-      return true
+      const emailInputRef = this.$refs.emailInputRef as InstanceType<typeof CustomInput>
+      const passwordInputRef = this.$refs.passwordInputRef as InstanceType<typeof CustomInput>
+
+      const validList = [
+        emailInputRef.validateInput(),
+        passwordInputRef.validateInput(),
+      ]
+
+      return !validList.some((isValid) => isValid === false)
     },
     async handleLoginButtonClick() {
       const valid = this.validateForm()
-      if (!valid) {
-        return
-      }
+      if (!valid) return
 
       const loginResult = await until(() => login(this.email, this.password))
       if (loginResult.error) {
