@@ -53,7 +53,7 @@ import gsap from 'gsap'
 import InlineSvg from 'vue-inline-svg'
 import { useToast } from 'vue-toastification'
 import CustomButton from '@/components/CustomButton.vue'
-import CustomInput from '@/components/CustomInput.vue'
+import CustomInput from '@/components/CustomInput/CustomInput.vue'
 
 import LogoFullSvg from '@/assets/logo-full/svg/primaryblue/logo-no-background.svg'
 import { signUp } from '@/firebase/auth'

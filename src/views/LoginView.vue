@@ -13,7 +13,8 @@
           :src="LogoFullSvg"
         />
         <CustomInput
-          v-model:inputText="username"
+          v-model:inputText="email"
+          :validate-config="emailValidateConfig"
           :placeholder="'Email'"
           class="white-section-item input"
         />
@@ -51,13 +52,14 @@ import gsap, { Expo } from 'gsap'
 import InlineSvg from 'vue-inline-svg'
 import { useToast } from 'vue-toastification'
 
-import CustomInput from '@/components/CustomInput.vue'
+import CustomInput from '@/components/CustomInput/CustomInput.vue'
 import CustomButton from '@/components/CustomButton.vue'
 
 import BodyWeightingImg from '@/assets/login-page-pictures/bodyWeighting.png'
 import LogoFullSvg from '@/assets/logo-full/svg/primaryblue/logo-no-background.svg'
 import { login } from '@/firebase/auth'
 import { until } from '@open-draft/until'
+import { ValidateConfig } from '@/components/CustomInput/types'
 
 export default defineComponent({
   name: 'LoginView',
@@ -68,12 +70,17 @@ export default defineComponent({
   },
   data() {
     return {
-      username: '',
+      email: '',
       password: '',
       BodyWeightingImg,
       LogoFullSvg,
       createAccountQuestion: 'Don\'t have an account?',
       createAccountTextButtonLabel: 'Create account',
+      emailValidateConfig: {
+        errorMessage: 'Invalid email format',
+        event: 'blur',
+        validateFunction: (email: string) => /^\S+@\S+$/.test(email),
+      } as ValidateConfig,
     }
   },
   mounted() {
@@ -107,7 +114,7 @@ export default defineComponent({
         return
       }
 
-      const loginResult = await until(() => login(this.username, this.password))
+      const loginResult = await until(() => login(this.email, this.password))
       if (loginResult.error) {
         const toast = useToast()
         toast.error(loginResult.error.message)
@@ -126,6 +133,10 @@ export default defineComponent({
     },
     handleLinkToCreateAccountButtonClick() {
       this.$router.push('/register')
+    },
+    validateEmail(email: string): boolean {
+      const isValid = /^\S+@\S+$/.test(email)
+      return isValid
     },
   },
 })

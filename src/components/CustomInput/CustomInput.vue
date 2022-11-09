@@ -1,11 +1,18 @@
 <template>
-  <div :class="['custom-input', (isInputFocused || !isInputTextEmpty) && 'focus']">
+  <div
+    :class="[
+      'custom-input',
+      (isInputFocused || !isInputTextEmpty) && 'focus',
+      !isValid && 'invalid'
+    ]"
+  >
     <div class="input-wrapper">
       <label
         for="input"
-        :class="['placeholder']"
+        class="placeholder"
       >{{ placeholder }}</label>
       <input
+        ref="inputRef"
         class="input"
         :value="inputText"
         :type="type"
@@ -16,12 +23,16 @@
         @keyup.enter="handleKeyUpEnter"
       >
     </div>
-    <!-- <span class="error-message">Test error message</span> -->
+    <span
+      v-show="!isValid"
+      class="error-message"
+    >{{ validateConfig?.errorMessage }}</span>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
+import { ValidateConfig } from './types'
 
 export default defineComponent({
   name: 'CustomInput',
@@ -38,11 +49,16 @@ export default defineComponent({
       type: String,
       default: 'text',
     },
+    validateConfig: {
+      type: Object as PropType<ValidateConfig>,
+      default: null,
+    },
   },
   emits: ['update:inputText', 'keyupEnter', 'focus', 'blur'],
   data() {
     return {
       isInputFocused: false,
+      isValid: true,
     }
   },
   computed: {
@@ -50,6 +66,9 @@ export default defineComponent({
       const isInputTextEmpty = this.inputText.length === 0
       return isInputTextEmpty
     },
+  },
+  mounted() {
+    this.initValidationListener()
   },
   methods: {
     setInputFocus(shouldFocus: boolean) {
@@ -73,6 +92,14 @@ export default defineComponent({
       this.setInputFocus(false)
       this.$emit('blur')
     },
+    initValidationListener() {
+      if (this.validateConfig == null) return
+
+      const inputRef = this.$refs.inputRef as HTMLElement
+      inputRef.addEventListener(this.validateConfig.event, () => {
+        this.isValid = this.validateConfig.validateFunction(this.inputText)
+      })
+    },
   },
 })
 </script>
@@ -91,16 +118,15 @@ export default defineComponent({
 
   display: grid;
   position: relative;
-  grid-template-rows: (font-sizes.$extra-small + 2px) 1fr;
+  grid-template-rows: auto 16px;
   gap: $gap;
-  align-items: center;
-  width: 500px;
 
   .input-wrapper {
     display: grid;
     position: relative;
     grid-template-rows: (font-sizes.$extra-small + 2px) 1fr;
     gap: $gap;
+    padding-bottom: 5px;
 
     &::before {
       position: absolute;
@@ -130,9 +156,9 @@ export default defineComponent({
       outline: none;
       border: none;
       background: transparent;
-      padding-right: $input-left-right-indent;
-      padding-bottom: 5px;
-      padding-left: $input-left-right-indent;
+
+      // padding-right: $input-left-right-indent;
+      // padding-left: $input-left-right-indent;
       width: 100%;
       height: 100%;
       color: colors.$darkblue-700;
@@ -150,13 +176,30 @@ export default defineComponent({
         transform 0.15s $time-function,
         font-size 0.15s $time-function,
         color 0.15s $time-function;
-      margin-right: $input-left-right-indent;
-      margin-left: $input-left-right-indent;
+
+      // margin-right: $input-left-right-indent;
+      // margin-left: $input-left-right-indent;
       cursor: text;
       height: 100%;
       color: colors.$darkblue-200;
       font-size: $place-holder-font-size;
       pointer-events: none;
+    }
+  }
+
+  .error-message {
+    // padding-right: $input-left-right-indent;
+    // padding-left: $input-left-right-indent;
+    color: colors.$red-600;
+    font-size: font-sizes.$extra-small;
+  }
+
+  &.invalid {
+    .input-wrapper {
+      &::after {
+        background-color: colors.$red-600;
+        width: 100%;
+      }
     }
   }
 
@@ -169,6 +212,14 @@ export default defineComponent({
       .placeholder {
         transform: translateY(-($input-font-size + $gap));
         font-size: $place-holder-focus-font-size;
+      }
+    }
+
+    &.invalid {
+      .input-wrapper {
+        .placeholder {
+          color: colors.$red-600;
+        }
       }
     }
   }

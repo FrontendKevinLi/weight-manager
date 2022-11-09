@@ -28,7 +28,7 @@ import { DateTime } from 'luxon'
 
 import CustomDialog from '@/components/CustomDialog/CustomDialog.vue'
 import { CustomDialogProps } from '@/components/CustomDialog/types'
-import CustomInput from '@/components/CustomInput.vue'
+import CustomInput from '@/components/CustomInput/CustomInput.vue'
 import { updateDailyRecord } from '@/firebase/firestore'
 import { until } from '@open-draft/until'
 import { useToast } from 'vue-toastification'
