@@ -3,14 +3,19 @@
     :value="props.value"
     @update:value="handleUpdateShow"
   >
-    <div class="calendar-item-dialog">
+    <div
+      v-if="props.value.show"
+      class="calendar-item-dialog"
+    >
       <span
         class="title"
         v-text="dialogTitle"
       />
       <CustomInput
+        ref="weightInput"
         :input-text="weight"
         class="weight-input"
+        :validate-config="weightValidateConfig"
         placeholder="Weight"
         @update:input-text="handleUpdateInputText"
         @focus="handleInputFocus"
@@ -32,6 +37,7 @@ import CustomInput from '@/components/CustomInput/CustomInput.vue'
 import { updateDailyRecord } from '@/firebase/firestore'
 import { until } from '@open-draft/until'
 import { useToast } from 'vue-toastification'
+import { ValidateConfig } from '@/components/CustomInput/types'
 import { CalendarItemDialogProps } from './types'
 
 type CalendarItemDialogEmits = {
@@ -42,7 +48,34 @@ const props = defineProps<{
   value: CalendarItemDialogProps
 }>()
 
+const weightValidateConfig: ValidateConfig = {
+  event: 'input',
+  validateFunction: (weight: string) => {
+    const isEmpty = weight.length === 0
+    if (isEmpty) {
+      return {
+        isValid: true,
+        errorMessage: '',
+      }
+    }
+
+    const isInvalidFormat = !/^\d+(.\d+)*$/.test(weight)
+    if (isInvalidFormat) {
+      return {
+        isValid: false,
+        errorMessage: 'Please input numbers only',
+      }
+    }
+
+    return {
+      isValid: true,
+      errorMessage: '',
+    }
+  },
+}
+
 const weightBefore = ref('')
+const weightInput = ref<InstanceType<typeof CustomInput>>()
 const weight = computed(() => props.value.calendarItem.weight)
 const dialogTitle = computed(() => props.value.calendarItem.dateTime.setLocale('en-GB').toLocaleString(DateTime.DATE_FULL))
 
@@ -67,8 +100,19 @@ const handleInputFocus = () => {
   weightBefore.value = props.value.calendarItem.weight
 }
 
+const validateForm = () => {
+  const validList = [
+    weightInput.value?.validateInput(),
+  ]
+
+  return !validList.some((isValid) => isValid === false)
+}
+
 const handleInputBlur = async () => {
   if (weightBefore.value === props.value.calendarItem.weight) return
+
+  const isValid = validateForm()
+  if (!isValid) return
 
   const result = await until(() => updateDailyRecord(props.value.calendarItem.dateTime, {
     date: props.value.calendarItem.dateTime.toISODate(),
