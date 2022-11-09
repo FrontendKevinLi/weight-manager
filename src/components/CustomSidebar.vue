@@ -65,6 +65,7 @@ import { until } from '@open-draft/until'
 import RouteItem from '@/types/RouteItem'
 import TableSvg from '@/assets/sidebar-icons/table-columns-solid.svg'
 import RecordSvg from '@/assets/sidebar-icons/clipboard-regular.svg'
+import CalendarSvg from '@/assets/sidebar-icons/calendar-days-solid.svg'
 import ChartSvg from '@/assets/sidebar-icons/chart-simple-solid.svg'
 import SettingsSvg from '@/assets/sidebar-icons/gear-solid.svg'
 import LogoSvg from '@/assets/logo/svg/lightblue/logo-no-background.svg'
@@ -72,6 +73,7 @@ import LogoutSvg from '@/assets/info-panel-icons/right-from-bracket-solid.svg'
 import { logout } from '@/firebase/auth'
 import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue'
 import { ConfirmDialogProps } from '@/components/ConfirmDialog/types'
+import DashboardSvg from '@/assets/sidebar-icons/gauge-solid.svg'
 
 export default defineComponent({
   name: 'CustomSidebar',
@@ -87,6 +89,8 @@ export default defineComponent({
       LogoSvg,
       SettingsSvg,
       LogoutSvg,
+      CalendarSvg,
+      DashboardSvg,
       activeItemIndicatorInited: false,
       logoutConfirmDialog: {
         title: 'Log out',
@@ -99,12 +103,12 @@ export default defineComponent({
     routeItemList(): RouteItem[] {
       const routeItemList: RouteItem[] = [
         new RouteItem({
-          icon: this.TableSvg,
+          icon: this.DashboardSvg,
           className: 'dashboard',
           path: '/dashboard',
         }),
         new RouteItem({
-          icon: this.RecordSvg,
+          icon: this.CalendarSvg,
           className: 'records',
           path: '/records',
         }),
