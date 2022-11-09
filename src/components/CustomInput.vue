@@ -1,19 +1,22 @@
 <template>
-  <div :class="['custom-input-wrapper', (isInputFocused || !isInputTextEmpty) && 'focus']">
-    <label
-      for="input"
-      :class="['placeholder']"
-    >{{ placeholder }}</label>
-    <input
-      class="input"
-      :value="inputText"
-      :type="type"
-      @input="handleInputChange"
-      @mousedown="setInputFocus(true)"
-      @focus="handleFocus"
-      @blur="handleBlur"
-      @keyup.enter="handleKeyUpEnter"
-    >
+  <div :class="['custom-input', (isInputFocused || !isInputTextEmpty) && 'focus']">
+    <div class="input-wrapper">
+      <label
+        for="input"
+        :class="['placeholder']"
+      >{{ placeholder }}</label>
+      <input
+        class="input"
+        :value="inputText"
+        :type="type"
+        @input="handleInputChange"
+        @mousedown="setInputFocus(true)"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        @keyup.enter="handleKeyUpEnter"
+      >
+    </div>
+    <!-- <span class="error-message">Test error message</span> -->
   </div>
 </template>
 
@@ -78,7 +81,7 @@ export default defineComponent({
 @use "@/style/colors" as colors;
 @use "@/style/font-sizes.scss" as font-sizes;
 
-.custom-input-wrapper {
+.custom-input {
   $underline-height: 2px;
   $input-left-right-indent: 10px;
   $input-font-size: font-sizes.$medium;
@@ -91,65 +94,82 @@ export default defineComponent({
   grid-template-rows: (font-sizes.$extra-small + 2px) 1fr;
   gap: $gap;
   align-items: center;
-  border-bottom: $underline-height solid colors.$darkblue-200;
-  padding-bottom: 5px;
   width: 500px;
 
-  // colored underline
-  &::after {
-    position: absolute;
-    bottom: -$underline-height;
-    left: 0;
-    transition: width 0.15s ease-in-out;
-    background-color: colors.$darkblue-700;
-    width: 0;
-    height: $underline-height;
-    content: "";
-  }
-
-  .input {
-    box-sizing: border-box;
-    grid-row: 2 / 3;
-    grid-column: 1 / 2;
-    outline: none;
-    border: none;
-    background: transparent;
-    padding-right: $input-left-right-indent;
-    padding-left: $input-left-right-indent;
-    width: 100%;
-    height: 100%;
-    color: colors.$darkblue-700;
-    font-size: $input-font-size;
-  }
-
-  .placeholder {
-    $time-function: cubic-bezier(0.4, 0, 0.2, 1);
-
+  .input-wrapper {
     display: grid;
-    grid-row: 2 / 3;
-    grid-column: 1 / 2;
-    align-items: center;
-    transition:
-      transform 0.15s $time-function,
-      font-size 0.15s $time-function,
-      color 0.15s $time-function;
-    margin-right: $input-left-right-indent;
-    margin-left: $input-left-right-indent;
-    cursor: text;
-    height: 100%;
-    color: colors.$darkblue-200;
-    font-size: $place-holder-font-size;
-    pointer-events: none;
-  }
+    position: relative;
+    grid-template-rows: (font-sizes.$extra-small + 2px) 1fr;
+    gap: $gap;
 
-  &.focus {
-    &::after {
+    &::before {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      background-color: colors.$darkblue-200;
       width: 100%;
+      height: $underline-height;
+      content: "";
+    }
+
+    &::after {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      transition: width 0.15s ease-in-out;
+      background-color: colors.$darkblue-700;
+      width: 0;
+      height: $underline-height;
+      content: "";
+    }
+
+    .input {
+      box-sizing: border-box;
+      grid-row: 2 / 3;
+      grid-column: 1 / 2;
+      outline: none;
+      border: none;
+      background: transparent;
+      padding-right: $input-left-right-indent;
+      padding-bottom: 5px;
+      padding-left: $input-left-right-indent;
+      width: 100%;
+      height: 100%;
+      color: colors.$darkblue-700;
+      font-size: $input-font-size;
     }
 
     .placeholder {
-      transform: translateY(-($input-font-size + $gap));
-      font-size: $place-holder-focus-font-size;
+      $time-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+      display: grid;
+      grid-row: 2 / 3;
+      grid-column: 1 / 2;
+      align-items: center;
+      transition:
+        transform 0.15s $time-function,
+        font-size 0.15s $time-function,
+        color 0.15s $time-function;
+      margin-right: $input-left-right-indent;
+      margin-left: $input-left-right-indent;
+      cursor: text;
+      height: 100%;
+      color: colors.$darkblue-200;
+      font-size: $place-holder-font-size;
+      pointer-events: none;
+    }
+  }
+
+  &.focus {
+    .input-wrapper {
+      &::after {
+        width: 100%;
+      }
+
+      .placeholder {
+        transform: translateY(-($input-font-size + $gap));
+        font-size: $place-holder-focus-font-size;
+      }
     }
   }
 }
