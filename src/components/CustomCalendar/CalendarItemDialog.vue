@@ -1,10 +1,12 @@
 <template>
   <CustomDialog
-    :value="props.value"
+    ref="customDialogRef"
+    :value="customDialogProps"
     @update:value="handleUpdateShow"
+    @keydown.enter="handleEnter"
   >
     <div
-      v-if="props.value.show"
+      :key="`calendar-item-dialog${props.value.show}`"
       class="calendar-item-dialog"
     >
       <span
@@ -12,7 +14,7 @@
         v-text="dialogTitle"
       />
       <CustomInput
-        ref="weightInput"
+        ref="weightInputRef"
         :input-text="weight"
         class="weight-input"
         :validate-config="weightValidateConfig"
@@ -27,7 +29,7 @@
 
 <script lang="ts" setup>
 import {
-  defineProps, defineEmits, computed, ref,
+  defineProps, defineEmits, computed, ref, watch, nextTick,
 } from 'vue'
 import { DateTime } from 'luxon'
 
@@ -47,6 +49,25 @@ type CalendarItemDialogEmits = {
 const props = defineProps<{
   value: CalendarItemDialogProps
 }>()
+
+const weightBefore = ref('')
+const weightInputRef = ref<InstanceType<typeof CustomInput>>()
+const customDialogRef = ref<InstanceType<typeof CustomDialog>>()
+const weight = computed(() => props.value.calendarItem.weight)
+const dialogTitle = computed(() => props.value.calendarItem.dateTime.setLocale('en-GB').toLocaleString(DateTime.DATE_FULL))
+
+const focusFirstInput = () => {
+  nextTick(() => {
+    weightInputRef.value?.focusAtEnd()
+  })
+}
+
+const customDialogProps = computed(() => ({
+  show: props.value.show,
+  onFadeInStart: () => {
+    focusFirstInput()
+  },
+}) as CustomDialogProps)
 
 const weightValidateConfig: ValidateConfig = {
   event: 'input',
@@ -74,11 +95,6 @@ const weightValidateConfig: ValidateConfig = {
   },
 }
 
-const weightBefore = ref('')
-const weightInput = ref<InstanceType<typeof CustomInput>>()
-const weight = computed(() => props.value.calendarItem.weight)
-const dialogTitle = computed(() => props.value.calendarItem.dateTime.setLocale('en-GB').toLocaleString(DateTime.DATE_FULL))
-
 const emit = defineEmits<CalendarItemDialogEmits>()
 const handleUpdateShow = (payload: CustomDialogProps) => {
   emit('update:value', {
@@ -102,7 +118,7 @@ const handleInputFocus = () => {
 
 const validateForm = () => {
   const validList = [
-    weightInput.value?.validateInput(),
+    weightInputRef.value?.validateInput(),
   ]
 
   return !validList.some((isValid) => isValid === false)
@@ -125,6 +141,10 @@ const handleInputBlur = async () => {
   }
 
   emit('record-updated', { isTargetMonth: props.value.calendarItem.isTargetMonth })
+}
+
+const handleEnter = () => {
+  customDialogRef.value?.handleBackgroundMaskClick()
 }
 </script>
 
