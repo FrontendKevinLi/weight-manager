@@ -53,12 +53,10 @@
 import { ref, onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import gsap from 'gsap'
-import InlineSvg from 'vue-inline-svg'
 import { useToast } from 'vue-toastification'
 import CustomButton from '@/components/CustomButton.vue'
 import CustomInput from '@/components/CustomInput/CustomInput.vue'
 
-import LogoFullSvg from '@/assets/logo-full/svg/primaryblue/logo-no-background.svg'
 import { signUp } from '@/firebase/auth'
 import { until } from '@open-draft/until'
 import { ValidateConfig } from '@/components/CustomInput/types'
@@ -141,16 +139,6 @@ const confirmPasswordValidateConfig = computed(() => ({
 
 const fadeInFormItems = () => {
   const timeLine = gsap.timeline()
-
-  if (whiteSectionRef.value != null) {
-    timeLine.from(whiteSectionRef.value, {
-      opacity: 0.001,
-      y: -100,
-      ease: 'power2',
-      delay: 0.1,
-      duration: 0.75,
-    })
-  }
 
   timeLine.from('.white-section-item', {
     y: '-250px',
