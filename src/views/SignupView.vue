@@ -163,14 +163,10 @@ const fadeInFormItems = () => {
 }
 
 const validateForm = () => {
-  const emailInputEl = emailInputRef.value as InstanceType<typeof CustomInput>
-  const passwordInputEl = passwordInputRef.value as InstanceType<typeof CustomInput>
-  const confirmPasswordInputEl = confirmPasswordInputRef.value as InstanceType<typeof CustomInput>
-
   const validList = [
-    emailInputEl.validateInput(),
-    passwordInputEl.validateInput(),
-    confirmPasswordInputEl.validateInput(),
+    emailInputRef.value?.validateInput(),
+    passwordInputRef.value?.validateInput(),
+    confirmPasswordInputRef.value?.validateInput(),
   ]
 
   return !validList.some((isValid) => isValid === false)
