@@ -1,16 +1,23 @@
 <template>
   <CustomDialog
-    :value="props.value"
+    ref="customDialogRef"
+    :value="customDialogProps"
     @update:value="handleUpdateShow"
+    @keydown.enter="handleEnter"
   >
-    <div class="calendar-item-dialog">
+    <div
+      :key="`calendar-item-dialog${props.value.show}`"
+      class="calendar-item-dialog"
+    >
       <span
         class="title"
         v-text="dialogTitle"
       />
       <CustomInput
+        ref="weightInputRef"
         :input-text="weight"
         class="weight-input"
+        :validate-config="weightValidateConfig"
         placeholder="Weight"
         @update:input-text="handleUpdateInputText"
         @focus="handleInputFocus"
@@ -22,16 +29,17 @@
 
 <script lang="ts" setup>
 import {
-  defineProps, defineEmits, computed, ref,
+  defineProps, defineEmits, computed, ref, watch, nextTick,
 } from 'vue'
 import { DateTime } from 'luxon'
 
 import CustomDialog from '@/components/CustomDialog/CustomDialog.vue'
 import { CustomDialogProps } from '@/components/CustomDialog/types'
-import CustomInput from '@/components/CustomInput.vue'
+import CustomInput from '@/components/CustomInput/CustomInput.vue'
 import { updateDailyRecord } from '@/firebase/firestore'
 import { until } from '@open-draft/until'
 import { useToast } from 'vue-toastification'
+import { ValidateConfig } from '@/components/CustomInput/types'
 import { CalendarItemDialogProps } from './types'
 
 type CalendarItemDialogEmits = {
@@ -43,8 +51,49 @@ const props = defineProps<{
 }>()
 
 const weightBefore = ref('')
+const weightInputRef = ref<InstanceType<typeof CustomInput>>()
+const customDialogRef = ref<InstanceType<typeof CustomDialog>>()
 const weight = computed(() => props.value.calendarItem.weight)
 const dialogTitle = computed(() => props.value.calendarItem.dateTime.setLocale('en-GB').toLocaleString(DateTime.DATE_FULL))
+
+const focusFirstInput = () => {
+  nextTick(() => {
+    weightInputRef.value?.focusAtEnd()
+  })
+}
+
+const customDialogProps = computed(() => ({
+  show: props.value.show,
+  onFadeInStart: () => {
+    focusFirstInput()
+  },
+}) as CustomDialogProps)
+
+const weightValidateConfig: ValidateConfig = {
+  event: 'input',
+  validateFunction: (weight: string) => {
+    const isEmpty = weight.length === 0
+    if (isEmpty) {
+      return {
+        isValid: true,
+        errorMessage: '',
+      }
+    }
+
+    const isInvalidFormat = !/^\d+(.\d+)*$/.test(weight)
+    if (isInvalidFormat) {
+      return {
+        isValid: false,
+        errorMessage: 'Please input numbers only',
+      }
+    }
+
+    return {
+      isValid: true,
+      errorMessage: '',
+    }
+  },
+}
 
 const emit = defineEmits<CalendarItemDialogEmits>()
 const handleUpdateShow = (payload: CustomDialogProps) => {
@@ -67,8 +116,19 @@ const handleInputFocus = () => {
   weightBefore.value = props.value.calendarItem.weight
 }
 
+const validateForm = () => {
+  const validList = [
+    weightInputRef.value?.validateInput(),
+  ]
+
+  return !validList.some((isValid) => isValid === false)
+}
+
 const handleInputBlur = async () => {
   if (weightBefore.value === props.value.calendarItem.weight) return
+
+  const isValid = validateForm()
+  if (!isValid) return
 
   const result = await until(() => updateDailyRecord(props.value.calendarItem.dateTime, {
     date: props.value.calendarItem.dateTime.toISODate(),
@@ -81,6 +141,10 @@ const handleInputBlur = async () => {
   }
 
   emit('record-updated', { isTargetMonth: props.value.calendarItem.isTargetMonth })
+}
+
+const handleEnter = () => {
+  customDialogRef.value?.handleBackgroundMaskClick()
 }
 </script>
 
@@ -99,7 +163,7 @@ const handleInputBlur = async () => {
 
   .title {
     color: colors.$darkblue-600;
-    font-size: font-sizes.$medium;
+    font-size: font-sizes.$small;
   }
 
   .weight-input {

@@ -5,8 +5,10 @@
     <div
       ref="backgroundMaskRef"
       class="background-mask"
-      @click.self="handleBackgroundMaskClick"
-      @keydown.escape.self="handleBackgroundMaskClick"
+      @mousedown.self="handleMousedown"
+      @mouseup.self="handleMouseup"
+      @click="handleBackgroundMaskClick"
+      @keypress.escape.self="handleBackgroundMaskClick"
     >
       <div
         ref="dialogWrapperRef"
@@ -43,41 +45,44 @@ const backgroundMaskRef = ref<HTMLElement>()
 const showDialog = computed(() => props.value.show)
 const fadeAnimationDuration = 0.5
 let canCloseDialog = true
+const isSameMousedownTarget = ref(false)
+const isSameMouseupTarget = ref(false)
 
 const fadeIn = (): Promise<void> => new Promise((resolve) => {
-  const el: Nullable<HTMLElement> = dialogWrapperRef.value
+  const dialogWrapperEl = dialogWrapperRef.value
 
   if (backgroundMaskRef.value == null) {
     throw new Error('Element not exist')
   }
 
-  if (el == null) {
+  if (dialogWrapperEl == null) {
     throw new Error('Element not exist')
   }
 
   const timeline = gsap.timeline()
 
-  timeline.set(backgroundMaskRef.value, {
+  timeline.fromTo(backgroundMaskRef.value, {
     autoAlpha: 0,
-  })
-
-  timeline.set(el, {
-    autoAlpha: 0,
-    scale: 0.5,
-  })
-
-  timeline.to(el, {
+  }, {
     autoAlpha: 1,
-    scale: 1,
     duration: fadeAnimationDuration,
     ease: Expo.easeOut,
+    onStart: () => {
+      if (props.value.onFadeInStart == null) return
+
+      props.value.onFadeInStart()
+    },
     onComplete() {
       resolve()
     },
   }, 0)
 
-  timeline.to(backgroundMaskRef.value, {
+  timeline.fromTo(dialogWrapperEl, {
+    autoAlpha: 0,
+    scale: 0.5,
+  }, {
     autoAlpha: 1,
+    scale: 1,
     duration: fadeAnimationDuration,
     ease: Expo.easeOut,
     onComplete() {
@@ -87,43 +92,39 @@ const fadeIn = (): Promise<void> => new Promise((resolve) => {
 })
 
 const fadeOut = (): Promise<void> => new Promise((resolve, reject) => {
-  const el: Nullable<HTMLElement> = dialogWrapperRef.value
+  const dialogWrapperEl: Nullable<HTMLElement> = dialogWrapperRef.value
 
   if (backgroundMaskRef.value == null) {
     reject(new Error('Element not exist'))
     return
   }
 
-  if (el == null) {
+  if (dialogWrapperEl == null) {
     reject(new Error('Element not exist'))
     return
   }
 
   const timeline = gsap.timeline()
 
-  timeline.set(backgroundMaskRef.value, {
+  timeline.fromTo(backgroundMaskRef.value, {
     autoAlpha: 1,
-  })
-
-  timeline.set(el, {
-    autoAlpha: 1,
-    scale: 1,
-  })
-
-  timeline.to(el, {
+  }, {
     autoAlpha: 0,
-    scale: 0.5,
     duration: fadeAnimationDuration,
-    ease: 'expo',
+    ease: Expo.easeOut,
     onComplete() {
       resolve()
     },
   }, 0)
 
-  timeline.to(backgroundMaskRef.value, {
+  timeline.fromTo(dialogWrapperEl, {
+    autoAlpha: 1,
+    scale: 1,
+  }, {
     autoAlpha: 0,
+    scale: 0.5,
     duration: fadeAnimationDuration,
-    ease: 'expo',
+    ease: Expo.easeOut,
     onComplete() {
       resolve()
     },
@@ -146,7 +147,20 @@ const close = async () => {
 }
 
 const handleBackgroundMaskClick = async () => {
+  if (!isSameMousedownTarget.value || !isSameMouseupTarget.value) return
+
+  isSameMousedownTarget.value = false
+  isSameMouseupTarget.value = false
+
   emit('update:value', { show: false })
+}
+
+const handleMousedown = (e: MouseEvent) => {
+  isSameMousedownTarget.value = e.target === e.currentTarget
+}
+
+const handleMouseup = (e: MouseEvent) => {
+  isSameMouseupTarget.value = e.target === e.currentTarget
 }
 
 watch(showDialog, async () => {
@@ -163,6 +177,7 @@ watch(showDialog, async () => {
 defineExpose({
   show,
   close,
+  handleBackgroundMaskClick,
 })
 
 </script>

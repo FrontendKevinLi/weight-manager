@@ -1,3 +1,4 @@
 export type CustomDialogProps = {
-  show: boolean
+  show: boolean,
+  onFadeInStart?: (() => void)
 }

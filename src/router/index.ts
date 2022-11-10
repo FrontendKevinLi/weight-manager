@@ -1,14 +1,34 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import PageLayout from '@/components/PageLayout.vue'
 import LoginView from '@/views/LoginView.vue'
+import SignupView from '@/views/SignupView.vue'
+import LoginRegisterLayout from '@/components/LoginRegisterLayout.vue'
 import { getIsAuthenticated } from '@/firebase/auth'
 import { until } from '@open-draft/until'
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
-    name: 'login',
-    component: LoginView,
+    component: LoginRegisterLayout,
+    children: [
+      {
+        path: '',
+        name: 'login',
+        component: LoginView,
+      },
+    ],
+  },
+  {
+    path: '/signup',
+    component: LoginRegisterLayout,
+    children: [
+      {
+        path: '',
+        name: 'signup',
+        component: SignupView,
+      },
+    ],
+
   },
   {
     path: '/',
@@ -67,12 +87,6 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
-  {
-    path: '/register',
-    name: 'register',
-    component: () => import('@/views/RegisterView.vue'),
-
-  },
 ]
 
 const router = createRouter({
@@ -84,7 +98,7 @@ router.beforeEach(async (to) => {
   const isAuthenticatedResult = await until(() => getIsAuthenticated())
 
   // special case
-  if (to.name === 'register') {
+  if (to.name === 'signup') {
     return true
   }
 

@@ -106,7 +106,8 @@
           ]
         }
       ],
-      "no-shadow": "off"
+      "no-shadow": "off",
+      "no-undef": "off"
     }
   },
   "browserslist": [
