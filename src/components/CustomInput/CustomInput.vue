@@ -161,6 +161,8 @@ export default defineComponent({
       outline: none;
       border: none;
       background: transparent;
+      padding-right: 0;
+      padding-left: 0;
 
       // padding-right: $input-left-right-indent;
       // padding-left: $input-left-right-indent;
