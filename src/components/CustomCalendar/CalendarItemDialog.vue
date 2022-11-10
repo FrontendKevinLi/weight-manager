@@ -143,7 +143,7 @@ const handleInputBlur = async () => {
 
   .title {
     color: colors.$darkblue-600;
-    font-size: font-sizes.$medium;
+    font-size: font-sizes.$small;
   }
 
   .weight-input {
