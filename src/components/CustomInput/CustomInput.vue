@@ -116,9 +116,9 @@ export default defineComponent({
 .custom-input {
   $underline-height: 2px;
   $input-left-right-indent: 10px;
-  $input-font-size: font-sizes.$medium;
-  $place-holder-font-size: font-sizes.$medium;
-  $place-holder-focus-font-size: font-sizes.$extra-small;
+  $input-font-size: font-sizes.$small;
+  $place-holder-font-size: font-sizes.$small;
+  $place-holder-focus-font-size: 12px;
   $gap: 5px;
 
   display: grid;

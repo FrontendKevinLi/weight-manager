@@ -1,64 +1,56 @@
 <template>
-  <div class="login">
-    <div
-      class="login-box"
-    >
-      <div
-        ref="white-section"
-        class="white-section"
-        @keyup.enter="handleLoginButtonClick"
-      >
-        <InlineSvg
-          class="logo"
-          :src="LogoFullSvg"
-        />
-        <CustomInput
-          ref="emailInputRef"
-          v-model:inputText="email"
-          :validate-config="emailValidateConfig"
-          :placeholder="'Email'"
-          class="white-section-item input"
-        />
-        <CustomInput
-          ref="passwordInputRef"
-          v-model:inputText="password"
-          :validate-config="passwordValidateConfig"
-          :placeholder="'Password'"
-          :type="'password'"
-          class="white-section-item input"
-        />
-        <CustomButton
-          :label="'Login'"
-          class="white-section-item login-btn"
-          @click="handleLoginButtonClick"
-        />
-        <div class="create-account">
-          <span
-            class="white-section-item question"
-            v-text="createAccountQuestion"
-          />
-          <span
-            class="white-section-item text-button-label"
-            @click="handleLinkToCreateAccountButtonClick"
-            @keydown="handleLinkToCreateAccountButtonClick"
-            v-text="createAccountTextButtonLabel"
-          />
-        </div>
-      </div>
+  <div
+    class="login-form"
+    @keydown.enter="handleLoginButtonClick"
+  >
+    <InlineSvg
+      class="logo"
+      :src="LogoFullSvg"
+    />
+    <CustomInput
+      ref="emailInputRef"
+      v-model:inputText="email"
+      :validate-config="emailValidateConfig"
+      :placeholder="'Email'"
+      class="white-section-item input"
+    />
+    <CustomInput
+      ref="passwordInputRef"
+      v-model:inputText="password"
+      :validate-config="passwordValidateConfig"
+      :placeholder="'Password'"
+      :type="'password'"
+      class="white-section-item input"
+    />
+    <CustomButton
+      :label="'Login'"
+      class="white-section-item login-btn"
+      @click="handleLoginButtonClick"
+    />
+    <div class="create-account">
+      <span
+        class="white-section-item question"
+        v-text="createAccountQuestion"
+      />
+      <span
+        class="white-section-item text-button-label"
+        @click="handleLinkToCreateAccountButtonClick"
+        @keydown="handleLinkToCreateAccountButtonClick"
+        v-text="createAccountTextButtonLabel"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import gsap, { Expo } from 'gsap'
+import gsap from 'gsap'
 import InlineSvg from 'vue-inline-svg'
 import { useToast } from 'vue-toastification'
 
 import CustomInput from '@/components/CustomInput/CustomInput.vue'
 import CustomButton from '@/components/CustomButton.vue'
 
-import BodyWeightingImg from '@/assets/login-page-pictures/bodyWeighting.png'
 import LogoFullSvg from '@/assets/logo-full/svg/primaryblue/logo-no-background.svg'
 import { login } from '@/firebase/auth'
 import { until } from '@open-draft/until'
@@ -75,7 +67,6 @@ export default defineComponent({
     return {
       email: '',
       password: '',
-      BodyWeightingImg,
       LogoFullSvg,
       createAccountQuestion: 'Don\'t have an account?',
       createAccountTextButtonLabel: 'Create account',
@@ -126,18 +117,12 @@ export default defineComponent({
     },
   },
   mounted() {
-    this.initAnimations()
+    this.fadeInFormItems()
   },
   methods: {
-    initAnimations() {
+    fadeInFormItems() {
       const timeLine = gsap.timeline()
 
-      timeLine.from(this.$refs['white-section'] as gsap.TweenTarget, {
-        autoAlpha: 0,
-        y: -100,
-        ease: Expo.easeInOut,
-        duration: 0.75,
-      })
       timeLine.from('.white-section-item', {
         y: '-250px',
         ease: 'back',
@@ -145,7 +130,7 @@ export default defineComponent({
         stagger: {
           amount: 0.25,
         },
-      }, '-=0.5')
+      }, 0.15)
     },
     validateForm() {
       const emailInputRef = this.$refs.emailInputRef as InstanceType<typeof CustomInput>
@@ -180,7 +165,7 @@ export default defineComponent({
       })
     },
     handleLinkToCreateAccountButtonClick() {
-      this.$router.push('/register')
+      this.$router.push('/signup')
     },
     validateEmail(email: string): boolean {
       const isValid = /^\S+@\S+$/.test(email)
@@ -194,100 +179,57 @@ export default defineComponent({
 @use "@/style/colors" as colors;
 @use "@/style/constants" as constants;
 @use "@/style/font-sizes.scss" as font-sizes;
-@use "@/style/animations";
 
-.login {
-  display: flex;
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  overflow: hidden;
+.login-form {
+  display: grid;
+  gap: 15px;
+  place-items: center;
+  width: 100%;
 
-  &::before {
-    position: absolute;
-    background-image: url("@/assets/backgrounds/low-poly-grid-haikei2.svg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    width: 108vw;
-    height: 115vh;
-    animation: float 7s infinite alternate ease-in-out;
-    content: "";
-    filter: brightness(0.8) blur(3px);
+  .logo {
+    $size: 200px;
+
+    margin-bottom: 20px;
+    width: $size;
+    height: $size;
   }
 
-  .login-box {
-    $login-box-width: 75vw;
+  .title {
+    color: colors.$darkblue-600;
+    font-size: font-sizes.$medium;
+  }
 
-    display: flex;
-    position: relative;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    z-index: 0;
-    border-radius: constants.$border-radius;
-    height: 70vh;
-    max-height: 700px;
+  .input {
+    width: 100%;
+    min-width: 260px;
+    letter-spacing: 0.1rem;
+  }
 
-    .white-section {
-      box-sizing: border-box;
-      display: flex;
-      position: relative;
-      flex-direction: column;
-      row-gap: 30px;
-      align-items: center;
-      visibility: hidden;
-      border-radius: 12px;
+  .login-btn {
+    box-sizing: border-box;
+    margin-top: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 100%;
+    text-align: center;
+    letter-spacing: 0.15rem;
+    font-size: font-sizes.$small;
+    font-weight: bold;
+  }
 
-      // box-shadow: 0 3px 5px 0 colors.$black-700;
-      // box-shadow: 0 3px 8px -1px colors.$black-900;
-      background-color: white;
-      padding-top: 40px;
-      padding-right: 80px;
-      padding-bottom: 40px;
-      padding-left: 80px;
-      width: calc($login-box-width / 2.5);
+  .create-account {
+    display: grid;
+    gap: 10px;
+    margin-top: 20px;
+    text-align: center;
 
-      .logo {
-        $size: 200px;
+    .question {
+      color: colors.$darkblue-600;
+    }
 
-        width: $size;
-        height: $size;
-      }
-
-      .input {
-        width: 100%;
-        min-width: 260px;
-        letter-spacing: 0.1rem;
-      }
-
-      .login-btn {
-        box-sizing: border-box;
-        margin-top: 20px;
-        padding-top: 20px;
-        padding-bottom: 20px;
-        width: 100%;
-        text-align: center;
-        letter-spacing: 0.15rem;
-        font-size: font-sizes.$small;
-        font-weight: bold;
-      }
-
-      .create-account {
-        display: grid;
-        gap: 10px;
-        margin-top: 20px;
-        text-align: center;
-
-        .question {
-          color: colors.$darkblue-600;
-        }
-
-        .text-button-label {
-          cursor: pointer;
-          color: colors.$primary-600;
-        }
-      }
+    .text-button-label {
+      cursor: pointer;
+      color: colors.$primary-600;
     }
   }
 }
