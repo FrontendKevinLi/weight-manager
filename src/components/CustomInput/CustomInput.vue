@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, nextTick, PropType } from 'vue'
 import { ValidateConfig } from './types'
 
 export default defineComponent({
@@ -70,6 +70,7 @@ export default defineComponent({
   },
   mounted() {
     this.initValidationListener()
+    this.focusAtEnd()
   },
   methods: {
     setInputFocus(shouldFocus: boolean) {
@@ -96,7 +97,7 @@ export default defineComponent({
     initValidationListener() {
       if (this.validateConfig == null) return
 
-      const inputRef = this.$refs.inputRef as HTMLElement
+      const inputRef = this.$refs.inputRef as HTMLInputElement
       inputRef.addEventListener(this.validateConfig.event, this.validateInput)
     },
     validateInput() {
@@ -104,6 +105,12 @@ export default defineComponent({
       this.isValid = isValid
       this.errorMessage = errorMessage
       return isValid
+    },
+    focusAtEnd() {
+      const inputRef = this.$refs.inputRef as HTMLInputElement
+      const index = this.inputText.length
+      inputRef.setSelectionRange(index, index)
+      inputRef.focus()
     },
   },
 })
