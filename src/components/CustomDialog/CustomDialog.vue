@@ -5,8 +5,10 @@
     <div
       ref="backgroundMaskRef"
       class="background-mask"
-      @click.self="handleBackgroundMaskClick"
-      @keydown.escape.self="handleBackgroundMaskClick"
+      @mousedown.self="handleMousedown"
+      @mouseup.self="handleMouseup"
+      @click="handleBackgroundMaskClick"
+      @keypress.escape.self="handleBackgroundMaskClick"
     >
       <div
         ref="dialogWrapperRef"
@@ -43,6 +45,8 @@ const backgroundMaskRef = ref<HTMLElement>()
 const showDialog = computed(() => props.value.show)
 const fadeAnimationDuration = 0.5
 let canCloseDialog = true
+const isSameMousedownTarget = ref(false)
+const isSameMouseupTarget = ref(false)
 
 const fadeIn = (): Promise<void> => new Promise((resolve) => {
   const dialogWrapperEl = dialogWrapperRef.value
@@ -143,7 +147,20 @@ const close = async () => {
 }
 
 const handleBackgroundMaskClick = async () => {
+  if (!isSameMousedownTarget.value || !isSameMouseupTarget.value) return
+
+  isSameMousedownTarget.value = false
+  isSameMouseupTarget.value = false
+
   emit('update:value', { show: false })
+}
+
+const handleMousedown = (e: MouseEvent) => {
+  isSameMousedownTarget.value = e.target === e.currentTarget
+}
+
+const handleMouseup = (e: MouseEvent) => {
+  isSameMouseupTarget.value = e.target === e.currentTarget
 }
 
 watch(showDialog, async () => {
