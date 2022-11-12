@@ -186,7 +186,6 @@ export default defineComponent({
   display: grid;
   gap: 15px;
   place-items: center;
-  padding: 40px;
   width: 100%;
 
   .logo {
@@ -233,10 +232,6 @@ export default defineComponent({
       cursor: pointer;
       color: colors.$primary-600;
     }
-  }
-
-  @media (max-width: breakpoints.$small) {
-    padding: 40px;
   }
 }
 </style>

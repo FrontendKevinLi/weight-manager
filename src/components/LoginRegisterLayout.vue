@@ -86,6 +86,7 @@ export default defineComponent({
     visibility: hidden;
     border-radius: 12px;
     background-color: white;
+    padding: 40px;
     width: 450px;
     max-height: 100%;
     overflow-y: auto;
