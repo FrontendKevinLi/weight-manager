@@ -210,7 +210,6 @@ onMounted(() => {
 
   .input {
     width: 100%;
-    min-width: 260px;
     letter-spacing: 0.1rem;
   }
 
