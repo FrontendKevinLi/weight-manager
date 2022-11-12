@@ -51,6 +51,7 @@ export default defineComponent({
 @use "@/style/colors" as colors;
 @use "@/style/constants" as constants;
 @use "@/style/font-sizes.scss" as font-sizes;
+@use "@/style/breakpoints.scss" as breakpoints;
 @use "@/style/animations";
 
 .page-wrapper {
@@ -60,7 +61,7 @@ export default defineComponent({
   position: relative;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
 
   &::before {
@@ -69,7 +70,7 @@ export default defineComponent({
     background-repeat: no-repeat;
     background-size: cover;
     width: 108vw;
-    height: 115vh;
+    height: 115%;
     animation: float 7s infinite alternate ease-in-out;
     content: "";
     filter: brightness(0.8) blur(3px);
@@ -85,11 +86,15 @@ export default defineComponent({
     visibility: hidden;
     border-radius: 12px;
     background-color: white;
-    padding-top: 40px;
-    padding-right: 80px;
-    padding-bottom: 40px;
-    padding-left: 80px;
-    width: 500px;
+    width: 450px;
+    max-height: 100%;
+    overflow-y: auto;
+  }
+
+  @media (max-width: breakpoints.$small) {
+    .form-box {
+      width: calc(100% - 40px);
+    }
   }
 }
 </style>
