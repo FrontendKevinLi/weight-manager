@@ -1,9 +1,9 @@
-@keyframes float {
+@keyframes background-float {
   from {
-    transform: translate(-2%, -5%);
+    background-position: left top;
   }
 
   to {
-    transform: translate(3%, 5%);
+    background-position: center center;
   }
 }
