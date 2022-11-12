@@ -1,7 +1,12 @@
 <template>
   <div class="page-layout">
-    <CustomHeader />
-    <CustomSidebar />
+    <CustomHeader
+      @menu-click="handleMenuClick"
+    />
+    <CustomSidebar
+      ref="customSidebarRef"
+      v-model:show="showSidebar"
+    />
     <div class="page-main">
       <router-view />
     </div>
@@ -29,6 +34,7 @@ export default defineComponent({
   },
   data() {
     return {
+      showSidebar: false,
     }
   },
   async mounted() {
@@ -46,12 +52,16 @@ export default defineComponent({
       const userStore = useUserStore()
       userStore.setCurrentUser(auth.currentUser)
     },
+    handleMenuClick() {
+      this.showSidebar = true
+    },
   },
 })
 </script>
 
 <style lang="scss" scoped>
 @use "@/style/constants.scss" as constants;
+@use "@/style/breakpoints.scss" as breakpoints;
 @use "@/style/colors" as colors;
 
 .page-layout {
@@ -70,6 +80,15 @@ export default defineComponent({
 
   .custom-sidebar {
     grid-area: sidebar;
+
+    @media (max-width: breakpoints.$small) {
+      position: fixed;
+      top: 0;
+      left: 0;
+      visibility: hidden;
+      z-index: 9999;
+      height: 100%;
+    }
   }
 
   .custom-header {
@@ -78,6 +97,23 @@ export default defineComponent({
 
   .info-panel {
     grid-area: info-panel;
+
+    @media (max-width: breakpoints.$small) {
+      position: fixed;
+      right: 0;
+      visibility: hidden;
+    }
+  }
+
+  .page-main {
+    grid-area: body;
+  }
+
+  @media (max-width: breakpoints.$small) {
+    grid-template-areas:
+      "header"
+      "body";
+    grid-template-columns: 1fr;
   }
 }
 </style>

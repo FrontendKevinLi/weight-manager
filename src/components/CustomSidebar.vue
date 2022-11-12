@@ -1,59 +1,73 @@
 <template>
-  <div class="custom-sidebar">
-    <div class="logo">
-      <InlineSvg
-        :src="LogoSvg"
-      />
-    </div>
+  <div
+    ref="sidebarWrapperRef"
+    class="sidebar-wrapper"
+  >
     <div
-      class="route-list-wrapper"
+      ref="sidebarMaskRef"
+      class="sidebar-mask"
+      @click="handleMaskClick"
+      @keydown="handleMaskClick"
+    />
+    <div
+      ref="customSidebarRef"
+      class="custom-sidebar"
     >
-      <div
-        class="active-indicator"
-      >
-        <div class="side-indicator" />
-        <div class="background-indicator" />
+      <div class="logo">
+        <InlineSvg
+          :src="LogoSvg"
+        />
       </div>
       <div
-        ref="routeList"
-        class="route-list"
+        class="route-list-wrapper"
       >
         <div
-          v-for="routeItem in routeItemList"
-          ref="routeItem"
-          :key="routeItem.className"
-          :class="[
-            'route-item',
-            routeItem.className,
-            routeItem.slideIn && 'slide-in',
-            routeItem.clickable && 'clickable',
-            routeItem.path === currentRoute && 'active'
-          ]"
-          @click.stop="handleRouteItemClick(routeItem)"
-          @keydown="handleRouteItemClick(routeItem)"
+          class="active-indicator"
         >
-          <InlineSvg
-            :src="routeItem.icon"
-          />
+          <div class="side-indicator" />
+          <div class="background-indicator" />
+        </div>
+        <div
+          ref="routeList"
+          class="route-list"
+        >
+          <div
+            v-for="routeItem in routeItemList"
+            ref="routeItem"
+            :key="routeItem.className"
+            :class="[
+              'route-item',
+              routeItem.className,
+              routeItem.slideIn && 'slide-in',
+              routeItem.clickable && 'clickable',
+              routeItem.path === currentRoute && 'active'
+            ]"
+            @click.stop="handleRouteItemClick(routeItem)"
+            @keydown="handleRouteItemClick(routeItem)"
+          >
+            <InlineSvg
+              :src="routeItem.icon"
+            />
+          </div>
         </div>
       </div>
+      <div
+        class="logout-button"
+        @click="handleLogoutButtonClick"
+        @keydown="handleLogoutButtonClick"
+      >
+        <InlineSvg
+          class="logout-icon"
+          :src="LogoutSvg"
+        />
+      </div>
     </div>
-    <div
-      class="logout-button"
-      @click="handleLogoutButtonClick"
-      @keydown="handleLogoutButtonClick"
-    >
-      <InlineSvg
-        class="logout-icon"
-        :src="LogoutSvg"
-      />
-    </div>
-    <ConfirmDialog
-      v-model:value="logoutConfirmDialog"
-      @cancel="handleLogoutDialogCancel"
-      @confirm="handleLogoutDialogConfirm"
-    />
   </div>
+  <ConfirmDialog
+    v-model:value="logoutConfirmDialog"
+    @cancel="handleLogoutDialogCancel"
+    @confirm="handleLogoutDialogConfirm"
+  />
 </template>
 
 <script lang="ts">
@@ -74,6 +88,7 @@ import { logout } from '@/firebase/auth'
 import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue'
 import { ConfirmDialogProps } from '@/components/ConfirmDialog/types'
 import DashboardSvg from '@/assets/sidebar-icons/gauge-solid.svg'
+import useWindowSizeStore from '@/stores/windowSize'
 
 export default defineComponent({
   name: 'CustomSidebar',
@@ -81,6 +96,13 @@ export default defineComponent({
     InlineSvg,
     ConfirmDialog,
   },
+  props: {
+    show: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  emits: ['update:show'],
   data() {
     return {
       TableSvg,
@@ -125,6 +147,10 @@ export default defineComponent({
       ]
       return routeItemList
     },
+    isMobile(): boolean {
+      const windowSizeStore = useWindowSizeStore()
+      return windowSizeStore.isMobile
+    },
     currentRoute(): string {
       const currentRoute = this.$router.currentRoute.value.fullPath
       if (this.activeItemIndicatorInited) {
@@ -133,22 +159,110 @@ export default defineComponent({
       return currentRoute
     },
   },
+  watch: {
+    show(value: boolean) {
+      if (!this.isMobile) return
+
+      if (value === true) {
+        this.fadeInSidebar()
+        return
+      }
+
+      this.fadeOutSidebar()
+    },
+    isMobile(value: boolean) {
+      if (value === true) {
+        this.hideSidebar()
+        return
+      }
+
+      this.closeSidebar()
+      this.showDesktopSidebar()
+    },
+  },
   mounted() {
-    // this.initAnimation()
     this.rePositionActiveIndicator(true)
   },
   methods: {
-    initAnimation() {
+    showDesktopSidebar() {
       const timeline = gsap.timeline()
-      timeline.from('.route-item', {
-        y: -150,
-        opacity: 0,
-        stagger: 0.10,
-        ease: 'back',
-        onComplete: () => {
-          // this.rePositionActiveIndicator(true)
-        },
-      }, 0)
+      const sidebarWrapperEl = this.$refs.sidebarWrapperRef as HTMLElement
+      const customSidebarEl = this.$refs.customSidebarRef as HTMLElement
+      const sidebarMaskEl = this.$refs.sidebarMaskRef as HTMLElement
+      timeline.set(sidebarWrapperEl, {
+        autoAlpha: 1,
+      })
+      timeline.set(sidebarMaskEl, {
+        autoAlpha: 0,
+      })
+      timeline.set(customSidebarEl, {
+        autoAlpha: 1,
+        x: 0,
+      })
+    },
+    hideSidebar() {
+      const timeline = gsap.timeline()
+      const sidebarWrapperEl = this.$refs.sidebarWrapperRef as HTMLElement
+      timeline.set(sidebarWrapperEl, {
+        autoAlpha: 0,
+      })
+    },
+    fadeInSidebar(): Promise<void> {
+      return new Promise((resolve) => {
+        const sidebarWrapperEl = this.$refs.sidebarWrapperRef as HTMLElement
+        const sidebarMaskEl = this.$refs.sidebarMaskRef as HTMLElement
+        const customSidebarEl = this.$refs.customSidebarRef as HTMLElement
+        const timeline = gsap.timeline()
+
+        timeline.set(sidebarWrapperEl, {
+          autoAlpha: 1,
+        })
+        timeline.fromTo(sidebarMaskEl, {
+          autoAlpha: 0,
+        }, {
+          ease: Expo.easeOut,
+          duration: 0.5,
+          autoAlpha: 1,
+        }, 0)
+        timeline.fromTo(customSidebarEl, {
+          x: '-100%',
+          autoAlpha: 0,
+        }, {
+          x: 0,
+          autoAlpha: 1,
+          duration: 0.5,
+          ease: Expo.easeOut,
+          onComplete: () => {
+            resolve()
+          },
+        }, 0)
+      })
+    },
+    fadeOutSidebar(): Promise<void> {
+      return new Promise((resolve) => {
+        const sidebarWrapperEl = this.$refs.sidebarWrapperRef as HTMLElement
+        const customSidebarEl = this.$refs.customSidebarRef as HTMLElement
+        const sidebarMaskEl = this.$refs.sidebarMaskRef as HTMLElement
+        const timeline = gsap.timeline()
+        timeline.fromTo(sidebarMaskEl, {
+          autoAlpha: 1,
+        }, {
+          autoAlpha: 0,
+        }, 0)
+        timeline.fromTo(customSidebarEl, {
+          x: 0,
+          autoAlpha: 1,
+        }, {
+          x: '-100%',
+          autoAlpha: 0,
+          onComplete: () => {
+            resolve()
+          },
+        }, 0)
+        timeline.set(sidebarWrapperEl, {
+          autoAlpha: 0,
+        })
+      })
     },
     initListeners() {
       const sideBarItems = gsap.utils.toArray('.route-item.slide-in') as HTMLElement[]
@@ -180,32 +294,38 @@ export default defineComponent({
       })
     },
     async handleRouteItemClick(routeItem: RouteItem) {
+      this.closeSidebar()
       await this.$router.push(routeItem.path)
-      this.rePositionActiveIndicator()
+      await this.rePositionActiveIndicator()
     },
     getActiveRouteItemElement() {
       return document.querySelector('.route-item.active')
     },
-    rePositionActiveIndicator(isInit = false) {
-      this.$nextTick(() => {
-        const timeline = gsap.timeline()
-        const routeList = this.$refs.routeList as HTMLElement | undefined
-        const activeRouteItemElementTop = this.getActiveRouteItemElement()?.getBoundingClientRect().top ?? 0
-        const routeListElementTop = routeList?.getBoundingClientRect().top ?? 0
-        const top = activeRouteItemElementTop - routeListElementTop
+    rePositionActiveIndicator(isInit = false): Promise<void> {
+      return new Promise((resolve) => {
+        this.$nextTick(() => {
+          const timeline = gsap.timeline()
+          const routeList = this.$refs.routeList as HTMLElement | undefined
+          const activeRouteItemElementTop = this.getActiveRouteItemElement()?.getBoundingClientRect().top ?? 0
+          const routeListElementTop = routeList?.getBoundingClientRect().top ?? 0
+          const top = activeRouteItemElementTop - routeListElementTop
 
-        if (isInit) {
-          timeline.set('.active-indicator', {
+          if (isInit) {
+            timeline.set('.active-indicator', {
+              y: top,
+            })
+            this.activeItemIndicatorInited = true
+            return
+          }
+
+          timeline.to('.active-indicator', {
+            duration: 0.75,
             y: top,
+            ease: Expo.easeOut,
+            onComplete: () => {
+              resolve()
+            },
           })
-          this.activeItemIndicatorInited = true
-          return
-        }
-
-        timeline.to('.active-indicator', {
-          duration: 0.75,
-          y: top,
-          ease: Expo.easeOut,
         })
       })
     },
@@ -224,6 +344,12 @@ export default defineComponent({
     async handleLogoutButtonClick() {
       this.logoutConfirmDialog.show = true
     },
+    closeSidebar() {
+      this.$emit('update:show', false)
+    },
+    handleMaskClick() {
+      this.closeSidebar()
+    },
   },
 })
 </script>
@@ -231,108 +357,142 @@ export default defineComponent({
 <style lang="scss" scoped>
 @use "sass:color";
 @use "@/style/constants.scss" as constants;
+@use "@/style/breakpoints.scss" as breakpoints;
 @use "@/style/colors" as colors;
 
-.custom-sidebar {
-  $logo-height: 70px;
-  $sidebar-width: 120px;
+.sidebar-wrapper {
+  position: fixed;
+  z-index: 10;
+  height: 100%;
 
-  display: grid;
-  position: relative;
-  grid-template-rows: $logo-height 1fr $logo-height;
-  grid-template-columns: $sidebar-width;
-  place-items: center;
-  border-top-right-radius: constants.$border-radius;
-  border-bottom-right-radius: constants.$border-radius;
-  background-color: colors.$primary-900;
-  padding-top: 20px;
-  padding-bottom: 20px;
-
-  .logo {
-    height: $logo-height;
-    aspect-ratio: 1000 / 1125;
+  .sidebar-mask {
+    position: fixed;
+    visibility: hidden;
+    background-color: rgb(0 0 0 / 50%);
+    width: 100vw;
+    height: 100%;
   }
 
-  .route-list-wrapper {
-    width: 100%;
-    height: fit-content;
+  .custom-sidebar {
+    $logo-height: 70px;
+    $sidebar-width: 120px;
 
-    .route-list {
-      $route-item-size: 30px;
+    box-sizing: border-box;
+    display: grid;
+    position: relative;
+    grid-template-rows: $logo-height 1fr $logo-height;
+    grid-template-columns: $sidebar-width;
+    place-items: center;
+    border-top-right-radius: constants.$border-radius;
+    border-bottom-right-radius: constants.$border-radius;
+    background-color: colors.$primary-900;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    height: 100%;
+    overflow-x: hidden;
 
-      display: grid;
-      position: relative;
-      gap: $route-item-size * 0.5;
-      place-items: center;
+    .logo {
+      height: $logo-height;
+      aspect-ratio: 1000 / 1125;
+    }
+
+    .route-list-wrapper {
       width: 100%;
+      height: fit-content;
 
-      .route-item {
-        box-sizing: border-box;
+      .route-list {
+        $route-item-size: 30px;
+
         display: grid;
         position: relative;
+        gap: $route-item-size * 0.5;
         place-items: center;
-        transition: fill 0.2s ease-in-out;
+        width: 100%;
+
+        .route-item {
+          box-sizing: border-box;
+          display: grid;
+          position: relative;
+          place-items: center;
+          transition: fill 0.2s ease-in-out;
+          width: 100%;
+          aspect-ratio: 5 / 4;
+          fill: colors.$primary-100;
+
+          &:is(.clickable) {
+            cursor: pointer;
+          }
+
+          &:is(.active) {
+            fill: white;
+          }
+
+          svg {
+            width: $route-item-size;
+            height: $route-item-size;
+          }
+        }
+
+        @media (max-width: breakpoints.$small) {
+          gap: 0;
+        }
+      }
+
+      .active-indicator {
+        display: grid;
+        position: absolute;
+        align-items: center;
         width: 100%;
         aspect-ratio: 5 / 4;
-        fill: colors.$primary-100;
 
-        &:is(.clickable) {
-          cursor: pointer;
+        & > * {
+          grid-area: 1 / 1;
         }
 
-        &:is(.active) {
-          fill: white;
+        .side-indicator {
+          border-top-right-radius: constants.$border-radius;
+          border-bottom-right-radius: constants.$border-radius;
+          background-color: colors.$primary-200;
+          width: 6px;
+          height: 100%;
         }
 
-        svg {
-          width: $route-item-size;
-          height: $route-item-size;
+        .background-indicator {
+          margin-left: 6px;
+          background-color: white;
+          height: calc(100% - (constants.$border-radius / 2));
+          filter: opacity(0.1);
         }
       }
     }
 
-    .active-indicator {
+    .logout-button {
       display: grid;
-      position: absolute;
-      align-items: center;
-      width: $sidebar-width;
-      aspect-ratio: 5 / 4;
+      place-items: center;
+      cursor: pointer;
+      width: 100%;
+      aspect-ratio: 5/4;
 
-      & > * {
-        grid-area: 1 / 1;
-      }
+      .logout-icon {
+        $size: 30px;
 
-      .side-indicator {
-        border-top-right-radius: constants.$border-radius;
-        border-bottom-right-radius: constants.$border-radius;
-        background-color: colors.$primary-200;
-        width: 6px;
-        height: 100%;
+        width: $size;
+        height: $size;
+        fill: colors.$primary-100;
       }
+    }
 
-      .background-indicator {
-        margin-left: 6px;
-        background-color: white;
-        height: calc(100% - (constants.$border-radius / 2));
-        filter: opacity(0.1);
-      }
+    @media (max-width: breakpoints.$small) {
+      visibility: hidden;
+    }
+
+    @media (max-width: breakpoints.$small) {
+      transform: translate(-100%);
     }
   }
 
-  .logout-button {
-    display: grid;
-    place-items: center;
-    cursor: pointer;
-    width: 100%;
-    aspect-ratio: 5/4;
-
-    .logout-icon {
-      $size: 30px;
-
-      width: $size;
-      height: $size;
-      fill: colors.$primary-100;
-    }
+  @media (max-width: breakpoints.$small) {
+    visibility: hidden;
   }
 }
 </style>
