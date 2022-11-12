@@ -51,7 +51,8 @@ export default defineComponent({
 @use "@/style/colors" as colors;
 @use "@/style/constants" as constants;
 @use "@/style/font-sizes.scss" as font-sizes;
-@use "@/style/animations";
+@use "@/style/breakpoints.scss" as breakpoints;
+@use "@/style/animations.scss";
 
 .page-wrapper {
   $login-box-width: 75vw;
@@ -60,19 +61,19 @@ export default defineComponent({
   position: relative;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  background-image: url("@/assets/backgrounds/low-poly-grid-haikei2.svg");
+  background-position: left top;
+  background-size: auto 120%;
+  height: 100%;
   overflow: hidden;
+  animation: background-float 7s infinite alternate ease-in-out;
 
   &::before {
     position: absolute;
-    background-image: url("@/assets/backgrounds/low-poly-grid-haikei2.svg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    width: 108vw;
-    height: 115vh;
-    animation: float 7s infinite alternate ease-in-out;
+    width: 100%;
+    height: 100%;
     content: "";
-    filter: brightness(0.8) blur(3px);
+    backdrop-filter: blur(2px) brightness(0.8);
   }
 
   .form-box {
@@ -85,11 +86,19 @@ export default defineComponent({
     visibility: hidden;
     border-radius: 12px;
     background-color: white;
-    padding-top: 40px;
-    padding-right: 80px;
-    padding-bottom: 40px;
-    padding-left: 80px;
-    width: 500px;
+    padding: 40px;
+    width: 450px;
+    max-height: 100%;
+    overflow-y: auto;
+  }
+
+  @media (max-width: breakpoints.$small) {
+    background-size: cover;
+    animation: background-float 21s infinite alternate ease-in-out;
+
+    .form-box {
+      width: calc(100% - 40px);
+    }
   }
 }
 </style>

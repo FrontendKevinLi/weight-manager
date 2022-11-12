@@ -60,6 +60,7 @@ import { useUserStore } from '@/stores'
 import { setUsername } from '@/firebase/auth'
 import { until } from '@open-draft/until'
 import { Nullable } from '@/types/utils'
+import useWindowSizeStore from '@/stores/windowSize'
 import AchievementItem from './AchievementItem.vue'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -70,8 +71,10 @@ const usernameRef = ref<HTMLElement>()
 const infoPanelRef = ref<HTMLElement>()
 
 const userStore = useUserStore()
+const windowSizeStore = useWindowSizeStore()
 const toast = useToast()
 const currentUser = computed(() => userStore.currentUser)
+const isMobile = computed(() => windowSizeStore.isMobile)
 const username = ref(currentUser.value?.displayName ?? '')
 const usernameBefore = ref<Nullable<string>>('')
 
@@ -179,7 +182,9 @@ const fadeInInfoPanel = () => {
 }
 
 const initAnimation = () => {
-  fadeInInfoPanel()
+  if (!isMobile.value) {
+    fadeInInfoPanel()
+  }
   initAchievementItemElListScrollTrigger()
 }
 
@@ -220,6 +225,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 @use "sass:color";
 @use "@/style/constants.scss" as constants;
+@use "@/style/breakpoints.scss" as breakpoints;
 @use "@/style/colors.scss" as colors;
 
 .info-panel {
@@ -264,7 +270,6 @@ onMounted(() => {
 
         grid-column: 3;
         transition: opacity 0.1s ease-in-out;
-        visibility: visible;
         cursor: pointer;
         width: $size;
         height: $size;

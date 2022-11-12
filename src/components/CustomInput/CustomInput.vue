@@ -87,6 +87,8 @@ export default defineComponent({
       this.$emit('keyupEnter')
     },
     handleFocus() {
+      const el = this.$refs.inputRef as HTMLInputElement
+      el.scrollIntoView()
       this.setInputFocus(true)
       this.$emit('focus')
     },

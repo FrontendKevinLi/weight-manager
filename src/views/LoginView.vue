@@ -179,8 +179,10 @@ export default defineComponent({
 @use "@/style/colors" as colors;
 @use "@/style/constants" as constants;
 @use "@/style/font-sizes.scss" as font-sizes;
+@use "@/style/breakpoints.scss" as breakpoints;
 
 .login-form {
+  box-sizing: border-box;
   display: grid;
   gap: 15px;
   place-items: center;
@@ -201,7 +203,6 @@ export default defineComponent({
 
   .input {
     width: 100%;
-    min-width: 260px;
     letter-spacing: 0.1rem;
   }
 
