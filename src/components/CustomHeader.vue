@@ -12,6 +12,8 @@
       class="profile-icon"
       :src="ProfilePng"
       alt="profile"
+      @click="handleProfileIconClick"
+      @keydown="handleProfileIconClick"
     >
   </div>
 </template>
@@ -29,7 +31,7 @@ export default defineComponent({
   components: {
     InlineSvg,
   },
-  emits: ['menu-click'],
+  emits: ['menu-click', 'profile-icon-click'],
   data() {
     return {
       ProfilePng,
@@ -46,6 +48,9 @@ export default defineComponent({
   methods: {
     handleMenuClick() {
       this.$emit('menu-click')
+    },
+    handleProfileIconClick() {
+      this.$emit('profile-icon-click')
     },
   },
 })

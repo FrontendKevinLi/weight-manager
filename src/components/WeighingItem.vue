@@ -321,7 +321,6 @@ export default defineComponent({
         top: 50%;
         left: -4%;
         transform: translateY(-50%) rotate(90deg);
-        z-index: 1;
         fill: white;
         width: 10%;
         aspect-ratio: 384 / 512;

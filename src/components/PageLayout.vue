@@ -2,6 +2,7 @@
   <div class="page-layout">
     <CustomHeader
       @menu-click="handleMenuClick"
+      @profile-icon-click="handleProfileIconClick"
     />
     <CustomSidebar
       ref="customSidebarRef"
@@ -10,7 +11,9 @@
     <div class="page-main">
       <router-view />
     </div>
-    <InfoPanel />
+    <InfoPanel
+      v-model:value="infoPanelProps"
+    />
   </div>
 </template>
 
@@ -19,14 +22,16 @@ import { defineComponent } from 'vue'
 
 import CustomSidebar from '@/components/CustomSidebar.vue'
 import CustomHeader from '@/components/CustomHeader.vue'
-import InfoPanel from '@/components/InfoPanel.vue'
+import InfoPanel from '@/components/InfoPanel/InfoPanel.vue'
 import { auth, getIsAuthenticated } from '@/firebase/auth'
 import { until } from '@open-draft/until'
 import { useToast } from 'vue-toastification'
 import { useUserStore } from '@/stores'
+import { RouterView } from 'vue-router'
+import { InfoPanelProps } from '@/components/InfoPanel/types'
 
 export default defineComponent({
-  name: 'DashboardView',
+  name: 'PageLayout',
   components: {
     CustomSidebar,
     CustomHeader,
@@ -35,6 +40,9 @@ export default defineComponent({
   data() {
     return {
       showMobileSidebar: false,
+      infoPanelProps: {
+        showMobileInfoPanel: false,
+      } as InfoPanelProps,
     }
   },
   async mounted() {
@@ -54,6 +62,9 @@ export default defineComponent({
     },
     handleMenuClick() {
       this.showMobileSidebar = true
+    },
+    handleProfileIconClick() {
+      this.infoPanelProps.showMobileInfoPanel = true
     },
   },
 })

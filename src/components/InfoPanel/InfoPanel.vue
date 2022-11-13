@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import {
-  onMounted, ref, computed, watch,
+  onMounted, ref, computed, watch, defineEmits, EmitsOptions,
 } from 'vue'
 import { v4 as uuid } from 'uuid'
 import gsap, { Expo } from 'gsap'
@@ -61,9 +61,18 @@ import { setUsername } from '@/firebase/auth'
 import { until } from '@open-draft/until'
 import { Nullable } from '@/types/utils'
 import useWindowSizeStore from '@/stores/windowSize'
-import AchievementItem from './AchievementItem.vue'
+import router from '@/router'
+import AchievementItem from '../AchievementItem.vue'
+import { InfoPanelProps } from './types'
 
 gsap.registerPlugin(ScrollTrigger)
+
+type InfoPanelEmits = {
+  (e: 'update:value', payload: InfoPanelProps): void
+}
+
+const emit = defineEmits<InfoPanelEmits>()
+const props = defineProps<{value: InfoPanelProps}>()
 
 const achievementItemList = ref<InstanceType<(typeof AchievementItem)>[]>()
 const achievementItemListEl = ref<HTMLElement>()
@@ -177,8 +186,8 @@ const fadeInInfoPanel = () => {
   timeline.to(infoPanelRef.value, {
     autoAlpha: 1,
     x: 0,
-    duration: 1,
-    ease: Expo.easeInOut,
+    duration: 0.5,
+    ease: Expo.easeOut,
   })
 }
 
@@ -193,8 +202,8 @@ const fadeOutInfoPanel = () => {
   timeline.to(infoPanelRef.value, {
     autoAlpha: 0,
     x: '100%',
-    duration: 1,
-    ease: Expo.easeInOut,
+    duration: 0.5,
+    ease: Expo.easeOut,
   })
 }
 
@@ -249,6 +258,12 @@ const handleEditIconClick = () => {
   usernameRef.value?.focus()
 }
 
+const closeMobileInfoPanel = () => {
+  emit('update:value', {
+    showMobileInfoPanel: false,
+  })
+}
+
 watch(currentUser, () => {
   username.value = currentUser.value?.displayName ?? ''
 })
@@ -262,8 +277,27 @@ watch(isMobile, (isMobile) => {
   showInfoPanel()
 })
 
+watch(props, (props) => {
+  console.log('change')
+  if (!isMobile.value) return
+
+  if (props.value.showMobileInfoPanel) {
+    fadeInInfoPanel()
+    return
+  }
+
+  fadeOutInfoPanel()
+})
+
 onMounted(() => {
   initAnimation()
+  router.beforeEach((to, from) => {
+    if (props.value.showMobileInfoPanel) {
+      closeMobileInfoPanel()
+      return false
+    }
+    return true
+  })
 })
 
 </script>
@@ -275,13 +309,17 @@ onMounted(() => {
 @use "@/style/colors.scss" as colors;
 
 .info-panel {
+  box-sizing: border-box;
   display: grid;
   grid-template-rows: auto 1fr;
   gap: 80px;
+  z-index: 2;
   border-top-left-radius: constants.$border-radius;
   border-bottom-left-radius: constants.$border-radius;
   background-color: white;
   padding: 50px;
+  height: 100%;
+  max-height: 100%;
 
   .user-info {
     display: grid;
@@ -352,6 +390,26 @@ onMounted(() => {
 
       .achievement-item {
         visibility: hidden;
+      }
+    }
+  }
+}
+
+@media (max-width: breakpoints.$small) {
+  .info-panel {
+    width: 100%;
+
+    .user-info {
+      grid-template-columns: auto 1fr;
+
+      .user-icon {
+        height: 100px;
+      }
+
+      .username-wrapper {
+        display: flex;
+
+        // grid-template-columns: auto 1fr;
       }
     }
   }
