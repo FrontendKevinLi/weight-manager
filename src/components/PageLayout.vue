@@ -5,7 +5,7 @@
     />
     <CustomSidebar
       ref="customSidebarRef"
-      v-model:show="showSidebar"
+      v-model:show-mobile-sidebar="showMobileSidebar"
     />
     <div class="page-main">
       <router-view />
@@ -34,7 +34,7 @@ export default defineComponent({
   },
   data() {
     return {
-      showSidebar: false,
+      showMobileSidebar: false,
     }
   },
   async mounted() {
@@ -53,7 +53,7 @@ export default defineComponent({
       userStore.setCurrentUser(auth.currentUser)
     },
     handleMenuClick() {
-      this.showSidebar = true
+      this.showMobileSidebar = true
     },
   },
 })
@@ -74,8 +74,8 @@ export default defineComponent({
   grid-template-rows: 90px 1fr;
   grid-template-columns: 120px 1fr 420px;
   width: 100vw;
-  min-height: 100vh;
-  max-height: 100vh;
+  height: 100%;
+  max-height: 100%;
   overflow: hidden;
 
   .custom-sidebar {

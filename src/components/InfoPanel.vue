@@ -71,11 +71,12 @@ const usernameRef = ref<HTMLElement>()
 const infoPanelRef = ref<HTMLElement>()
 
 const userStore = useUserStore()
-const windowSizeStore = useWindowSizeStore()
-const toast = useToast()
 const currentUser = computed(() => userStore.currentUser)
-const isMobile = computed(() => windowSizeStore.isMobile)
 const username = ref(currentUser.value?.displayName ?? '')
+
+const windowSizeStore = useWindowSizeStore()
+const isMobile = computed(() => windowSizeStore.isMobile)
+
 const usernameBefore = ref<Nullable<string>>('')
 
 const achievementList: AchievementItemType[] = [
@@ -181,6 +182,41 @@ const fadeInInfoPanel = () => {
   })
 }
 
+const fadeOutInfoPanel = () => {
+  if (infoPanelRef.value == null) return
+
+  const timeline = gsap.timeline()
+  timeline.set(infoPanelRef.value, {
+    autoAlpha: 1,
+    x: 0,
+  })
+  timeline.to(infoPanelRef.value, {
+    autoAlpha: 0,
+    x: '100%',
+    duration: 1,
+    ease: Expo.easeInOut,
+  })
+}
+
+const hideInfoPanel = () => {
+  if (infoPanelRef.value == null) return
+
+  const timeline = gsap.timeline()
+  timeline.set(infoPanelRef.value, {
+    autoAlpha: 0,
+  })
+}
+
+const showInfoPanel = () => {
+  if (infoPanelRef.value == null) return
+
+  const timeline = gsap.timeline()
+  timeline.set(infoPanelRef.value, {
+    autoAlpha: 1,
+    x: 0,
+  })
+}
+
 const initAnimation = () => {
   if (!isMobile.value) {
     fadeInInfoPanel()
@@ -198,6 +234,7 @@ const handleUsernameBlur = async () => {
 
   const result = await until(() => setUsername(username.value))
   if (result.error) {
+    const toast = useToast()
     toast.error(result.error.message)
   }
 }
@@ -214,6 +251,15 @@ const handleEditIconClick = () => {
 
 watch(currentUser, () => {
   username.value = currentUser.value?.displayName ?? ''
+})
+
+watch(isMobile, (isMobile) => {
+  if (isMobile) {
+    hideInfoPanel()
+    return
+  }
+
+  showInfoPanel()
 })
 
 onMounted(() => {

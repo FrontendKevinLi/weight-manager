@@ -92,27 +92,8 @@ onMounted(() => {
 <style lang="scss" scoped>
 @use "sass:color";
 @use "@/style/colors.scss" as colors;
+@use "@/style/constants.scss" as constants;
 @use "@/style/font-sizes.scss" as font-sizes;
-
-@mixin icon-button {
-  display: grid;
-  transition: fill 0.2s ease-out;
-  border-radius: 50%;
-  background-color: colors.$primary-50-variant;
-  cursor: pointer;
-  padding: 10px;
-  width: 30px;
-  aspect-ratio: 1 / 1;
-  fill: colors.$primary-600;
-
-  &:hover {
-    fill: color.adjust(colors.$primary-500, $lightness: 5%);
-  }
-
-  &:active {
-    fill: color.adjust(colors.$primary-500, $lightness: -5%);
-  }
-}
 
 .calendar-header {
   display: grid;
@@ -134,7 +115,7 @@ onMounted(() => {
     width: fit-content;
 
     .arrow-icon {
-      @include icon-button;
+      @include constants.icon-button;
     }
 
     .calendar-date {
@@ -156,7 +137,7 @@ onMounted(() => {
     justify-content: end;
 
     .add-icon {
-      @include icon-button;
+      @include constants.icon-button;
     }
   }
 }

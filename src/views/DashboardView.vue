@@ -21,20 +21,35 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @use "@/style/constants.scss" as constants;
+@use "@/style/breakpoints.scss" as breakpoints;
 @use "@/style/colors" as colors;
 
 .dashboard-view {
   display: grid;
-  grid-template-rows: 432px 1fr;
+  grid-template-rows: minmax(50vmin, 60vmin) 1fr;
   place-items: center;
   height: 100%;
 
   .weighing-item {
-    transform: scale(0.8);
+    padding: 40px;
   }
 
   .last-days-weight-bar-chart-wrapper {
     padding: 40px;
+  }
+}
+
+@media (max-width: breakpoints.$small) {
+  .dashboard-view {
+    grid-template-rows: minmax(50vmin, 90vmin) 1fr;
+
+    .weighing-item {
+      padding: 20px;
+    }
+
+    .last-days-weight-bar-chart-wrapper {
+      padding: 20px;
+    }
   }
 }
 </style>
