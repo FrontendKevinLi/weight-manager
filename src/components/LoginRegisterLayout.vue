@@ -90,11 +90,22 @@ export default defineComponent({
     width: 450px;
     max-height: 100%;
     overflow-y: auto;
+    will-change: opacity, transform;
   }
+}
 
-  @media (max-width: breakpoints.$small) {
+@media (max-width: breakpoints.$small) {
+  .page-wrapper {
     background-size: cover;
-    animation: background-float 21s infinite alternate ease-in-out;
+    animation: none;
+
+    &::before {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      content: "";
+      backdrop-filter: unset;
+    }
 
     .form-box {
       width: calc(100% - 40px);
