@@ -81,7 +81,7 @@ export default defineComponent({
     },
     handleInputChange(e: Event) {
       const target = e.target as HTMLInputElement
-      this.$emit('update:inputText', target.value)
+      this.$emit('update:inputText', target.value.trim())
     },
     handleKeyUpEnter() {
       this.$emit('keyupEnter')

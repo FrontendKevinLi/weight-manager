@@ -97,12 +97,12 @@ export default defineComponent({
     ConfirmDialog,
   },
   props: {
-    show: {
+    showMobileSidebar: {
       type: Boolean,
       default: false,
     },
   },
-  emits: ['update:show'],
+  emits: ['update:show-mobile-sidebar'],
   data() {
     return {
       TableSvg,
@@ -160,23 +160,23 @@ export default defineComponent({
     },
   },
   watch: {
-    show(value: boolean) {
+    showMobileSidebar(showMobileSidebar: boolean) {
       if (!this.isMobile) return
 
-      if (value === true) {
+      if (showMobileSidebar) {
         this.fadeInSidebar()
         return
       }
 
       this.fadeOutSidebar()
     },
-    isMobile(value: boolean) {
-      if (value === true) {
-        this.hideSidebar()
+    isMobile(isMobile: boolean) {
+      if (isMobile) {
+        this.hideMobileSidebar()
         return
       }
 
-      this.closeSidebar()
+      this.closeMobileSidebar()
       this.showDesktopSidebar()
     },
   },
@@ -200,7 +200,7 @@ export default defineComponent({
         x: 0,
       })
     },
-    hideSidebar() {
+    hideMobileSidebar() {
       const timeline = gsap.timeline()
       const sidebarWrapperEl = this.$refs.sidebarWrapperRef as HTMLElement
       timeline.set(sidebarWrapperEl, {
@@ -239,6 +239,7 @@ export default defineComponent({
       })
     },
     fadeOutSidebar(): Promise<void> {
+      console.log('fade out')
       return new Promise((resolve) => {
         const sidebarWrapperEl = this.$refs.sidebarWrapperRef as HTMLElement
         const customSidebarEl = this.$refs.customSidebarRef as HTMLElement
@@ -294,7 +295,7 @@ export default defineComponent({
       })
     },
     async handleRouteItemClick(routeItem: RouteItem) {
-      this.closeSidebar()
+      this.closeMobileSidebar()
       await this.$router.push(routeItem.path)
       await this.rePositionActiveIndicator()
     },
@@ -344,11 +345,11 @@ export default defineComponent({
     async handleLogoutButtonClick() {
       this.logoutConfirmDialog.show = true
     },
-    closeSidebar() {
-      this.$emit('update:show', false)
+    closeMobileSidebar() {
+      this.$emit('update:show-mobile-sidebar', false)
     },
     handleMaskClick() {
-      this.closeSidebar()
+      this.closeMobileSidebar()
     },
   },
 })

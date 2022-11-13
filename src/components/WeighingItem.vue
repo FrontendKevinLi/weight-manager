@@ -26,9 +26,10 @@
         ref="pointerContainerRef"
         class="pointer-container"
       >
-        <div class="pointer">
-          <div class="triangle-mask" />
-        </div>
+        <InlineSvg
+          class="pointer"
+          :src="PointerSvg"
+        />
       </div>
       <div
         ref="indicatorsRef"
@@ -52,6 +53,7 @@
 import { defineComponent } from 'vue'
 import gsap, { Expo } from 'gsap'
 import CustomEase from 'gsap/CustomEase'
+import InlineSvg from 'vue-inline-svg'
 
 import { ProgressCircle2Config, AnimationConfig } from '@/types/ProgressCircle2'
 import Constants from '@/utils/constant'
@@ -61,6 +63,7 @@ import { until } from '@open-draft/until'
 import { getMonthlyRecord } from '@/firebase/firestore'
 import { DateTime } from 'luxon'
 import { useToast } from 'vue-toastification'
+import PointerSvg from '@/assets/weighing-item/location-dot-solid.svg'
 
 gsap.registerPlugin(CustomEase)
 
@@ -68,6 +71,7 @@ export default defineComponent({
   name: 'WeighingItem',
   components: {
     ProgressCircle2,
+    InlineSvg,
   },
   data() {
     return {
@@ -84,6 +88,7 @@ export default defineComponent({
       } as AnimationConfig,
       monthlyRecord: {} as MonthlyRecord,
       initPointerRotateDeg: 315,
+      PointerSvg,
     }
   },
   computed: {
@@ -246,17 +251,18 @@ export default defineComponent({
 <style lang="scss" scoped>
 @use "@/style/constants.scss" as constants;
 @use "@/style/colors" as colors;
+@use "@/style/font-sizes" as font-sizes;
 
 .weighing-item {
-  $inner-circle-size: 325px;
+  $inner-circle-size: 65%;
   $outer-circle-size: 440px;
 
+  box-sizing: border-box;
   display: grid;
   position: relative;
   place-items: center;
-  padding: 20px;
-  width: fit-content;
-  height: fit-content;
+  height: 100%;
+  aspect-ratio: 1 / 1;
 
   * {
     grid-area: 1 / 1;
@@ -266,8 +272,8 @@ export default defineComponent({
     display: grid;
     position: relative;
     place-items: center;
-    width: fit-content;
-    height: fit-content;
+    width: 100%;
+    height: 100%;
 
     * {
       grid-area: 1 / 1;
@@ -291,77 +297,46 @@ export default defineComponent({
         align-items: baseline;
         color: colors.$darkblue-600;
 
-        // color: white;
-
         .number {
-          font-size: 72px;
+          font-size: max(2vw, font-sizes.$medium);
         }
 
         .unit {
-          font-size: 36px;
+          font-size: max(2vw, font-sizes.$small);
         }
       }
     }
 
     .pointer-container {
       $offset: -40px;
-      $pointer-wrapper-size: $outer-circle-size + $offset;
 
       position: relative;
       visibility: hidden;
       z-index: 2;
-      width: $pointer-wrapper-size;
-      height: $pointer-wrapper-size;
+      width: 80%;
+      aspect-ratio: 1 / 1;
 
       .pointer {
-        $circle-size: 40px;
-
         position: absolute;
         top: 50%;
-        left: -($circle-size / 2);
-        transform: translateY(-50%);
-        z-index: 1;
-        border-radius: 50%;
-        background-color: white;
-        width: $circle-size;
-        height: $circle-size;
+        left: -4%;
+        transform: translateY(-50%) rotate(90deg);
+        fill: white;
+        width: 10%;
+        aspect-ratio: 384 / 512;
         filter: drop-shadow(0 0 4px colors.$primary-800);
-
-        &::before {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          z-index: 1;
-          border-radius: 50%;
-          background-color: colors.$primary-600;
-          width: 12px;
-          height: 12px;
-          content: "";
-        }
-
-        .triangle-mask {
-          position: absolute;
-          left: -$circle-size;
-          z-index: 0;
-          border-top: $circle-size / 2 solid transparent;
-          border-right: $circle-size solid white;
-          border-bottom: $circle-size / 2  solid transparent;
-          border-left: $circle-size / 2 solid transparent;
-        }
       }
     }
 
     .indicators {
       $offset: 10px;
       $padding: 50px;
-      $indicator-wrapper-size: $outer-circle-size + $offset + $padding;
 
       position: relative;
       visibility: hidden;
       z-index: 1;
-      width: $indicator-wrapper-size;
-      height: $indicator-wrapper-size;
+      width: 100%;
+      aspect-ratio: 1 / 1;
 
       .indicator {
         @for $i from 1 through 19 {
@@ -398,7 +373,7 @@ export default defineComponent({
 
     .outer-progress-circle {
       $offset: 5px;
-      $size: $outer-circle-size - $offset;
+      $size: 80%;
 
       visibility: hidden;
       width: $size;
@@ -406,7 +381,7 @@ export default defineComponent({
       filter: drop-shadow(0 0 4px colors.$primary-800) brightness(1.15);
 
       ::v-deep svg {
-        transform: rotate(135deg);
+        transform: rotate(225deg);
       }
     }
   }
@@ -415,7 +390,7 @@ export default defineComponent({
     border: 2px solid colors.$primary-600;
     border-radius: 50%;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    height: 100%;
   }
 }
 </style>

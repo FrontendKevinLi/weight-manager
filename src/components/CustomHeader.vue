@@ -8,6 +8,13 @@
     <span class="page-name">
       {{ routeLabel }}
     </span>
+    <img
+      class="profile-icon"
+      :src="ProfilePng"
+      alt="profile"
+      @click="handleProfileIconClick"
+      @keydown="handleProfileIconClick"
+    >
   </div>
 </template>
 
@@ -24,7 +31,7 @@ export default defineComponent({
   components: {
     InlineSvg,
   },
-  emits: ['menu-click'],
+  emits: ['menu-click', 'profile-icon-click'],
   data() {
     return {
       ProfilePng,
@@ -42,6 +49,9 @@ export default defineComponent({
     handleMenuClick() {
       this.$emit('menu-click')
     },
+    handleProfileIconClick() {
+      this.$emit('profile-icon-click')
+    },
   },
 })
 </script>
@@ -49,36 +59,54 @@ export default defineComponent({
 <style lang="scss" scoped>
 @use "@/style/constants.scss" as constants;
 @use "@/style/breakpoints.scss" as breakpoints;
+@use "@/style/font-sizes.scss" as font-sizes;
 @use "@/style/colors" as colors;
 
 .custom-header {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   gap: 20px;
   align-items: center;
-  padding-top: 40px;
   padding-right: 40px;
   padding-left: 40px;
 
   .menu-icon {
-    display: none;
-    width: 30px;
-    aspect-ratio: 1 / 1;
-    fill: colors.$darkblue-600;
+    @include constants.icon-button;
 
-    @media (max-width: breakpoints.$small) {
-      display: inline;
-    }
+    display: none;
+
+    // fill: colors.$darkblue-600;
   }
 
   .page-name {
     color: #2d4e69;
-    font-size: 34px;
+    font-size: font-sizes.$large;
   }
 
-  @media (max-width: breakpoints.$small) {
-    padding-top: 0;
+  .profile-icon {
+    display: none;
+    width: 50px;
+    aspect-ratio: 1 / 1;
+  }
+}
+
+@media (max-width: breakpoints.$small) {
+  .custom-header {
     padding-right: 20px;
     padding-left: 20px;
+
+    .menu-icon {
+      display: inline;
+    }
+
+    .page-name {
+      color: #2d4e69;
+      font-size: font-sizes.$medium;
+    }
+
+    .profile-icon {
+      display: inline;
+    }
   }
 }
 </style>

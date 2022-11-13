@@ -2,41 +2,54 @@
   <div class="progress-circle-2">
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      viewBox="90 90 220 220"
-      class="circle-container"
+      xmlns:xlink="http://www.w3.org/1999/xlink"
+      viewBox="0 0 106 106"
+      fill="#fff"
+      fill-rule="evenodd"
+      stroke="#000"
+      stroke-linecap="round"
+      stroke-linejoin="round"
     >
-      <defs>
-        <linearGradient
-          :id="id"
-          x1="1"
-          x2="0"
-          y1="1"
-          y2="0"
-        >
-          <stop
-            offset="0"
-            :style="{
-              stopColor: linearGradientFrom
-            }"
-          />
-          <stop
-            offset="1"
-            :style="{
-              stopColor: linearGradientTo
-            }"
-          />
-        </linearGradient>
-      </defs>
-
-      <path
-        ref="progress-path"
-        d="M 300 200 A 100 100 0 1 1 200 100"
-        fill="none"
-        :stroke="`url(#${id})`"
-        :stroke-width="config.stroke.width"
-        class="circle-path"
-        :stroke-linecap="config.stroke.linecap"
+      <use
+        xlink:href="#A"
+        x="3"
+        y="3"
       />
+      <symbol
+        id="A"
+        overflow="visible"
+      >
+        <defs>
+          <linearGradient
+            :id="id"
+            x1="1"
+            x2="0"
+            y1="1"
+            y2="0"
+          >
+            <stop
+              offset="0"
+              :style="{
+                stopColor: linearGradientFrom
+              }"
+            />
+            <stop
+              offset="1"
+              :style="{
+                stopColor: linearGradientTo
+              }"
+            />
+          </linearGradient>
+        </defs>
+        <path
+          ref="progress-path"
+          d="M50 0c27.7 0 50 22.3 50 50s-22.3 50-50 50S0 77.7 0 50 22.3 0 50 0z"
+          fill="none"
+          :stroke="`url(#${id})`"
+          stroke-dasharray="204.17963469846285 314.1592653589793"
+          stroke-width="6"
+        />
+      </symbol>
     </svg>
   </div>
 </template>
@@ -74,7 +87,7 @@ export default defineComponent({
   },
   data() {
     return {
-      strokeDasharray: 472,
+      strokeDasharray: 314.1592653589793,
       id: `lg-${uuid()}`,
     }
   },
@@ -105,8 +118,9 @@ export default defineComponent({
     initProgress() {
       const timeline = gsap.timeline()
       if (!this.config.animationConfig?.enabled) {
+        const percentage = this.config.percentage * 0.75
         timeline.set(this.$refs['progress-path'] as string, {
-          strokeDasharray: `${this.strokeDasharray * this.config.percentage} ${this.strokeDasharray * (1 - this.config.percentage)}`,
+          strokeDasharray: `${this.strokeDasharray * percentage} ${this.strokeDasharray * (1 - percentage)}`,
         })
         return
       }
@@ -117,11 +131,12 @@ export default defineComponent({
     },
     fillProgress() {
       const timeline = gsap.timeline()
+      const percentage = this.config.percentage * 0.75
 
       timeline.to(this.$refs['progress-path'] as string, {
         duration: this.config.animationConfig?.enabled ? this.config.animationConfig.duration : 0,
         ease: CustomEase.create('custom', Constants.customElasticPath),
-        strokeDasharray: `${this.strokeDasharray * this.config.percentage} ${this.strokeDasharray * (1 - this.config.percentage)}`,
+        strokeDasharray: `${this.strokeDasharray * percentage} ${this.strokeDasharray * (1 - percentage)}`,
       }, this.config.animationConfig?.delay ?? 0)
     },
   },
