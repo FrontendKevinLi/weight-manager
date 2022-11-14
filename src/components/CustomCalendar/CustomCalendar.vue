@@ -8,7 +8,7 @@
     />
     <div class="calendar-main">
       <div
-        v-for="(weekday, index) in weekdayList"
+        v-for="(weekday, index) in weekdayNameList"
         :key="index"
         ref="headerItemRefList"
         :class="[
@@ -50,19 +50,21 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  nextTick, onMounted, reactive, ref, computed, watch,
-} from 'vue'
-import { DateTime } from 'luxon'
-import gsap, { Expo, Linear, Power2 } from 'gsap'
 import { getMonthlyRecord } from '@/firebase/firestore'
-import { until } from '@open-draft/until'
-import { useToast } from 'vue-toastification'
-import { MonthlyRecord } from '@/types/records'
 import useWindowSizeStore from '@/stores/windowSize'
-import { CalendarItem, CalendarItemDialogProps } from './types'
+import { MonthlyRecord } from '@/types/records'
+import { until } from '@open-draft/until'
+import gsap, { Expo, Linear } from 'gsap'
+import { DateTime } from 'luxon'
+import {
+  computed, nextTick, onMounted, reactive, ref, watch,
+} from 'vue'
+import { useToast } from 'vue-toastification'
 import CalendarHeader from './CalendarHeader.vue'
 import CalendarItemDialog from './CalendarItemDialog.vue'
+import {
+  CalendarItem, CalendarItemDialogProps, WeekdayNameVersion, WeekdayRange,
+} from './types'
 
 const dayItemsFadeInOutDuration = 0.5
 
@@ -215,17 +217,23 @@ const generateCalendarList = (dateTimeParam: DateTime): CalendarItem[] => {
   return [...calendarForPrepend, ...calendarForTargetMonth, ...calendarForAppend]
 }
 
-const weekdayList = computed((): string[] => {
+const getWeekdayName = (dateTime: DateTime, weekdayNum: WeekdayRange): string => {
+  // const weekdayName: WeekdayNameVersion = isMobile.value ? 'weekdayShort' : 'weekdayLong'
+  const weekdayNameVersion: WeekdayNameVersion = 'weekdayShort'
+  const weekdayName = dateTime.set({ weekday: weekdayNum })[weekdayNameVersion].toString()
+  return weekdayName
+}
+
+const weekdayNameList = computed((): string[] => {
   const { dateTime } = calendarInfo
-  const list: string[] = [isMobile.value ? dateTime.set({ weekday: 7 }).weekdayShort.toString() : dateTime.set({ weekday: 7 }).weekdayLong.toString()]
+  const weekdayNameList: string[] = [getWeekdayName(dateTime, 7)]
   for (let i = 1; i <= 6; i += 1) {
-    const weekday = isMobile.value ? dateTime.set({ weekday: i }).weekdayShort.toString() : dateTime.set({ weekday: i }).weekdayLong.toString()
-    list.push(weekday)
+    const weekdayName = getWeekdayName(dateTime, i as WeekdayRange)
+    weekdayNameList.push(weekdayName)
   }
-  return list
+  return weekdayNameList
 })
 const calendarList = computed(() => generateCalendarList(calendarInfo.dateTime))
-// const weekdayList = ref(generateWeekdayList)
 
 const fadeInHeader = () => {
   if (headerItemRefList.value == null) {
