@@ -18,17 +18,6 @@ import CustomCalendar from '@/components/CustomCalendar/CustomCalendar.vue'
   display: grid;
   place-items: center;
   height: 100%;
-
-  .custom-calendar {
-    padding: 40px;
-  }
 }
 
-@media (max-width: breakpoints.$small) {
-  .record-view {
-    .custom-calendar {
-      padding: 20px;
-    }
-  }
-}
 </style>

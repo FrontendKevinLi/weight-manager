@@ -67,15 +67,11 @@ export default defineComponent({
   grid-template-columns: auto 1fr auto;
   gap: 20px;
   align-items: center;
-  padding-right: 40px;
-  padding-left: 40px;
 
   .menu-icon {
     @include constants.icon-button;
 
     display: none;
-
-    // fill: colors.$darkblue-600;
   }
 
   .page-name {
@@ -92,9 +88,6 @@ export default defineComponent({
 
 @media (max-width: breakpoints.$small) {
   .custom-header {
-    padding-right: 20px;
-    padding-left: 20px;
-
     .menu-icon {
       display: inline;
     }

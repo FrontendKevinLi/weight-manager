@@ -29,27 +29,11 @@ export default defineComponent({
   grid-template-rows: minmax(50vmin, 60vmin) 1fr;
   place-items: center;
   height: 100%;
-
-  .weighing-item {
-    padding: 40px;
-  }
-
-  .last-days-weight-bar-chart-wrapper {
-    padding: 40px;
-  }
 }
 
 @media (max-width: breakpoints.$small) {
   .dashboard-view {
     grid-template-rows: minmax(50vmin, 90vmin) 1fr;
-
-    .weighing-item {
-      padding: 20px;
-    }
-
-    .last-days-weight-bar-chart-wrapper {
-      padding: 20px;
-    }
   }
 }
 </style>
