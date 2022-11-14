@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, PropType } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { ValidateConfig } from './types'
 
 export default defineComponent({

@@ -28,7 +28,7 @@
 import {
   ref, onMounted, Ref, reactive, computed,
 } from 'vue'
-import * as echarts from 'echarts'
+import { ECharts, init } from 'echarts'
 import { DateTime } from 'luxon'
 import { getMonthlyRecord } from '@/firebase/firestore'
 import { until } from '@open-draft/until'
@@ -167,7 +167,7 @@ function initChart(barChartRefParam: Ref<HTMLElement | undefined>, weightList: W
     return
   }
 
-  const barChart: echarts.ECharts = echarts.init(barChartRefParam.value)
+  const barChart: ECharts = init(barChartRefParam.value)
 
   const [minWeight, maxWeight] = getMinAndMaxWeight(weightList)
 

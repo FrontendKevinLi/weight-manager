@@ -67,7 +67,6 @@ const toast = useToast()
 const alreadyHaveAnAccountQuestion = 'Already have an account?'
 const loginTextButtonLabel = 'Login'
 
-const whiteSectionRef = ref<HTMLElement>()
 const emailInputRef = ref<InstanceType<typeof CustomInput>>()
 const passwordInputRef = ref<InstanceType<typeof CustomInput>>()
 const confirmPasswordInputRef = ref<InstanceType<typeof CustomInput>>()

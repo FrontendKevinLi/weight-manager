@@ -29,7 +29,7 @@
 
 <script lang="ts" setup>
 import {
-  defineProps, defineEmits, computed, ref, watch, nextTick,
+  defineProps, defineEmits, computed, ref, nextTick,
 } from 'vue'
 import { DateTime } from 'luxon'
 

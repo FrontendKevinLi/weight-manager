@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import {
-  onMounted, ref, computed, watch, defineEmits, EmitsOptions,
+  onMounted, ref, computed, watch, defineEmits,
 } from 'vue'
 import { v4 as uuid } from 'uuid'
 import gsap, { Expo } from 'gsap'
@@ -57,11 +57,11 @@ import { useRouter } from 'vue-router'
 import ProfilePng from '@/assets/header-icons/profile.png'
 import EditSvg from '@/assets/info-panel-icons/pen-to-square-solid.svg'
 import { AchievementItemType } from '@/types/AchievementItem'
-import { useUserStore } from '@/stores'
 import { setUsername } from '@/firebase/auth'
 import { until } from '@open-draft/until'
 import { Nullable } from '@/types/utils'
 import useWindowSizeStore from '@/stores/windowSize'
+import useUserStore from '@/stores/user'
 import AchievementItem from '../AchievementItem.vue'
 import { InfoPanelProps } from './types'
 
