@@ -52,6 +52,7 @@ import gsap, { Expo } from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 import { useToast } from 'vue-toastification'
 import InlineSvg from 'vue-inline-svg'
+import { useRouter } from 'vue-router'
 
 import ProfilePng from '@/assets/header-icons/profile.png'
 import EditSvg from '@/assets/info-panel-icons/pen-to-square-solid.svg'
@@ -61,7 +62,6 @@ import { setUsername } from '@/firebase/auth'
 import { until } from '@open-draft/until'
 import { Nullable } from '@/types/utils'
 import useWindowSizeStore from '@/stores/windowSize'
-import router from '@/router'
 import AchievementItem from '../AchievementItem.vue'
 import { InfoPanelProps } from './types'
 
@@ -78,6 +78,8 @@ const achievementItemList = ref<InstanceType<(typeof AchievementItem)>[]>()
 const achievementItemListEl = ref<HTMLElement>()
 const usernameRef = ref<HTMLElement>()
 const infoPanelRef = ref<HTMLElement>()
+
+const router = useRouter()
 
 const userStore = useUserStore()
 const currentUser = computed(() => userStore.currentUser)
@@ -278,11 +280,17 @@ watch(isMobile, (isMobile) => {
 })
 
 watch(props, (props) => {
-  console.log('change')
   if (!isMobile.value) return
 
   if (props.value.showMobileInfoPanel) {
+    router.push({
+      name: 'dashboard',
+      query: {
+        infoPanel: 'open',
+      },
+    })
     fadeInInfoPanel()
+
     return
   }
 
@@ -292,9 +300,11 @@ watch(props, (props) => {
 onMounted(() => {
   initAnimation()
   router.beforeEach((to, from) => {
-    if (props.value.showMobileInfoPanel) {
-      closeMobileInfoPanel()
-      return false
+    if (from.name === 'dashboard' && from.query.infoPanel === 'open') {
+      if (props.value.showMobileInfoPanel) {
+        closeMobileInfoPanel()
+        return true
+      }
     }
     return true
   })

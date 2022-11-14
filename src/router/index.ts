@@ -41,6 +41,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           label: 'Dashboard',
         },
+        props: (route) => ({ query: route.query.infoPanel }),
         component: () => import('@/views/DashboardView.vue'),
       },
     ],
