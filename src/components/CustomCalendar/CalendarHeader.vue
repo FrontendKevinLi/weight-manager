@@ -42,10 +42,14 @@ import InlineSvg from 'vue-inline-svg'
 import ArrowLeftSvg from '@/assets/calendar/chevron-left-solid.svg'
 import ArrowRightSvg from '@/assets/calendar/chevron-right-solid.svg'
 import AddSvg from '@/assets/records/plus-solid.svg'
+import useWindowSizeStore from '@/stores/windowSize'
 
 const props = defineProps<{
   dateTime: DateTime,
 }>()
+
+const windowSizeStore = useWindowSizeStore()
+const isMobile = computed(() => windowSizeStore.isMobile)
 
 const calendarHeaderRef = ref<HTMLElement>()
 const emit = defineEmits(['previous-month', 'next-month', 'add'])
@@ -54,7 +58,7 @@ const emit = defineEmits(['previous-month', 'next-month', 'add'])
 // }>()
 
 const calendarYear = computed(() => props.dateTime.year)
-const calendarMonth = computed(() => props.dateTime.monthLong)
+const calendarMonth = computed(() => (isMobile.value ? props.dateTime.monthShort : props.dateTime.monthLong))
 
 const fadeIn = () => {
   if (calendarHeaderRef.value == null) return
@@ -93,9 +97,11 @@ onMounted(() => {
 @use "sass:color";
 @use "@/style/colors.scss" as colors;
 @use "@/style/constants.scss" as constants;
+@use "@/style/breakpoints.scss" as breakpoints;
 @use "@/style/font-sizes.scss" as font-sizes;
 
 .calendar-header {
+  box-sizing: border-box;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 30px;
@@ -138,6 +144,30 @@ onMounted(() => {
 
     .add-icon {
       @include constants.icon-button;
+    }
+  }
+}
+
+@media (max-width: breakpoints.$small) {
+  .calendar-header {
+    gap: 0;
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+
+    .calendar-controls {
+      gap: 10px;
+
+      .calendar-date {
+        display: flex;
+        gap: 10px;
+        font-size: font-sizes.$small;
+
+        .month {
+          width: 30px;
+        }
+      }
     }
   }
 }

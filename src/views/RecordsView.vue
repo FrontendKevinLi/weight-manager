@@ -11,6 +11,7 @@ import CustomCalendar from '@/components/CustomCalendar/CustomCalendar.vue'
 
 <style lang="scss" scoped>
 @use "@/style/constants.scss" as constants;
+@use "@/style/breakpoints.scss" as breakpoints;
 @use "@/style/colors" as colors;
 
 .record-view {
@@ -20,6 +21,14 @@ import CustomCalendar from '@/components/CustomCalendar/CustomCalendar.vue'
 
   .custom-calendar {
     padding: 40px;
+  }
+}
+
+@media (max-width: breakpoints.$small) {
+  .record-view {
+    .custom-calendar {
+      padding: 20px;
+    }
   }
 }
 </style>
