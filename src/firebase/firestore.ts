@@ -1,4 +1,3 @@
-import ApiError from '@/utils/Errors'
 import { until } from '@open-draft/until'
 import {
   getFirestore, doc, setDoc, getDoc,
