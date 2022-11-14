@@ -152,7 +152,7 @@ export default defineComponent({
       return windowSizeStore.isMobile
     },
     currentRoute(): string {
-      const currentRoute = this.$router.currentRoute.value.fullPath
+      const currentRoute = this.$route.path
       if (this.activeItemIndicatorInited) {
         this.rePositionActiveIndicator()
       }

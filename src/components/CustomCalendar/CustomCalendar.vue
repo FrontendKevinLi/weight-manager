@@ -35,7 +35,10 @@
           class="weight-wrapper"
         >
           <span class="weight">{{ calendarItem.weight }}</span>
-          <span class="unit">KG</span>
+          <span
+            v-if="!isMobile"
+            class="unit"
+          >KG</span>
         </div>
       </div>
     </div>
@@ -56,11 +59,15 @@ import { getMonthlyRecord } from '@/firebase/firestore'
 import { until } from '@open-draft/until'
 import { useToast } from 'vue-toastification'
 import { MonthlyRecord } from '@/types/records'
+import useWindowSizeStore from '@/stores/windowSize'
 import { CalendarItem, CalendarItemDialogProps } from './types'
 import CalendarHeader from './CalendarHeader.vue'
 import CalendarItemDialog from './CalendarItemDialog.vue'
 
 const dayItemsFadeInOutDuration = 0.5
+
+const windowSizeStore = useWindowSizeStore()
+const isMobile = computed(() => windowSizeStore.isMobile)
 
 const dayItemRefList = ref<HTMLElement[]>()
 const headerItemRefList = ref<HTMLElement[]>()
@@ -208,17 +215,17 @@ const generateCalendarList = (dateTimeParam: DateTime): CalendarItem[] => {
   return [...calendarForPrepend, ...calendarForTargetMonth, ...calendarForAppend]
 }
 
-const generateWeekdayList = (): string[] => {
+const weekdayList = computed((): string[] => {
   const { dateTime } = calendarInfo
-  const list: string[] = [dateTime.set({ weekday: 7 }).weekdayLong.toString()]
+  const list: string[] = [isMobile.value ? dateTime.set({ weekday: 7 }).weekdayShort.toString() : dateTime.set({ weekday: 7 }).weekdayLong.toString()]
   for (let i = 1; i <= 6; i += 1) {
-    const weekday = dateTime.set({ weekday: i }).weekdayLong.toString()
+    const weekday = isMobile.value ? dateTime.set({ weekday: i }).weekdayShort.toString() : dateTime.set({ weekday: i }).weekdayLong.toString()
     list.push(weekday)
   }
   return list
-}
+})
 const calendarList = computed(() => generateCalendarList(calendarInfo.dateTime))
-const weekdayList: string[] = generateWeekdayList()
+// const weekdayList = ref(generateWeekdayList)
 
 const fadeInHeader = () => {
   if (headerItemRefList.value == null) {
@@ -351,6 +358,7 @@ onMounted(async () => {
 @use "sass:color";
 @use "@/style/colors.scss" as colors;
 @use "@/style/constants.scss" as constants;
+@use "@/style/breakpoints.scss" as breakpoints;
 @use "@/style/font-sizes.scss" as font-sizes;
 
 .custom-calendar {
@@ -369,7 +377,8 @@ onMounted(async () => {
     grid-template-rows: auto repeat(6, minmax(auto, 1fr));
 
     // grid-template-rows: auto;
-    grid-template-columns: repeat(7, 1fr);
+    // grid-template-columns: repeat(7, minmax(auto, 1fr));
+    grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 20px;
     width: 100%;
 
@@ -419,6 +428,53 @@ onMounted(async () => {
         .weight-wrapper {
           display: flex;
           gap: 5px;
+          font-size: font-sizes.$extra-small;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: breakpoints.$small) {
+  .custom-calendar {
+    .calendar-main {
+      gap: 5px;
+      overflow-x: auto;
+
+      .calendar-item {
+        aspect-ratio: 1 / 1;
+        padding: 5px;
+
+        &.header-item {
+          letter-spacing: 0;
+
+          .weekday {
+            color: colors.$primary-600;
+            font-size: font-sizes.$extra-small;
+            font-weight: bold;
+          }
+        }
+
+        &.day-item {
+          display: grid;
+          grid-template-rows: 1fr 1fr;
+          cursor: pointer;
+
+          &:is(.not-target) {
+            background-color: colors.$black-100;
+            cursor: not-allowed;
+            color: colors.$darkblue-100;
+          }
+
+          &:is(.today) {
+            background-color: colors.$primary-600;
+            color: white;
+          }
+
+          .weight-wrapper {
+            display: flex;
+            gap: 5px;
+          }
         }
       }
     }

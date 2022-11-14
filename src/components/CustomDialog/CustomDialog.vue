@@ -187,6 +187,9 @@ defineExpose({
 @use "@/style/colors.scss" as colors;
 
 .custom-dialog {
+  position: fixed;
+  z-index: 999;
+
   .background-mask {
     display: grid;
     position: fixed;

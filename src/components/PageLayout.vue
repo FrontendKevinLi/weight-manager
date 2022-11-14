@@ -45,6 +45,17 @@ export default defineComponent({
       } as InfoPanelProps,
     }
   },
+  computed: {
+    infoPanel(): string {
+      const infoPanel = this.$route.query.infoPanel as string
+      return infoPanel
+    },
+  },
+  watch: {
+    infoPanel(infoPanel) {
+      this.infoPanelProps.showMobileInfoPanel = infoPanel === 'open'
+    },
+  },
   async mounted() {
     this.setCurrentUser()
   },
