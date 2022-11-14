@@ -284,7 +284,7 @@ watch(props, (props) => {
 
   if (props.value.showMobileInfoPanel) {
     router.push({
-      name: 'dashboard',
+      name: router.currentRoute.value.name ?? '',
       query: {
         infoPanel: 'open',
       },
