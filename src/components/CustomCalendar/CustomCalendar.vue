@@ -369,6 +369,7 @@ onMounted(async () => {
   gap: 20px;
   width: 100%;
   height: 100%;
+  user-select: none;
 
   .calendar-main {
     display: grid;
@@ -411,7 +412,7 @@ onMounted(async () => {
 
       &.day-item {
         display: grid;
-        grid-template-rows: 1fr 1fr;
+        grid-template-rows: 50% 1fr;
         cursor: pointer;
 
         &:is(.not-target) {
@@ -423,6 +424,10 @@ onMounted(async () => {
         &:is(.today) {
           background-color: colors.$primary-600;
           color: white;
+        }
+
+        .day {
+          font-size: font-sizes.$small;
         }
 
         .weight-wrapper {
@@ -449,31 +454,17 @@ onMounted(async () => {
           letter-spacing: 0;
 
           .weekday {
-            color: colors.$primary-600;
             font-size: font-sizes.$extra-small;
-            font-weight: bold;
           }
         }
 
         &.day-item {
-          display: grid;
-          grid-template-rows: 1fr 1fr;
-          cursor: pointer;
-
-          &:is(.not-target) {
-            background-color: colors.$black-100;
-            cursor: not-allowed;
-            color: colors.$darkblue-100;
-          }
-
-          &:is(.today) {
-            background-color: colors.$primary-600;
-            color: white;
+          .day {
+            font-size: 12px;
           }
 
           .weight-wrapper {
-            display: flex;
-            gap: 5px;
+            font-size: 10px;
           }
         }
       }
