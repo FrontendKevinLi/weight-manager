@@ -28,7 +28,17 @@
 import {
   ref, onMounted, Ref, reactive, computed,
 } from 'vue'
-import { ECharts, init } from 'echarts'
+// import { ECharts, init } from 'echarts'
+import { init, use, ECharts } from 'echarts/core'
+import { BarChart } from 'echarts/charts'
+import {
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+} from 'echarts/components'
+import {
+  SVGRenderer,
+} from 'echarts/renderers'
 import { DateTime } from 'luxon'
 import { getMonthlyRecord } from '@/firebase/firestore'
 import { until } from '@open-draft/until'
@@ -38,6 +48,14 @@ import gsap from 'gsap'
 import router from '@/router'
 import ArrowRightSvg from '@/assets/dashboard/arrow-right-solid.svg'
 import InlineSvg from 'vue-inline-svg'
+
+use([
+  TitleComponent,
+  TooltipComponent,
+  GridComponent,
+  BarChart,
+  SVGRenderer,
+])
 
 type WeightItem = {
   date: string,
@@ -183,7 +201,6 @@ function initChart(barChartRefParam: Ref<HTMLElement | undefined>, weightList: W
       },
     },
     tooltip: {},
-    legend: {},
     xAxis: {
       type: 'category',
       data: chartData.xAxisData,
