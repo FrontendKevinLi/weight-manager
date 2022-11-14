@@ -93,7 +93,7 @@ export default defineComponent({
   grid-template-areas:
     "sidebar header info-panel"
     "sidebar body info-panel";
-  grid-template-rows: 90px 1fr;
+  grid-template-rows: auto 1fr;
   grid-template-columns: 120px 1fr 420px;
   width: 100vw;
   height: 100%;
@@ -115,6 +115,7 @@ export default defineComponent({
 
   .custom-header {
     grid-area: header;
+    padding: 40px;
   }
 
   .info-panel {
@@ -129,13 +130,24 @@ export default defineComponent({
 
   .page-main {
     grid-area: body;
+    padding: 40px;
   }
 
   @media (max-width: breakpoints.$small) {
-    grid-template-areas:
-      "header"
-      "body";
-    grid-template-columns: 1fr;
+    & {
+      grid-template-areas:
+        "header"
+        "body";
+      grid-template-columns: 1fr;
+
+      .custom-header {
+        padding: 20px;
+      }
+
+      .page-main {
+        padding: 20px;
+      }
+    }
   }
 }
 </style>

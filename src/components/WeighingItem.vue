@@ -314,6 +314,7 @@ export default defineComponent({
       visibility: hidden;
       z-index: 2;
       width: 80%;
+      will-change: opacity, transform;
       aspect-ratio: 1 / 1;
 
       .pointer {
@@ -337,6 +338,7 @@ export default defineComponent({
       z-index: 1;
       width: 100%;
       aspect-ratio: 1 / 1;
+      will-change: opacity, transform;
 
       .indicator {
         @for $i from 1 through 19 {
@@ -379,6 +381,7 @@ export default defineComponent({
       width: $size;
       height: $size;
       filter: drop-shadow(0 0 4px colors.$primary-800) brightness(1.15);
+      will-change: opacity, transform;
 
       ::v-deep svg {
         transform: rotate(225deg);
@@ -391,6 +394,7 @@ export default defineComponent({
     border-radius: 50%;
     width: 100%;
     height: 100%;
+    will-change: opacity, transform;
   }
 }
 </style>
