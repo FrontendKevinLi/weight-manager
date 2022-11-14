@@ -26,7 +26,6 @@ import InfoPanel from '@/components/InfoPanel/InfoPanel.vue'
 import { auth, getIsAuthenticated } from '@/firebase/auth'
 import { until } from '@open-draft/until'
 import { useToast } from 'vue-toastification'
-import { RouterView } from 'vue-router'
 import { InfoPanelProps } from '@/components/InfoPanel/types'
 import useUserStore from '@/stores/user'
 

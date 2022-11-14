@@ -45,7 +45,7 @@
 
 <script setup lang="ts">
 import {
-  onMounted, ref, computed, watch, defineEmits, EmitsOptions,
+  onMounted, ref, computed, watch, defineEmits,
 } from 'vue'
 import { v4 as uuid } from 'uuid'
 import gsap, { Expo } from 'gsap'

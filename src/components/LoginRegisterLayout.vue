@@ -21,7 +21,7 @@ export default defineComponent({
     },
   },
   watch: {
-    currentRoute(value) {
+    currentRoute() {
       this.fadeInFormBox()
     },
   },
