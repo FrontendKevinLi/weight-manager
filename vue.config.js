@@ -7,7 +7,7 @@ module.exports = defineConfig({
     : '/',
   configureWebpack: {
     plugins: [
-      new BundleAnalyzerPlugin(),
+      process.env.NODE_ENV !== 'production' && new BundleAnalyzerPlugin(),
     ],
   },
   chainWebpack: (config) => {
