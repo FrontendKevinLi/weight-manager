@@ -42,7 +42,7 @@ const routes: Array<RouteRecordRaw> = [
           label: 'Dashboard',
         },
         props: (route) => ({ query: route.query.infoPanel }),
-        component: () => import('@/views/DashboardView.vue'),
+        component: () => import(/* webpackPrefetch: true */ '@/views/DashboardView.vue'),
       },
     ],
   },
@@ -56,7 +56,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           label: 'Records',
         },
-        component: () => import('@/views/RecordsView.vue'),
+        component: () => import(/* webpackPrefetch: true */ '@/views/RecordsView.vue'),
       },
     ],
   },
@@ -70,7 +70,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           label: 'Analytics',
         },
-        component: () => import('@/views/AnalyticsView.vue'),
+        component: () => import(/* webpackPrefetch: true */ '@/views/AnalyticsView.vue'),
       },
     ],
   },
@@ -84,7 +84,7 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           label: 'Settings',
         },
-        component: () => import('@/views/SettingsView.vue'),
+        component: () => import(/* webpackPrefetch: true */ '@/views/SettingsView.vue'),
       },
     ],
   },
