@@ -33,7 +33,12 @@ export default defineComponent({
 
 @media (max-width: breakpoints.$small) {
   .dashboard-view {
-    grid-template-rows: minmax(50vmin, 90vmin) 1fr;
+    grid-template-rows: minmax(50vmin, 100%) 1fr;
+
+    .weighing-item {
+      width: 100%;
+      height: auto;
+    }
   }
 }
 </style>
