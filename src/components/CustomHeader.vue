@@ -10,6 +10,8 @@
     </span>
     <img
       class="profile-icon"
+      width="50"
+      height="50"
       :src="ProfilePng"
       alt="profile"
       @click="handleProfileIconClick"
