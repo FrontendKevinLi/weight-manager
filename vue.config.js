@@ -1,14 +1,15 @@
 const { defineConfig } = require('@vue/cli-service')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 module.exports = defineConfig({
-  publicPath: process.env.NODE_ENV === 'production'
+  publicPath: isProduction
     ? '/weight-manager/'
     : '/',
   configureWebpack: {
     plugins: [
-      process.env.NODE_ENV !== 'production' && new BundleAnalyzerPlugin(),
-    ],
+    ].concat(isProduction ? [] : [new BundleAnalyzerPlugin()]),
   },
   chainWebpack: (config) => {
     config.optimization.splitChunks({
@@ -19,20 +20,30 @@ module.exports = defineConfig({
           priority: 10,
           test: /[\\/]node_modules[\\/]/,
         },
+        luxon: {
+          name: 'chunk-luxon',
+          priority: 15,
+          test: /[\\/]node_modules[\\/]_?luxon(.*)/,
+        },
         gsap: {
           name: 'chunk-gsap',
           priority: 20,
           test: /[\\/]node_modules[\\/]_?gsap(.*)/,
         },
-        luxon: {
-          name: 'chunk-luxon',
+        firebase: {
+          name: 'chunk-firebase',
           priority: 25,
-          test: /[\\/]node_modules[\\/]_?luxon(.*)/,
+          test: /[\\/]node_modules[\\/]_?@firebase(.*)/,
         },
         echarts: {
           name: 'chunk-echarts',
           priority: 30,
           test: /[\\/]node_modules[\\/]_?echarts(.*)/,
+        },
+        vue: {
+          name: 'chunk-vue',
+          priority: 35,
+          test: /[\\/]node_modules[\\/]_?@vue(.*)/,
         },
       },
     })
