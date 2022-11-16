@@ -380,7 +380,7 @@ export default defineComponent({
       visibility: hidden;
       width: $size;
       height: $size;
-      filter: drop-shadow(0 0 4px colors.$primary-800) brightness(1.15);
+      filter: brightness(1.15);
       will-change: opacity, transform;
 
       ::v-deep svg {

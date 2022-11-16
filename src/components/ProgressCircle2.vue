@@ -9,6 +9,7 @@
       stroke="#000"
       stroke-linecap="round"
       stroke-linejoin="round"
+      filter="url(#shadow)"
     >
       <use
         xlink:href="#A"
@@ -40,6 +41,18 @@
               }"
             />
           </linearGradient>
+          <filter
+            id="shadow"
+            color-interpolation-filters="sRGB"
+          >
+            <feDropShadow
+              dx="0"
+              dy="0"
+              stdDeviation="4"
+              flood-opacity="1"
+              flood-color="#3e63a2"
+            />
+          </filter>
         </defs>
         <path
           ref="progress-path"
