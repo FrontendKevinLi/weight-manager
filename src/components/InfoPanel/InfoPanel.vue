@@ -10,7 +10,7 @@
         alt="icon"
       >
       <div class="username-wrapper">
-        <span
+        <div
           ref="usernameRef"
           class="username"
           :contenteditable="true"
@@ -19,11 +19,12 @@
           @input="handleUsernameInput"
           v-text="username"
         />
-        <InlineSvg
-          class="edit-icon"
-          :src="EditSvg"
-          @click="handleEditIconClick"
-        />
+        <div class="edit-icon">
+          <InlineSvg
+            :src="EditSvg"
+            @click="handleEditIconClick"
+          />
+        </div>
       </div>
     </div>
     <div class="achievement-section">
@@ -338,35 +339,32 @@ onMounted(() => {
 
     .user-icon {
       border-radius: 50%;
-      height: 150px;
+      width: 150px;
+      aspect-ratio: 1 / 1;
     }
 
     .username-wrapper {
       display: grid;
-      grid-template-columns: 1fr auto 1fr;
+      grid-template-columns: 1fr 20px;
       gap: 15px;
+      align-items: center;
 
       .username {
-        grid-column: 2;
         outline: none;
         width: 100%;
         min-width: 10px;
         overflow: hidden;
         text-align: center;
         color: colors.$darkblue-600;
-        font-size: 20px;
+        font-size: 22px;
         font-weight: bold;
       }
 
       .edit-icon {
-        $size: 20px;
-        $gap: 20px;
-
-        grid-column: 3;
         transition: opacity 0.1s ease-in-out;
         cursor: pointer;
-        width: $size;
-        height: $size;
+        width: 100%;
+        aspect-ratio: 1 / 1;
         fill: colors.$primary-600;
       }
 
@@ -410,14 +408,14 @@ onMounted(() => {
     width: 100%;
 
     .user-info {
-      grid-template-columns: auto 1fr;
+      grid-template-columns: 100px 1fr;
 
       .user-icon {
-        height: 100px;
+        width: 100%;
       }
 
       .username-wrapper {
-        display: flex;
+        display: grid;
 
         // grid-template-columns: auto 1fr;
       }
