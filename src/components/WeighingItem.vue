@@ -265,7 +265,6 @@ export default defineComponent({
   display: grid;
   position: relative;
   place-items: center;
-  height: 100%;
   aspect-ratio: 1 / 1;
 
   > * {

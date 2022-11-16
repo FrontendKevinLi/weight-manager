@@ -47,6 +47,12 @@ export default defineComponent({
   grid-template-rows: minmax(50vmin, 60vmin) 1fr;
   place-items: center;
   height: 100%;
+
+  .weighing-item-wrapper {
+    width: auto;
+    height: 100%;
+    aspect-ratio: 1/1;
+  }
 }
 
 @media (max-width: breakpoints.$small) {
@@ -56,6 +62,7 @@ export default defineComponent({
 
     .weighing-item-wrapper {
       width: 100%;
+      height: auto;
       aspect-ratio: 1/ 1;
     }
 
