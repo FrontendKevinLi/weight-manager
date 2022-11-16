@@ -325,7 +325,6 @@ export default defineComponent({
         fill: white;
         width: 10%;
         aspect-ratio: 384 / 512;
-        filter: drop-shadow(0 0 4px colors.$primary-800);
       }
     }
 
