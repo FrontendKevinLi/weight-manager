@@ -116,14 +116,16 @@ export default defineComponent({
   },
   async mounted() {
     this.initPointerAnimation()
-    await this.fadeInWeighingItem()
-    await this.fetchMonthlyRecord()
+    await Promise.allSettled([
+      this.fadeInWeighingItem(),
+      this.fetchMonthlyRecord(),
+    ])
     const circle = this.$refs.outerProgressCircleRef as InstanceType<typeof ProgressCircle2>
     this.setWeight()
-    this.$nextTick(() => {
+    this.$nextTick(async () => {
       circle.fillProgress()
       this.rotatePointer()
-      this.animateWeightText()
+      await this.animateWeightText()
     })
   },
   methods: {
@@ -216,9 +218,6 @@ export default defineComponent({
           scale: 1,
           duration: 1.1,
           ease: Expo.easeInOut,
-          onComplete() {
-            resolve()
-          },
         }, 0.1)
 
         timeline.fromTo(circleInsideRef, {
@@ -230,18 +229,23 @@ export default defineComponent({
           duration: 1.1,
           ease: Expo.easeOut,
         }, '-=0.6')
+
+        timeline.then(() => resolve())
       })
     },
-    animateWeightText() {
-      const timeline = gsap.timeline()
-      timeline.to(this.weight, {
-        duration: this.animationConfig.duration,
-        tweenValue: this.weight.value,
-        ease: CustomEase.create('custom', Constants.customElasticPath),
-        onUpdate: () => {
-          this.weight.displayValue = this.weight.tweenValue.toFixed(1)
-        },
-      }, this.animationConfig.delay)
+    animateWeightText(): Promise<void> {
+      return new Promise((resolve) => {
+        const timeline = gsap.timeline()
+        timeline.to(this.weight, {
+          duration: this.animationConfig.duration,
+          tweenValue: this.weight.value,
+          ease: CustomEase.create('custom', Constants.customElasticPath),
+          onUpdate: () => {
+            this.weight.displayValue = this.weight.tweenValue.toFixed(1)
+          },
+        }, this.animationConfig.delay)
+        timeline.then(() => resolve())
+      })
     },
   },
 })
