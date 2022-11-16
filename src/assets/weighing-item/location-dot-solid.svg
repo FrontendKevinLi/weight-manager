@@ -8,7 +8,7 @@
       <feDropShadow
         dx="0"
         dy="0"
-        stdDeviation="4"
+        stdDeviation="2"
         flood-opacity="1"
         flood-color="#3e63a2"
       />
