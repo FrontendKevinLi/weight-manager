@@ -4,29 +4,32 @@
     class="calendar-header"
   >
     <div class="calendar-controls">
-      <InlineSvg
-        class="arrow-icon"
-        :src="ArrowLeftSvg"
-        @keydown="handlePreviousMonthButtonClick"
-        @click="handlePreviousMonthButtonClick"
-      />
+      <div class="arrow-icon">
+        <InlineSvg
+          :src="ArrowLeftSvg"
+          @keydown="handlePreviousMonthButtonClick"
+          @click="handlePreviousMonthButtonClick"
+        />
+      </div>
       <div class="calendar-date">
         <span class="year">{{ calendarYear }}</span>
         <span class="month">{{ calendarMonth }}</span>
       </div>
-      <InlineSvg
-        class="arrow-icon"
-        :src="ArrowRightSvg"
-        @click="handleNextMonthButtonClick"
-        @keydown="handleNextMonthButtonClick"
-      />
+      <div class="arrow-icon">
+        <InlineSvg
+          :src="ArrowRightSvg"
+          @click="handleNextMonthButtonClick"
+          @keydown="handleNextMonthButtonClick"
+        />
+      </div>
     </div>
     <div class="records-controls">
-      <InlineSvg
-        class="add-icon"
-        :src="AddSvg"
-        @click="handleAddButtonClick"
-      />
+      <div class="add-icon">
+        <InlineSvg
+          :src="AddSvg"
+          @click="handleAddButtonClick"
+        />
+      </div>
     </div>
   </div>
 </template>
