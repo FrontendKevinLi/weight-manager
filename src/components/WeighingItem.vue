@@ -264,7 +264,7 @@ export default defineComponent({
   height: 100%;
   aspect-ratio: 1 / 1;
 
-  * {
+  > * {
     grid-area: 1 / 1;
   }
 
@@ -275,14 +275,13 @@ export default defineComponent({
     width: 100%;
     height: 100%;
 
-    * {
+    > * {
       grid-area: 1 / 1;
     }
 
     .circle-inside {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: grid;
+      place-items: center;
       visibility: hidden;
       z-index: 1;
       border-radius: 50%;
