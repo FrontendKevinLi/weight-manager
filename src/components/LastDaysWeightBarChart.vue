@@ -14,9 +14,9 @@
         :label="linkText"
         @click="handleLinkButtonClick"
         @keydown="handleLinkButtonClick"
-        />
-      </div>
+      />
     </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -63,7 +63,8 @@ type ChartData = {
 }
 
 type LastDaysWeightBarChart = {
-  (e: 'inited'): void
+  (e: 'inited'): void,
+  (e: 'not-enough-data'): void
 }
 
 const shouldFetchLastMonthRecord = DateTime.now().day <= 7
@@ -272,6 +273,7 @@ onMounted(async () => {
   weightList.value = generateWeightList()
   if (!shouldShowChart.value) {
     fadeInHint()
+    emit('not-enough-data')
     return
   }
 

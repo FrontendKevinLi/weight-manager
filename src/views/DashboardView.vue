@@ -1,9 +1,12 @@
 <template>
   <div class="dashboard-view">
     <div class="weighing-item-wrapper">
-      <WeighingItem v-if="hasWeighingItemInited" />
+      <WeighingItem v-if="showWeighingItem" />
     </div>
-    <LastDaysWeightBarChart @inited="handleBarChartInited" />
+    <LastDaysWeightBarChart
+      @inited="handleBarChartInited"
+      @not-enough-data="handleBarChartNotEnoughData"
+    />
   </div>
 </template>
 
@@ -24,14 +27,24 @@ export default defineComponent({
   },
   data() {
     return {
-      hasFilled: false,
-      hasWeighingItemInited: false,
-      hasBarChartInited: false,
+      barChart: {
+        inited: false,
+        notEnoughData: false,
+      },
     }
+  },
+  computed: {
+    showWeighingItem(): boolean {
+      const showWeighingItem = this.barChart.inited || this.barChart.notEnoughData
+      return showWeighingItem
+    },
   },
   methods: {
     handleBarChartInited() {
-      this.hasWeighingItemInited = true
+      this.barChart.inited = true
+    },
+    handleBarChartNotEnoughData() {
+      this.barChart.notEnoughData = true
     },
   },
 })
