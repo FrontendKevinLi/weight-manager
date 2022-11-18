@@ -321,35 +321,6 @@ onMounted(async () => {
       color: colors.$darkblue-600;
       font-size: font-sizes.$medium;
     }
-
-    .link-button {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-      transition: color 0.2s ease-out, fill 0.2s ease-out;
-      border-radius: constants.$border-radius;
-      background-color: colors.$primary-50-variant;
-      cursor: pointer;
-      padding: 20px;
-      color: colors.$primary-600;
-      font-size: font-sizes.$small;
-      fill: colors.$primary-600;
-
-      &:hover {
-        color: color.adjust(colors.$primary-500, $lightness: 5%);
-        fill: color.adjust(colors.$primary-500, $lightness: 5%);
-      }
-
-      &:active {
-        color: color.adjust(colors.$primary-500, $lightness: -5%);
-        fill: color.adjust(colors.$primary-500, $lightness: -5%);
-      }
-
-      .arrow-icon {
-        width: 20px;
-        aspect-ratio: 1 / 1;
-      }
-    }
   }
 }
 
