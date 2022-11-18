@@ -141,10 +141,7 @@ export default defineComponent({
       this.monthlyRecord = result.data
     },
     setWeight() {
-      const today = DateTime.now()
-      const weightForToday = this.monthlyRecord[today.day]?.weight ?? 0.0
-
-      this.weight.value = weightForToday
+      this.weight.value = this.getWeightToday()
     },
     initPointerAnimation() {
       const timeline = gsap.timeline()
@@ -228,7 +225,7 @@ export default defineComponent({
           scale: 1,
           duration: 1.1,
           ease: Expo.easeOut,
-        }, '-=0.6')
+        }, 0.6)
 
         timeline.then(() => resolve())
       })
@@ -246,6 +243,11 @@ export default defineComponent({
         }, this.animationConfig.delay)
         timeline.then(() => resolve())
       })
+    },
+    getWeightToday() {
+      const today = DateTime.now()
+      const weightToday = this.monthlyRecord[today.day]?.weight ?? 0.0
+      return weightToday
     },
   },
 })
