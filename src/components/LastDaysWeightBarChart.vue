@@ -9,15 +9,11 @@
       class="hint-wrapper"
     >
       <span class="hint">{{ hint }}</span>
-      <div
-        class="link-button"
+      <LabeledIconButton
+        :svg-src="ArrowRightSvg"
+        :label="linkText"
         @click="handleLinkButtonClick"
         @keydown="handleLinkButtonClick"
-      >
-        <span class="label">{{ linkText }}</span>
-        <InlineSvg
-          class="arrow-icon"
-          :src="ArrowRightSvg"
         />
       </div>
     </div>
@@ -47,7 +43,7 @@ import { MonthlyRecord } from '@/types/records'
 import gsap from 'gsap'
 import router from '@/router'
 import ArrowRightSvg from '@/assets/dashboard/arrow-right-solid.svg'
-import InlineSvg from 'vue-inline-svg'
+import LabeledIconButton from '@/components/LabeledIconButton.vue'
 
 use([
   TitleComponent,
