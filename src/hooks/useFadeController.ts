@@ -11,13 +11,6 @@ type FadeConfig = {
   tweenVars?: gsap.TweenVars
 }
 
-// type Direction = {
-//   axis: 'x' | 'y',
-//   value: string
-// }
-
-// type FadeDirectionRecord = Record<FadeTo, Direction>
-
 type FadeFromToProperties = {
   from: gsap.TweenVars,
   to: gsap.TweenVars
