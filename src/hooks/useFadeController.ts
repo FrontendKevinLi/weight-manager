@@ -63,8 +63,8 @@ const useFadeController = (target: Ref<HTMLElement | undefined>) => {
     return fadeMode === 'fadeIn' ? fadeInDirectionRecord[to] : fadeOutDirectionRecord[to]
   }
 
-  const fadeIn = (fadeConfig: FadeConfig) => {
-    if (target.value == null) return
+  const fadeIn = (fadeConfig: FadeConfig): Promise<void> => new Promise((resolve) => {
+    if (target.value == null) throw new Error('Target not exist')
 
     const direction = getDirection('fadeIn', fadeConfig.to)
     const timeline = gsap.timeline()
@@ -78,10 +78,12 @@ const useFadeController = (target: Ref<HTMLElement | undefined>) => {
       ease: Expo.easeOut,
       ...fadeConfig.tweenVars,
     })
-  }
 
-  const fadeOut = (fadeConfig: FadeConfig) => {
-    if (target.value == null) return
+    timeline.then((() => resolve()))
+  })
+
+  const fadeOut = (fadeConfig: FadeConfig): Promise<void> => new Promise((resolve) => {
+    if (target.value == null) throw new Error('Target not exist')
 
     const direction = getDirection('fadeOut', fadeConfig.to)
     const timeline = gsap.timeline()
@@ -95,7 +97,9 @@ const useFadeController = (target: Ref<HTMLElement | undefined>) => {
       ease: Expo.easeOut,
       ...fadeConfig.tweenVars,
     })
-  }
+
+    timeline.then(() => resolve())
+  })
 
   const show = () => {
     if (target.value == null) return
@@ -104,6 +108,7 @@ const useFadeController = (target: Ref<HTMLElement | undefined>) => {
     timeline.set(target.value, {
       autoAlpha: 1,
       x: 0,
+      y: 0,
     })
   }
 
