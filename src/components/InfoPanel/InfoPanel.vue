@@ -63,6 +63,7 @@ import { until } from '@open-draft/until'
 import { Nullable } from '@/types/utils'
 import useWindowSizeStore from '@/stores/windowSize'
 import useUserStore from '@/stores/user'
+import useFadeController from '@/hooks/useFadeController'
 import AchievementItem from '../AchievementItem.vue'
 import { InfoPanelProps } from './types'
 
@@ -178,60 +179,11 @@ const initAchievementItemElListScrollTrigger = () => {
   })
 }
 
-const fadeInInfoPanel = () => {
-  if (infoPanelRef.value == null) return
-
-  const timeline = gsap.timeline()
-  timeline.set(infoPanelRef.value, {
-    autoAlpha: 0,
-    x: '100%',
-  })
-  timeline.to(infoPanelRef.value, {
-    autoAlpha: 1,
-    x: 0,
-    duration: 0.5,
-    ease: Expo.easeOut,
-  })
-}
-
-const fadeOutInfoPanel = () => {
-  if (infoPanelRef.value == null) return
-
-  const timeline = gsap.timeline()
-  timeline.set(infoPanelRef.value, {
-    autoAlpha: 1,
-    x: 0,
-  })
-  timeline.to(infoPanelRef.value, {
-    autoAlpha: 0,
-    x: '100%',
-    duration: 0.5,
-    ease: Expo.easeOut,
-  })
-}
-
-const hideInfoPanel = () => {
-  if (infoPanelRef.value == null) return
-
-  const timeline = gsap.timeline()
-  timeline.set(infoPanelRef.value, {
-    autoAlpha: 0,
-  })
-}
-
-const showInfoPanel = () => {
-  if (infoPanelRef.value == null) return
-
-  const timeline = gsap.timeline()
-  timeline.set(infoPanelRef.value, {
-    autoAlpha: 1,
-    x: 0,
-  })
-}
+const infoPanelFadeController = useFadeController(infoPanelRef)
 
 const initAnimation = () => {
   if (!isMobile.value) {
-    fadeInInfoPanel()
+    infoPanelFadeController.fadeIn({ to: 'left' })
   }
   initAchievementItemElListScrollTrigger()
 }
@@ -273,11 +225,11 @@ watch(currentUser, () => {
 
 watch(isMobile, (isMobile) => {
   if (isMobile) {
-    hideInfoPanel()
+    infoPanelFadeController.hide()
     return
   }
 
-  showInfoPanel()
+  infoPanelFadeController.show()
 })
 
 watch(props, (props) => {
@@ -290,12 +242,12 @@ watch(props, (props) => {
         infoPanel: 'open',
       },
     })
-    fadeInInfoPanel()
+    infoPanelFadeController.fadeIn({ to: 'left' })
 
     return
   }
 
-  fadeOutInfoPanel()
+  infoPanelFadeController.fadeOut({ to: 'right' })
 })
 
 onMounted(() => {
