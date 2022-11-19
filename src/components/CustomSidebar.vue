@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import InlineSvg from 'vue-inline-svg'
 import gsap, { Expo } from 'gsap'
 import { until } from '@open-draft/until'
@@ -89,6 +89,7 @@ import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.vue'
 import { ConfirmDialogProps } from '@/components/ConfirmDialog/types'
 import DashboardSvg from '@/assets/sidebar-icons/gauge-solid.svg'
 import useWindowSizeStore from '@/stores/windowSize'
+import useFadeController from '@/hooks/useFadeController'
 
 export default defineComponent({
   name: 'CustomSidebar',
@@ -103,6 +104,49 @@ export default defineComponent({
     },
   },
   emits: ['update:show-mobile-sidebar'],
+  setup() {
+    const sidebarWrapperRef = ref<HTMLElement>()
+    const customSidebarRef = ref<HTMLElement>()
+    const sidebarMaskRef = ref<HTMLElement>()
+
+    const sidebarWrapperFadeController = useFadeController(sidebarWrapperRef)
+    const customSidebarRefFadeController = useFadeController(customSidebarRef)
+    const sidebarMaskRefFadeController = useFadeController(sidebarMaskRef)
+
+    const fadeInSidebar = async () => {
+      await Promise.allSettled([
+        sidebarMaskRefFadeController.fadeIn({ to: 'none' }),
+        sidebarWrapperFadeController.fadeIn({ to: 'none' }),
+        customSidebarRefFadeController.fadeIn({ to: 'right' }),
+      ])
+    }
+
+    const fadeOutSidebar = async () => {
+      await Promise.allSettled([
+        sidebarMaskRefFadeController.fadeOut({ to: 'none' }),
+        sidebarWrapperFadeController.fadeOut({ to: 'none' }),
+        customSidebarRefFadeController.fadeOut({ to: 'left' }),
+      ])
+    }
+
+    const showDesktopSidebar = async () => {
+      sidebarMaskRefFadeController.hide()
+      sidebarWrapperFadeController.show()
+      customSidebarRefFadeController.show({ tweenVars: { x: 0 } })
+    }
+
+    return {
+      sidebarWrapperRef,
+      customSidebarRef,
+      sidebarMaskRef,
+      sidebarWrapperFadeController,
+      customSidebarRefFadeController,
+      sidebarMaskRefFadeController,
+      fadeInSidebar,
+      fadeOutSidebar,
+      showDesktopSidebar,
+    }
+  },
   data() {
     return {
       TableSvg,
@@ -172,7 +216,7 @@ export default defineComponent({
     },
     isMobile(isMobile: boolean) {
       if (isMobile) {
-        this.hideMobileSidebar()
+        this.sidebarWrapperFadeController.hide()
         return
       }
 
@@ -184,87 +228,6 @@ export default defineComponent({
     this.rePositionActiveIndicator(true)
   },
   methods: {
-    showDesktopSidebar() {
-      const timeline = gsap.timeline()
-      const sidebarWrapperEl = this.$refs.sidebarWrapperRef as HTMLElement
-      const customSidebarEl = this.$refs.customSidebarRef as HTMLElement
-      const sidebarMaskEl = this.$refs.sidebarMaskRef as HTMLElement
-      timeline.set(sidebarWrapperEl, {
-        autoAlpha: 1,
-      })
-      timeline.set(sidebarMaskEl, {
-        autoAlpha: 0,
-      })
-      timeline.set(customSidebarEl, {
-        autoAlpha: 1,
-        x: 0,
-      })
-    },
-    hideMobileSidebar() {
-      const timeline = gsap.timeline()
-      const sidebarWrapperEl = this.$refs.sidebarWrapperRef as HTMLElement
-      timeline.set(sidebarWrapperEl, {
-        autoAlpha: 0,
-      })
-    },
-    fadeInSidebar(): Promise<void> {
-      return new Promise((resolve) => {
-        const sidebarWrapperEl = this.$refs.sidebarWrapperRef as HTMLElement
-        const sidebarMaskEl = this.$refs.sidebarMaskRef as HTMLElement
-        const customSidebarEl = this.$refs.customSidebarRef as HTMLElement
-        const timeline = gsap.timeline()
-
-        timeline.set(sidebarWrapperEl, {
-          autoAlpha: 1,
-        })
-        timeline.fromTo(sidebarMaskEl, {
-          autoAlpha: 0,
-        }, {
-          ease: Expo.easeOut,
-          duration: 0.5,
-          autoAlpha: 1,
-        }, 0)
-        timeline.fromTo(customSidebarEl, {
-          x: '-100%',
-          autoAlpha: 0,
-        }, {
-          x: 0,
-          autoAlpha: 1,
-          duration: 0.5,
-          ease: Expo.easeOut,
-          onComplete: () => {
-            resolve()
-          },
-        }, 0)
-      })
-    },
-    fadeOutSidebar(): Promise<void> {
-      console.log('fade out')
-      return new Promise((resolve) => {
-        const sidebarWrapperEl = this.$refs.sidebarWrapperRef as HTMLElement
-        const customSidebarEl = this.$refs.customSidebarRef as HTMLElement
-        const sidebarMaskEl = this.$refs.sidebarMaskRef as HTMLElement
-        const timeline = gsap.timeline()
-        timeline.fromTo(sidebarMaskEl, {
-          autoAlpha: 1,
-        }, {
-          autoAlpha: 0,
-        }, 0)
-        timeline.fromTo(customSidebarEl, {
-          x: 0,
-          autoAlpha: 1,
-        }, {
-          x: '-100%',
-          autoAlpha: 0,
-          onComplete: () => {
-            resolve()
-          },
-        }, 0)
-        timeline.set(sidebarWrapperEl, {
-          autoAlpha: 0,
-        })
-      })
-    },
     initListeners() {
       const sideBarItems = gsap.utils.toArray('.route-item.slide-in') as HTMLElement[]
 
