@@ -4,7 +4,7 @@ import { Ref } from 'vue'
 
 type FadeMode = 'fadeIn' | 'fadeOut'
 
-type FadeTo = 'left' | 'right' | 'top' | 'bottom'
+type FadeTo = 'left' | 'right' | 'top' | 'bottom' | 'none'
 
 type FadeConfig = {
   to?: FadeTo
@@ -12,8 +12,8 @@ type FadeConfig = {
 }
 
 type FadeFromToProperties = {
-  from: gsap.TweenVars,
-  to: gsap.TweenVars
+  from?: gsap.TweenVars,
+  to?: gsap.TweenVars
 }
 
 type FadePropertiesRecord = Record<FadeTo, FadeFromToProperties>
@@ -52,6 +52,7 @@ const useFadeController = (target: Ref<HTMLElement | undefined>) => {
         y: 0,
       },
     },
+    none: {},
   }
 
   const fadeOutProperties: FadePropertiesRecord = {
@@ -87,6 +88,7 @@ const useFadeController = (target: Ref<HTMLElement | undefined>) => {
         y: '100%',
       },
     },
+    none: {},
   }
 
   const getFadeProperties = (fadeMode: FadeMode, to: Nullable<FadeTo>): Nullable<FadeFromToProperties> => {
