@@ -135,7 +135,7 @@ const useFadeController = (target: Ref<HTMLElement | undefined>) => {
     timeline.then(() => resolve())
   })
 
-  const show = () => {
+  const show = (fadeConfig?: FadeConfig) => {
     if (target.value == null) return
 
     const timeline = gsap.timeline()
@@ -143,15 +143,17 @@ const useFadeController = (target: Ref<HTMLElement | undefined>) => {
       autoAlpha: 1,
       x: 0,
       y: 0,
+      ...fadeConfig?.tweenVars,
     })
   }
 
-  const hide = () => {
+  const hide = (fadeConfig?: FadeConfig) => {
     if (target.value == null) return
 
     const timeline = gsap.timeline()
     timeline.set(target.value, {
       autoAlpha: 0,
+      ...fadeConfig?.tweenVars,
     })
   }
 
