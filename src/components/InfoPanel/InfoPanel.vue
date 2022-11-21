@@ -226,7 +226,7 @@ const closeMobileInfoPanel = () => {
 }
 
 const handleCloseButtonClick = () => {
-  closeMobileInfoPanel()
+  router.back()
 }
 
 watch(currentUser, () => {
