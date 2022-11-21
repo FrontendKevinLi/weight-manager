@@ -70,7 +70,6 @@ export default defineComponent({
   },
   mounted() {
     this.initValidationListener()
-    this.focusAtEnd()
   },
   methods: {
     setInputFocus(shouldFocus: boolean) {
