@@ -22,21 +22,27 @@ $card-shadow: 0 0 20px -3px colors.$primary-100;
 }
 
 @mixin icon-button {
+  box-sizing: border-box;
   display: grid;
   transition: fill 0.2s ease-out;
   border-radius: 50%;
   background-color: colors.$primary-50-variant;
   cursor: pointer;
   padding: 10px;
-  width: 30px;
   aspect-ratio: 1 / 1;
-  fill: colors.$primary-600;
+  width: 50px;
 
-  &:hover {
-    fill: color.adjust(colors.$primary-500, $lightness: 5%);
-  }
+  svg {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    fill: colors.$primary-600;
 
-  &:active {
-    fill: color.adjust(colors.$primary-500, $lightness: -5%);
+    &:hover {
+      fill: color.adjust(colors.$primary-500, $lightness: 5%);
+    }
+
+    &:active {
+      fill: color.adjust(colors.$primary-500, $lightness: -5%);
+    }
   }
 }

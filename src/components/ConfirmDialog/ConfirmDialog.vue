@@ -4,10 +4,17 @@
     @update:value="handleUpdateValue"
   >
     <div class="confirm-dialog">
-      <span
-        class="title"
-        v-text="props.value.title"
-      />
+      <header class="confirm-dialog-header">
+        <span
+          class="title"
+          v-text="props.value.title"
+        />
+        <CloseButton
+          class="close-button"
+          @click="handleCloseButtonClick"
+          @keydown="handleCloseButtonClick"
+        />
+      </header>
       <span
         class="content"
         v-text="props.value.content"
@@ -34,6 +41,7 @@ import { defineEmits, defineProps, computed } from 'vue'
 import CustomDialog from '@/components/CustomDialog/CustomDialog.vue'
 import { CustomDialogProps } from '@/components/CustomDialog/types'
 import CustomButton from '@/components/CustomButton.vue'
+import CloseButton from '@/components/CloseButton.vue'
 import { ConfirmDialogProps } from './types'
 
 const props = defineProps<{
@@ -50,6 +58,10 @@ const emit = defineEmits<ConfirmDialogEmits>()
 
 const customDialog = computed(() => ({ show: props.value.show }) as CustomDialogProps)
 
+const cancel = () => {
+  emit('cancel')
+}
+
 const handleUpdateValue = (payload: CustomDialogProps) => {
   emit('update:value', {
     ...props.value,
@@ -58,11 +70,15 @@ const handleUpdateValue = (payload: CustomDialogProps) => {
 }
 
 const handleCancelButtonClick = () => {
-  emit('cancel')
+  cancel()
 }
 
 const handleConfirmButtonClick = () => {
   emit('confirm')
+}
+
+const handleCloseButtonClick = () => {
+  cancel()
 }
 
 </script>
@@ -79,10 +95,17 @@ const handleConfirmButtonClick = () => {
   background-color: white;
   padding: 40px;
 
-  .title {
-    color: colors.$darkblue-600;
-    font-size: font-sizes.$medium;
-    font-weight: bold;
+  .confirm-dialog-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 30px;
+    align-items: center;
+
+    .title {
+      color: colors.$darkblue-600;
+      font-size: font-sizes.$medium;
+      font-weight: bold;
+    }
   }
 
   .content {

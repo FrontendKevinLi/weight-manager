@@ -1,15 +1,19 @@
 <template>
   <div class="custom-header">
-    <InlineSvg
-      class="menu-icon"
-      :src="MenuSvg"
-      @click="handleMenuClick"
-    />
+    <div class="menu-icon">
+      <InlineSvg
+        :src="MenuSvg"
+        @click="handleMenuClick"
+        @keydown="handleMenuClick"
+      />
+    </div>
     <span class="page-name">
       {{ routeLabel }}
     </span>
     <img
       class="profile-icon"
+      width="50"
+      height="50"
       :src="ProfilePng"
       alt="profile"
       @click="handleProfileIconClick"
@@ -63,10 +67,12 @@ export default defineComponent({
 @use "@/style/colors" as colors;
 
 .custom-header {
+  box-sizing: border-box;
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: 50px 1fr 50px;
   gap: 20px;
   align-items: center;
+  width: 100%;
 
   .menu-icon {
     @include constants.icon-button;
@@ -89,7 +95,7 @@ export default defineComponent({
 @media (max-width: breakpoints.$small) {
   .custom-header {
     .menu-icon {
-      display: inline;
+      display: grid;
     }
 
     .page-name {
@@ -98,7 +104,7 @@ export default defineComponent({
     }
 
     .profile-icon {
-      display: inline;
+      display: grid;
     }
   }
 }

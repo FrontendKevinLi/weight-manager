@@ -14,6 +14,9 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '',
         name: 'login',
+        meta: {
+          label: 'Login',
+        },
         component: LoginView,
       },
     ],
@@ -25,6 +28,9 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '',
         name: 'signup',
+        meta: {
+          label: 'Signup',
+        },
         component: SignupView,
       },
     ],
@@ -42,7 +48,7 @@ const routes: Array<RouteRecordRaw> = [
           label: 'Dashboard',
         },
         props: (route) => ({ query: route.query.infoPanel }),
-        component: () => import('@/views/DashboardView.vue'),
+        component: () => import(/* webpackPrefetch: true */ '@/views/DashboardView.vue'),
       },
     ],
   },
@@ -56,38 +62,38 @@ const routes: Array<RouteRecordRaw> = [
         meta: {
           label: 'Records',
         },
-        component: () => import('@/views/RecordsView.vue'),
+        component: () => import(/* webpackPrefetch: true */ '@/views/RecordsView.vue'),
       },
     ],
   },
-  {
-    path: '/analytics',
-    component: PageLayout,
-    children: [
-      {
-        path: '',
-        name: 'analytics',
-        meta: {
-          label: 'Analytics',
-        },
-        component: () => import('@/views/AnalyticsView.vue'),
-      },
-    ],
-  },
-  {
-    path: '/settings',
-    component: PageLayout,
-    children: [
-      {
-        path: '',
-        name: 'settings',
-        meta: {
-          label: 'Settings',
-        },
-        component: () => import('@/views/SettingsView.vue'),
-      },
-    ],
-  },
+  // {
+  //   path: '/analytics',
+  //   component: PageLayout,
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'analytics',
+  //       meta: {
+  //         label: 'Analytics',
+  //       },
+  //       component: () => import(/* webpackPrefetch: true */ '@/views/AnalyticsView.vue'),
+  //     },
+  //   ],
+  // },
+  // {
+  //   path: '/settings',
+  //   component: PageLayout,
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'settings',
+  //       meta: {
+  //         label: 'Settings',
+  //       },
+  //       component: () => import(/* webpackPrefetch: true */ '@/views/SettingsView.vue'),
+  //     },
+  //   ],
+  // },
 ]
 
 const router = createRouter({
@@ -100,18 +106,25 @@ router.beforeEach(async (to) => {
 
   // special case
   if (to.name === 'signup') {
+    document.title = 'Weight Manager | Signup'
     return true
   }
 
   // not authenticated
   if (!isAuthenticatedResult.data) {
-    if (to.name !== 'login') return { name: 'login' }
+    if (to.name !== 'login') {
+      document.title = 'Weight Manager | Login'
+      return { name: 'login' }
+    }
   }
 
   // authenticated
   if (isAuthenticatedResult.data) {
+    document.title = 'Weight Manager | Dashboard'
     if (to.name === 'login') return { name: 'dashboard' }
   }
+
+  document.title = `Weight Manager | ${to.meta.label}`
   return true
 })
 

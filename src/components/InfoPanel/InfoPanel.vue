@@ -10,7 +10,7 @@
         alt="icon"
       >
       <div class="username-wrapper">
-        <span
+        <div
           ref="usernameRef"
           class="username"
           :contenteditable="true"
@@ -19,12 +19,18 @@
           @input="handleUsernameInput"
           v-text="username"
         />
-        <InlineSvg
-          class="edit-icon"
-          :src="EditSvg"
-          @click="handleEditIconClick"
-        />
+        <div class="edit-icon">
+          <InlineSvg
+            :src="EditSvg"
+            @click="handleEditIconClick"
+          />
+        </div>
       </div>
+      <CloseButton
+        v-if="isMobile"
+        @click="handleCloseButtonClick"
+        @keydown="handleCloseButtonClick"
+      />
     </div>
     <div class="achievement-section">
       <span class="title">Achievements</span>
@@ -62,6 +68,8 @@ import { until } from '@open-draft/until'
 import { Nullable } from '@/types/utils'
 import useWindowSizeStore from '@/stores/windowSize'
 import useUserStore from '@/stores/user'
+import useFadeController from '@/hooks/useFadeController'
+import CloseButton from '@/components/CloseButton.vue'
 import AchievementItem from '../AchievementItem.vue'
 import { InfoPanelProps } from './types'
 
@@ -177,60 +185,11 @@ const initAchievementItemElListScrollTrigger = () => {
   })
 }
 
-const fadeInInfoPanel = () => {
-  if (infoPanelRef.value == null) return
-
-  const timeline = gsap.timeline()
-  timeline.set(infoPanelRef.value, {
-    autoAlpha: 0,
-    x: '100%',
-  })
-  timeline.to(infoPanelRef.value, {
-    autoAlpha: 1,
-    x: 0,
-    duration: 0.5,
-    ease: Expo.easeOut,
-  })
-}
-
-const fadeOutInfoPanel = () => {
-  if (infoPanelRef.value == null) return
-
-  const timeline = gsap.timeline()
-  timeline.set(infoPanelRef.value, {
-    autoAlpha: 1,
-    x: 0,
-  })
-  timeline.to(infoPanelRef.value, {
-    autoAlpha: 0,
-    x: '100%',
-    duration: 0.5,
-    ease: Expo.easeOut,
-  })
-}
-
-const hideInfoPanel = () => {
-  if (infoPanelRef.value == null) return
-
-  const timeline = gsap.timeline()
-  timeline.set(infoPanelRef.value, {
-    autoAlpha: 0,
-  })
-}
-
-const showInfoPanel = () => {
-  if (infoPanelRef.value == null) return
-
-  const timeline = gsap.timeline()
-  timeline.set(infoPanelRef.value, {
-    autoAlpha: 1,
-    x: 0,
-  })
-}
+const infoPanelFadeController = useFadeController(infoPanelRef)
 
 const initAnimation = () => {
   if (!isMobile.value) {
-    fadeInInfoPanel()
+    infoPanelFadeController.fadeIn({ to: 'left' })
   }
   initAchievementItemElListScrollTrigger()
 }
@@ -266,17 +225,21 @@ const closeMobileInfoPanel = () => {
   })
 }
 
+const handleCloseButtonClick = () => {
+  router.back()
+}
+
 watch(currentUser, () => {
   username.value = currentUser.value?.displayName ?? ''
 })
 
 watch(isMobile, (isMobile) => {
   if (isMobile) {
-    hideInfoPanel()
+    infoPanelFadeController.hide()
     return
   }
 
-  showInfoPanel()
+  infoPanelFadeController.show()
 })
 
 watch(props, (props) => {
@@ -289,12 +252,12 @@ watch(props, (props) => {
         infoPanel: 'open',
       },
     })
-    fadeInInfoPanel()
+    infoPanelFadeController.fadeIn({ to: 'left' })
 
     return
   }
 
-  fadeOutInfoPanel()
+  infoPanelFadeController.fadeOut({ to: 'right' })
 })
 
 onMounted(() => {
@@ -338,35 +301,32 @@ onMounted(() => {
 
     .user-icon {
       border-radius: 50%;
-      height: 150px;
+      width: 150px;
+      aspect-ratio: 1 / 1;
     }
 
     .username-wrapper {
       display: grid;
-      grid-template-columns: 1fr auto 1fr;
+      grid-template-columns: 1fr 20px;
       gap: 15px;
+      align-items: center;
 
       .username {
-        grid-column: 2;
         outline: none;
         width: 100%;
         min-width: 10px;
         overflow: hidden;
         text-align: center;
         color: colors.$darkblue-600;
-        font-size: 20px;
+        font-size: 22px;
         font-weight: bold;
       }
 
       .edit-icon {
-        $size: 20px;
-        $gap: 20px;
-
-        grid-column: 3;
         transition: opacity 0.1s ease-in-out;
         cursor: pointer;
-        width: $size;
-        height: $size;
+        width: 100%;
+        aspect-ratio: 1 / 1;
         fill: colors.$primary-600;
       }
 
@@ -407,19 +367,32 @@ onMounted(() => {
 
 @media (max-width: breakpoints.$small) {
   .info-panel {
+    gap: 40px;
+    padding: 20px;
     width: 100%;
 
     .user-info {
-      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        "close-button close-button"
+        "user-icon username-wrapper";
+      grid-template-columns: 100px 1fr;
+      row-gap: 0;
+      column-gap: 40px;
+      justify-items: flex-start;
 
       .user-icon {
-        height: 100px;
+        grid-area: user-icon;
+        width: 100%;
       }
 
       .username-wrapper {
-        display: flex;
+        display: grid;
+        grid-area: username-wrapper;
+      }
 
-        // grid-template-columns: auto 1fr;
+      .close-button {
+        grid-area: close-button;
+        justify-self: flex-end;
       }
     }
   }

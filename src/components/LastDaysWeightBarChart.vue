@@ -9,24 +9,19 @@
       class="hint-wrapper"
     >
       <span class="hint">{{ hint }}</span>
-      <div
-        class="link-button"
+      <LabeledIconButton
+        :svg-src="ArrowRightSvg"
+        :label="linkText"
         @click="handleLinkButtonClick"
         @keydown="handleLinkButtonClick"
-      >
-        <span class="label">{{ linkText }}</span>
-        <InlineSvg
-          class="arrow-icon"
-          :src="ArrowRightSvg"
-        />
-      </div>
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import {
-  ref, onMounted, Ref, reactive, computed,
+  ref, onMounted, Ref, reactive, computed, defineEmits,
 } from 'vue'
 // import { ECharts, init } from 'echarts'
 import { init, use, ECharts } from 'echarts/core'
@@ -47,7 +42,7 @@ import { MonthlyRecord } from '@/types/records'
 import gsap from 'gsap'
 import router from '@/router'
 import ArrowRightSvg from '@/assets/dashboard/arrow-right-solid.svg'
-import InlineSvg from 'vue-inline-svg'
+import LabeledIconButton from '@/components/LabeledIconButton.vue'
 
 use([
   TitleComponent,
@@ -67,9 +62,16 @@ type ChartData = {
   seriesData: { value: number, itemStyle: { color: string } }[]
 }
 
+type LastDaysWeightBarChart = {
+  (e: 'inited'): void,
+  (e: 'not-enough-data'): void
+}
+
 const shouldFetchLastMonthRecord = DateTime.now().day <= 7
 const hint = 'Complete weekly records to show charts!'
 const linkText = 'Record now'
+
+const emit = defineEmits<LastDaysWeightBarChart>()
 
 const weightList = ref<WeightItem[]>([])
 const hintWrapperRef = ref<HTMLElement>()
@@ -179,19 +181,31 @@ function transformToChartData(weightListParam: WeightItem[], minWeightParam: num
   return chartData
 }
 
-function initChart(barChartRefParam: Ref<HTMLElement | undefined>, weightList: WeightItem[]): void {
+const registerResizeListener = (chart: ECharts) => {
+  window.addEventListener('resize', () => {
+    chart.resize()
+  })
+}
+
+function initChart(barChartRefParam: Ref<HTMLElement | undefined>): ECharts {
   if (!barChartRefParam.value) {
-    console.error('Chart init failed. DOM element does not exits.')
-    return
+    emit('inited')
+    throw new Error('Chart init failed. DOM element does not exits.')
   }
 
   const barChart: ECharts = init(barChartRefParam.value)
 
+  registerResizeListener(barChart)
+  emit('inited')
+  return barChart
+}
+
+const setChartOption = (chart: ECharts, weightList: WeightItem[]): void => {
   const [minWeight, maxWeight] = getMinAndMaxWeight(weightList)
 
   const chartData: ChartData = transformToChartData(weightList, minWeight, maxWeight)
 
-  barChart.setOption({
+  chart.setOption({
     title: {
       show: true,
       text: 'Last Days',
@@ -233,10 +247,6 @@ function initChart(barChartRefParam: Ref<HTMLElement | undefined>, weightList: W
     },
     animationEasing: 'exponentialInOut',
   })
-
-  window.addEventListener('resize', () => {
-    barChart.resize()
-  })
 }
 
 const fadeInHint = () => {
@@ -263,10 +273,12 @@ onMounted(async () => {
   weightList.value = generateWeightList()
   if (!shouldShowChart.value) {
     fadeInHint()
+    emit('not-enough-data')
     return
   }
 
-  initChart(barChartRef, weightList.value)
+  const barChart = initChart(barChartRef)
+  setChartOption(barChart, weightList.value)
 })
 
 </script>
@@ -310,35 +322,6 @@ onMounted(async () => {
     .hint {
       color: colors.$darkblue-600;
       font-size: font-sizes.$medium;
-    }
-
-    .link-button {
-      display: flex;
-      gap: 15px;
-      align-items: center;
-      transition: color 0.2s ease-out, fill 0.2s ease-out;
-      border-radius: constants.$border-radius;
-      background-color: colors.$primary-50-variant;
-      cursor: pointer;
-      padding: 20px;
-      color: colors.$primary-600;
-      font-size: font-sizes.$small;
-      fill: colors.$primary-600;
-
-      &:hover {
-        color: color.adjust(colors.$primary-500, $lightness: 5%);
-        fill: color.adjust(colors.$primary-500, $lightness: 5%);
-      }
-
-      &:active {
-        color: color.adjust(colors.$primary-500, $lightness: -5%);
-        fill: color.adjust(colors.$primary-500, $lightness: -5%);
-      }
-
-      .arrow-icon {
-        width: 20px;
-        aspect-ratio: 1 / 1;
-      }
     }
   }
 }

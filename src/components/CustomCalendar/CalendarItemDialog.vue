@@ -9,10 +9,17 @@
       :key="`calendar-item-dialog${props.value.show}`"
       class="calendar-item-dialog"
     >
-      <span
-        class="title"
-        v-text="dialogTitle"
-      />
+      <header class="calendar-item-dialog-header">
+        <span
+          class="title"
+          v-text="dialogTitle"
+        />
+        <CloseButton
+          class="close-button"
+          @click="handleCloseButtonClick"
+          @keydown="handleCloseButtonClick"
+        />
+      </header>
       <CustomInput
         ref="weightInputRef"
         :input-text="weight"
@@ -40,6 +47,7 @@ import { updateDailyRecord } from '@/firebase/firestore'
 import { until } from '@open-draft/until'
 import { useToast } from 'vue-toastification'
 import { ValidateConfig } from '@/components/CustomInput/types'
+import CloseButton from '@/components/CloseButton.vue'
 import { CalendarItemDialogProps } from './types'
 
 type CalendarItemDialogEmits = {
@@ -96,15 +104,21 @@ const weightValidateConfig: ValidateConfig = {
 }
 
 const emit = defineEmits<CalendarItemDialogEmits>()
-const handleUpdateShow = (payload: CustomDialogProps) => {
+
+const updateProps = (newPropsValue: Partial<CalendarItemDialogProps>) => {
   emit('update:value', {
     ...props.value,
+    ...newPropsValue,
+  })
+}
+
+const handleUpdateShow = (payload: CustomDialogProps) => {
+  updateProps({
     show: payload.show,
   })
 }
 const handleUpdateInputText = (payload: string) => {
-  emit('update:value', {
-    ...props.value,
+  updateProps({
     calendarItem: {
       ...props.value.calendarItem,
       weight: payload,
@@ -114,6 +128,12 @@ const handleUpdateInputText = (payload: string) => {
 
 const handleInputFocus = () => {
   weightBefore.value = props.value.calendarItem.weight
+}
+
+const handleCloseButtonClick = () => {
+  updateProps({
+    show: false,
+  })
 }
 
 const validateForm = () => {
@@ -161,9 +181,16 @@ const handleEnter = () => {
   background-color: white;
   padding: 40px;
 
-  .title {
-    color: colors.$darkblue-600;
-    font-size: font-sizes.$small;
+  .calendar-item-dialog-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 30px;
+    align-items: center;
+
+    .title {
+      color: colors.$darkblue-600;
+      font-size: font-sizes.$medium;
+    }
   }
 
   .weight-input {
