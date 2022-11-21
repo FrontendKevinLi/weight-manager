@@ -178,16 +178,16 @@ export default defineComponent({
           className: 'records',
           path: '/records',
         }),
-        new RouteItem({
-          icon: this.ChartSvg,
-          className: 'analytics',
-          path: '/analytics',
-        }),
-        new RouteItem({
-          icon: this.SettingsSvg,
-          className: 'settings',
-          path: '/settings',
-        }),
+        // new RouteItem({
+        //   icon: this.ChartSvg,
+        //   className: 'analytics',
+        //   path: '/analytics',
+        // }),
+        // new RouteItem({
+        //   icon: this.SettingsSvg,
+        //   className: 'settings',
+        //   path: '/settings',
+        // }),
       ]
       return routeItemList
     },

@@ -60,34 +60,34 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
-  {
-    path: '/analytics',
-    component: PageLayout,
-    children: [
-      {
-        path: '',
-        name: 'analytics',
-        meta: {
-          label: 'Analytics',
-        },
-        component: () => import(/* webpackPrefetch: true */ '@/views/AnalyticsView.vue'),
-      },
-    ],
-  },
-  {
-    path: '/settings',
-    component: PageLayout,
-    children: [
-      {
-        path: '',
-        name: 'settings',
-        meta: {
-          label: 'Settings',
-        },
-        component: () => import(/* webpackPrefetch: true */ '@/views/SettingsView.vue'),
-      },
-    ],
-  },
+  // {
+  //   path: '/analytics',
+  //   component: PageLayout,
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'analytics',
+  //       meta: {
+  //         label: 'Analytics',
+  //       },
+  //       component: () => import(/* webpackPrefetch: true */ '@/views/AnalyticsView.vue'),
+  //     },
+  //   ],
+  // },
+  // {
+  //   path: '/settings',
+  //   component: PageLayout,
+  //   children: [
+  //     {
+  //       path: '',
+  //       name: 'settings',
+  //       meta: {
+  //         label: 'Settings',
+  //       },
+  //       component: () => import(/* webpackPrefetch: true */ '@/views/SettingsView.vue'),
+  //     },
+  //   ],
+  // },
 ]
 
 const router = createRouter({
