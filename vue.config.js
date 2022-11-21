@@ -5,6 +5,12 @@ const TerserPlugin = require('terser-webpack-plugin')
 const isProduction = process.env.NODE_ENV === 'production'
 
 module.exports = defineConfig({
+  pages: {
+    index: {
+      entry: 'src/main.ts',
+      title: 'Weight Manager',
+    },
+  },
   publicPath: isProduction
     ? '/weight-manager/'
     : '/',
