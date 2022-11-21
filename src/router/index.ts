@@ -14,6 +14,9 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '',
         name: 'login',
+        meta: {
+          label: 'Login',
+        },
         component: LoginView,
       },
     ],
@@ -25,6 +28,9 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '',
         name: 'signup',
+        meta: {
+          label: 'Signup',
+        },
         component: SignupView,
       },
     ],
@@ -100,18 +106,25 @@ router.beforeEach(async (to) => {
 
   // special case
   if (to.name === 'signup') {
+    document.title = 'Weight Manager | Signup'
     return true
   }
 
   // not authenticated
   if (!isAuthenticatedResult.data) {
-    if (to.name !== 'login') return { name: 'login' }
+    if (to.name !== 'login') {
+      document.title = 'Weight Manager | Login'
+      return { name: 'login' }
+    }
   }
 
   // authenticated
   if (isAuthenticatedResult.data) {
+    document.title = 'Weight Manager | Dashboard'
     if (to.name === 'login') return { name: 'dashboard' }
   }
+
+  document.title = `Weight Manager | ${to.meta.label}`
   return true
 })
 
