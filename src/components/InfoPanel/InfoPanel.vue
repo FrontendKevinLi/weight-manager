@@ -26,6 +26,11 @@
           />
         </div>
       </div>
+      <CloseButton
+        v-if="isMobile"
+        @click="handleCloseButtonClick"
+        @keydown="handleCloseButtonClick"
+      />
     </div>
     <div class="achievement-section">
       <span class="title">Achievements</span>
@@ -64,6 +69,7 @@ import { Nullable } from '@/types/utils'
 import useWindowSizeStore from '@/stores/windowSize'
 import useUserStore from '@/stores/user'
 import useFadeController from '@/hooks/useFadeController'
+import CloseButton from '@/components/CloseButton.vue'
 import AchievementItem from '../AchievementItem.vue'
 import { InfoPanelProps } from './types'
 
@@ -219,6 +225,10 @@ const closeMobileInfoPanel = () => {
   })
 }
 
+const handleCloseButtonClick = () => {
+  closeMobileInfoPanel()
+}
+
 watch(currentUser, () => {
   username.value = currentUser.value?.displayName ?? ''
 })
@@ -357,19 +367,32 @@ onMounted(() => {
 
 @media (max-width: breakpoints.$small) {
   .info-panel {
+    gap: 40px;
+    padding: 20px;
     width: 100%;
 
     .user-info {
+      grid-template-areas:
+        "close-button close-button"
+        "user-icon username-wrapper";
       grid-template-columns: 100px 1fr;
+      row-gap: 0;
+      column-gap: 40px;
+      justify-items: flex-start;
 
       .user-icon {
+        grid-area: user-icon;
         width: 100%;
       }
 
       .username-wrapper {
         display: grid;
+        grid-area: username-wrapper;
+      }
 
-        // grid-template-columns: auto 1fr;
+      .close-button {
+        grid-area: close-button;
+        justify-self: flex-end;
       }
     }
   }
